@@ -10,7 +10,7 @@
 
 ## 문서
 
-- [docs/PLANNING.md](docs/PLANNING.md): 기획 전체 (서비스 구조, 테마, 인트로, 장소와 모달, 방명록, 조작, 어드민, 진행 순서)
+- [docs/PLANNING.md](docs/PLANNING.md): 기획 전체 (서비스 구조, 테마, 인트로, 장소와 모달, 방명록, 조작, 어드민, 데이터·백엔드, 진행 순서)
 - [docs/ART_GUIDE.md](docs/ART_GUIDE.md): 픽셀아트 기준 (해상도, 그리기 순서, 스프라이트 표기법, 팔레트, UI 색)
 - [CLAUDE.md](CLAUDE.md): 작업 규칙 요약 (구조, 진행 순서, 공통·성능 규칙)
 - 목업 (브라우저로 열기, 왼쪽 위 버튼으로 테마 전환)
