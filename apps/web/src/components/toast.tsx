@@ -25,7 +25,7 @@ export function Toaster() {
     }
   }, [])
   return msg ? (
-    <div className="toast cut" role="status">
+    <div className="toast" role="status">
       {msg}
     </div>
   ) : null

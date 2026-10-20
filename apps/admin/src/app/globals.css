@@ -130,3 +130,11 @@
     @apply font-sans;
     }
 }
+/* 포커스 링 제거 (@layer 밖에 두어 shadcn 유틸리티보다 우선). 되살리려면 이 블록만 지운다. */
+*:focus,
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+}

@@ -1,10 +1,21 @@
 'use client'
 
-import { GUESTBOOK_LIMITS, guestbookInputSchema, type GuestbookEntry } from '@lww/shared'
+import { GUESTBOOK_LIMITS, guestbookInputSchema, type GuestbookEntry, type ThemeId } from '@lww/shared'
 import { useState } from 'react'
 import { toast } from './toast'
 
-export function Guestbook({ slug, initial }: { slug: string; initial: GuestbookEntry[] }) {
+// 방명록이 올라가면 게임 화면에 알린다 (물고기·별이 생기는 연출)
+export const GUESTBOOK_POSTED = 'lww-guestbook-posted'
+
+// 글이 게임 화면에서 무엇이 되는지 (방명록 안내 한 줄만 테마 문구를 쓴다. docs/ART_GUIDE.md 6장)
+const BECOMES: Record<ThemeId, string> = {
+  village: '남겨 주신 메시지는 바다의 물고기 한 마리가 됩니다.',
+  space: '남겨 주신 메시지는 하늘의 별 하나가 됩니다.',
+}
+
+const dateFmt = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'long', day: 'numeric' })
+
+export function Guestbook({ slug, theme, initial }: { slug: string; theme: ThemeId; initial: GuestbookEntry[] }) {
   const [entries, setEntries] = useState(initial)
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
@@ -32,27 +43,32 @@ export function Guestbook({ slug, initial }: { slug: string; initial: GuestbookE
       })
       const body = (await res.json()) as { entry?: GuestbookEntry; error?: string }
       if (!res.ok || !body.entry) {
-        toast(body.error ?? '남기지 못했어요. 잠시 뒤 다시 해 주세요')
+        toast(body.error ?? '남기지 못했습니다. 잠시 후 다시 시도해 주세요.')
         return
       }
-      setEntries((list) => [body.entry!, ...list])
+      const entry = body.entry
+      setEntries((list) => [entry, ...list])
       setName('')
       setMessage('')
       setErrors({})
-      toast('마음을 남겼어요')
+      window.dispatchEvent(new CustomEvent<GuestbookEntry>(GUESTBOOK_POSTED, { detail: entry }))
     } catch {
-      toast('남기지 못했어요. 잠시 뒤 다시 해 주세요')
+      toast('남기지 못했습니다. 잠시 후 다시 시도해 주세요.')
     } finally {
       setSending(false)
     }
   }
 
   return (
-    <section className="sec">
-      <h2>✦ 방명록</h2>
+    <div style={{ paddingTop: 8 }}>
+      <p className="small sub center" style={{ margin: '0 0 22px' }}>
+        두 사람에게 축하의 마음을 남겨 주세요.
+        <br />
+        {BECOMES[theme]}
+      </p>
       <form onSubmit={submit} noValidate>
         <input
-          className="fld"
+          className="field"
           placeholder="이름"
           maxLength={GUESTBOOK_LIMITS.name}
           value={name}
@@ -65,8 +81,8 @@ export function Guestbook({ slug, initial }: { slug: string; initial: GuestbookE
         />
         {errors.name && <div className="err">{errors.name}</div>}
         <textarea
-          className="fld"
-          placeholder="축하 메시지를 남겨 주세요"
+          className="field"
+          placeholder="축하 메시지"
           maxLength={GUESTBOOK_LIMITS.message}
           value={message}
           onChange={(e) => {
@@ -77,20 +93,25 @@ export function Guestbook({ slug, initial }: { slug: string; initial: GuestbookE
           aria-invalid={!!errors.message}
         />
         {errors.message && <div className="err">{errors.message}</div>}
-        <button type="submit" className="primary cut" disabled={sending}>
-          {sending ? '남기는 중…' : '마음 남기기'}
+        <button type="submit" className="btn btn-primary" disabled={sending}>
+          {sending ? '남기는 중' : '방명록 남기기'}
         </button>
-        <p className="note">남긴 글은 수정하거나 지울 수 없어요</p>
+        <p className="note">남긴 글은 수정하거나 삭제할 수 없습니다.</p>
       </form>
-      <div className="sub-2" style={{ fontSize: 11, marginTop: 22 }}>
-        남겨진 마음 {entries.length}개
-      </div>
-      {entries.map((e) => (
-        <div key={e.id} className="entry">
-          <div className="entry-name">{e.name}</div>
-          <div className="entry-msg">{e.message}</div>
+      <div className="entries">
+        <div className="small muted" style={{ marginBottom: 6 }}>
+          축하 메시지 {entries.length}개
         </div>
-      ))}
-    </section>
+        {entries.map((e) => (
+          <div key={e.id} className="entry">
+            <div className="entry-head">
+              <span className="entry-name">{e.name}</span>
+              <span className="entry-date">{dateFmt.format(new Date(e.createdAt))}</span>
+            </div>
+            <div className="entry-msg">{e.message}</div>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }

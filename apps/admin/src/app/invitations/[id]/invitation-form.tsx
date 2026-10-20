@@ -192,10 +192,7 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
         {person('bride', '신부')}
       </div>
 
-      <Section title="인트로 · 인사말" description="인트로는 처음 접속하면 뜨는 표지 화면이에요.">
-        <Field label="인트로 문구" error={err(['intro', 'message'])}>
-          {text(['intro', 'message'], { placeholder: '저희 결혼합니다', maxLength: 40 })}
-        </Field>
+      <Section title="인사말">
         <Field label="인사말" error={err(['greeting', 'text'])}>
           <Textarea
             rows={5}

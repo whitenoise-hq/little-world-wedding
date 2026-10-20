@@ -1,11 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { daysUntil, formatCeremonyKo, formatCeremonyShort } from './format'
+import { daysUntil, formatCeremonyKo, formatCeremonyShort, formatDateKo, formatTimeKo } from './format'
 
 describe('format', () => {
   it('예식 일시를 한국어로 쓴다', () => {
     expect(formatCeremonyKo('2027-05-22', '12:30')).toBe('2027년 5월 22일 토요일 낮 12시 30분')
     expect(formatCeremonyKo('2027-09-11', '11:00')).toBe('2027년 9월 11일 토요일 오전 11시')
     expect(formatCeremonyKo('2027-09-11', '18:00')).toBe('2027년 9월 11일 토요일 오후 6시')
+  })
+
+  it('날짜와 시간을 따로 쓴다', () => {
+    expect(formatDateKo('2027-05-22')).toBe('2027년 5월 22일 토요일')
+    expect(formatTimeKo('12:30')).toBe('낮 12시 30분')
   })
 
   it('짧은 형식', () => {

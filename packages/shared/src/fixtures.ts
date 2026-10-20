@@ -36,7 +36,6 @@ export const FIXTURE_INVITATIONS: Invitation[] = [
         father: { name: '박정호', phone: '010-5555-6666', showPhone: true },
         mother: { name: '최미정', phone: '010-7777-8888', showPhone: false },
       },
-      intro: { message: '저희 결혼합니다' },
       greeting: {
         text: '바다가 보이는 작은 마을에\n두 사람이 함께 집을 지었습니다.\n저희의 첫걸음을 함께 축복해 주세요.',
       },
@@ -94,7 +93,6 @@ export const FIXTURE_INVITATIONS: Invitation[] = [
         father: { name: '한경호', phone: '', showPhone: false },
         mother: { name: '오미숙', phone: '', showPhone: false },
       },
-      intro: { message: '저희 결혼합니다' },
       greeting: { text: '서로 다른 별에서 온 두 사람이\n같은 행성에 집을 짓기로 했습니다.' },
       ceremony: {
         date: '2027-09-11',

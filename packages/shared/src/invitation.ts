@@ -49,12 +49,9 @@ export const accountSchema = z.object({
   visible: z.boolean(),
 })
 
-export const DEFAULT_INTRO_MESSAGE = '저희 결혼합니다'
-
 export const invitationContentSchema = z.object({
   groom: personSchema,
   bride: personSchema,
-  intro: z.object({ message: z.string().trim().max(40) }),
   greeting: z.object({ text: z.string().trim().max(500) }),
   ceremony: ceremonySchema,
   directions: z.array(directionSchema).max(10),
@@ -117,7 +114,6 @@ export function emptyInvitationContent(): InvitationContent {
   return {
     groom: emptyPerson(),
     bride: emptyPerson(),
-    intro: { message: DEFAULT_INTRO_MESSAGE },
     greeting: { text: '' },
     ceremony: { date: '', time: '12:00', venueName: '', hall: '', address: '', lat: null, lng: null },
     directions: [

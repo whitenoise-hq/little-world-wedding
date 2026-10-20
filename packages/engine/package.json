@@ -10,5 +10,6 @@
   },
   "dependencies": {
     "@lww/shared": "workspace:*"
-  }
+  },
+  "sideEffects": false
 }

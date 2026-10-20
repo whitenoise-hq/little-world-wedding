@@ -1,15 +1,25 @@
 import type { Metadata, Viewport } from 'next'
+import { Nanum_Myeongjo } from 'next/font/google'
 import localFont from 'next/font/local'
 import type { ReactNode } from 'react'
 import { Toaster } from '@/components/toast'
 import './globals.css'
 
-// 갈무리11 서브셋 (src/fonts/README.md)
+// 청첩장 글자: 나눔명조 (OFL). 빌드할 때 받아 우리 도메인에서 내보내고, 한글은 쓰인 조각만 내려받는다.
+const serif = Nanum_Myeongjo({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+  preload: false,
+})
+
+// 게임 세계 안 이름표·말풍선: 갈무리11 서브셋 (src/fonts/README.md)
 const pixel = localFont({
   src: '../fonts/Galmuri11-subset.woff2',
   variable: '--font-pixel',
   display: 'swap',
-  preload: true,
+  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -21,13 +31,14 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
   viewportFit: 'cover',
-  themeColor: '#2a1a2e',
+  themeColor: '#111111',
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ko" className={pixel.variable}>
+    <html lang="ko" className={`${serif.variable} ${pixel.variable}`}>
       <body>
         {children}
         <Toaster />

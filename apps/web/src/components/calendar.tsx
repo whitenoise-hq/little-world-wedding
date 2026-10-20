@@ -17,11 +17,15 @@ export function Calendar({ date }: { date: string }) {
       {Array.from({ length: first }, (_, i) => (
         <div key={`b${i}`} />
       ))}
-      {Array.from({ length: days }, (_, i) => (
-        <div key={i} className={`cal-day${i + 1 === d ? ' on' : ''}`}>
-          {i + 1}
-        </div>
-      ))}
+      {Array.from({ length: days }, (_, i) => {
+        const day = i + 1
+        const sun = (first + i) % 7 === 0
+        return (
+          <div key={day} className={`cal-day${day === d ? ' on' : sun ? ' sun' : ''}`}>
+            <span>{day}</span>
+          </div>
+        )
+      })}
     </div>
   )
 }

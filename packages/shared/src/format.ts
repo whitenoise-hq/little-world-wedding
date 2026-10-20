@@ -9,13 +9,23 @@ function parts(date: string) {
   return { y, m, d, weekday }
 }
 
-// 2027년 5월 22일 토요일 낮 12시 30분
-export function formatCeremonyKo(date: string, time: string): string {
+// 2027년 5월 22일 토요일
+export function formatDateKo(date: string): string {
   const { y, m, d, weekday } = parts(date)
+  return `${y}년 ${m}월 ${d}일 ${WEEKDAYS[weekday]}요일`
+}
+
+// 낮 12시 30분
+export function formatTimeKo(time: string): string {
   const [hh = 0, mm = 0] = time.split(':').map(Number)
   const period = hh < 12 ? '오전' : hh < 17 ? '낮' : hh < 19 ? '오후' : '저녁'
   const h12 = hh % 12 === 0 ? 12 : hh % 12
-  return `${y}년 ${m}월 ${d}일 ${WEEKDAYS[weekday]}요일 ${period} ${h12}시${mm ? ` ${mm}분` : ''}`
+  return `${period} ${h12}시${mm ? ` ${mm}분` : ''}`
+}
+
+// 2027년 5월 22일 토요일 낮 12시 30분
+export function formatCeremonyKo(date: string, time: string): string {
+  return `${formatDateKo(date)} ${formatTimeKo(time)}`
 }
 
 // 2027.05.22 SAT 12:30

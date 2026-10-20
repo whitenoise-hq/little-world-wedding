@@ -1,3 +1,7 @@
 export * from './characters'
 export * from './constants'
+export * from './game'
+export * from './painter'
+export * from './random'
 export * from './theme'
+export * from './themes'

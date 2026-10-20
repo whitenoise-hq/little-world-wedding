@@ -6,8 +6,9 @@ export const THEME_LABELS: Record<ThemeId, string> = {
   village: '마을',
 }
 
-// 테마별 UI 색. docs/ART_GUIDE.md 6장.
-export const THEME_UI: Record<ThemeId, { header: string; introBg: string; introAccent: string; tagline: string }> = {
-  space: { header: '#2a2450', introBg: '#0b0a1e', introAccent: '#a99ad6', tagline: 'OUR LITTLE PLANET' },
-  village: { header: '#1e4660', introBg: '#1f4a2a', introAccent: '#bfe8a0', tagline: 'OUR LITTLE VILLAGE' },
+// 테마별 UI 색. docs/ART_GUIDE.md 6장. 게임 밖 UI(인트로·모달·버튼)에 쓴다.
+// taglineColor: 게임 화면 왼쪽 위 테마 문구 색 (픽셀 폰트)
+export const THEME_UI: Record<ThemeId, { accent: string; introBg: string; tagline: string; taglineColor: string }> = {
+  space: { accent: '#4b4590', introBg: '#15132b', tagline: 'OUR LITTLE PLANET', taglineColor: '#a99ad6' },
+  village: { accent: '#2f6b5e', introBg: '#1d3a33', tagline: 'OUR LITTLE VILLAGE', taglineColor: '#bfe8a0' },
 }
