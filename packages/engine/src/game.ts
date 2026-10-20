@@ -79,6 +79,8 @@ export class Game {
 
   // 컨테이너 크기에 맞춘다. docs/ART_GUIDE.md 1장.
   resize(cssWidth: number, cssHeight: number) {
+    // 숨은 탭 등에서 크기가 0으로 오면 건너뛴다 (0으로 나누면 카메라가 NaN이 되어 배경이 사라진다)
+    if (!(cssWidth > 0 && cssHeight > 0)) return
     const { w, h } = this.theme.world
     let scale = cssHeight / TARGET_VIEW_HEIGHT
     if (cssWidth / scale < VIEW_WIDTH) scale = cssWidth / VIEW_WIDTH
@@ -261,6 +263,8 @@ export class Game {
     const target = this.focus ? this.focus.point() : this.player
     const tx = Math.max(0, Math.min(w - this.view.w, target.x - this.view.w / 2))
     const ty = Math.max(0, Math.min(h - this.view.h, target.y - this.view.h / 2))
+    // 혹시 카메라가 NaN이 되었으면 바로 목표 위치로 되돌린다
+    if (!Number.isFinite(this.camF.x) || !Number.isFinite(this.camF.y)) snap = true
     const k = snap ? 1 : Math.min(1, dt * 5)
     this.camF.x += (tx - this.camF.x) * k
     this.camF.y += (ty - this.camF.y) * k

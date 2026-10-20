@@ -87,7 +87,6 @@ interface Fish {
 
 export function createVillageTheme(): Theme {
   let treeSprites: HTMLCanvasElement[] | null = null
-  let dogAngle = 0
   const splashes: { x: number; y: number; t0: number }[] = []
   const rng = createRng(33)
   const sparkles = Array.from({ length: 40 }, () => {
@@ -401,11 +400,16 @@ export function createVillageTheme(): Theme {
     p.sprite(HEART_BIG, { k: K, p: '#f29bb5', w: '#ffffff' }, x - 3, y - 32)
   }
 
-  const dogPos = () => ({ x: Math.round(100 + Math.cos(dogAngle) * 26), y: Math.round(70 + Math.sin(dogAngle) * 11) })
+  // 강아지: 11초 중 8초는 분수 주위를 달리고 3초는 앉는다. 각도는 경과 시간만으로 정한다
+  // (프레임 간격에 기대지 않아 프레임을 건너뛰어도 같은 자리에 온다).
+  const DOG_CYCLE = 11
+  const DOG_RUN = 8
+  const dogAngle = (t: number) => (Math.floor(t / DOG_CYCLE) * DOG_RUN + Math.min(t % DOG_CYCLE, DOG_RUN)) * 1.1
+  const dogPos = (t: number) => ({ x: Math.round(100 + Math.cos(dogAngle(t)) * 26), y: Math.round(70 + Math.sin(dogAngle(t)) * 11) })
   const drawDog = (p: Painter, t: number) => {
-    const run = t % 11 < 8
-    const { x, y } = dogPos()
-    const right = -Math.sin(dogAngle) > 0
+    const run = t % DOG_CYCLE < DOG_RUN
+    const { x, y } = dogPos(t)
+    const right = -Math.sin(dogAngle(t)) > 0
     const fr = Math.floor(t * 10) % 2
     const lift = run && fr ? 1 : 0
     p.ellipse(x, y, 4, 1, 'rgba(20,40,20,.28)')
@@ -630,7 +634,6 @@ export function createVillageTheme(): Theme {
     },
     drawables(f): Drawable[] {
       const t = f.t
-      if (t % 11 < 8) dogAngle += f.dt * 1.1
       treeSprites ??= [false, true].map((blossom) =>
         prerender(22, 26, (p) => {
           p.ellipse(11, 23, 8, 2, '#4a8a3a')
@@ -661,7 +664,7 @@ export function createVillageTheme(): Theme {
         { y: 197, draw: drawSign },
         { y: 101, draw: (p) => drawLights(p, t) },
         { y: 138, draw: drawGate },
-        { y: dogPos().y, draw: (p) => drawDog(p, t) },
+        { y: dogPos(t).y, draw: (p) => drawDog(p, t) },
         ...lamps.map(([x, y]) => ({ y, draw: (p: Painter) => drawLamp(p, x, y, t) })),
         ...trees.map(([x, y, b]) => ({ y, draw: (p: Painter) => p.ctx.drawImage(ts[b]!, x - 11, y - 23) })),
       ]
