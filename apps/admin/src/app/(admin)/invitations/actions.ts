@@ -1,6 +1,7 @@
 'use server'
 
 import {
+  cacheTags,
   emptyInvitationContent,
   invitationContentSchema,
   MAX_PHOTOS,
@@ -14,6 +15,7 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requireAdmin } from '@/lib/auth'
 import { guestbook, invitations, photos } from '@/lib/repositories'
+import { revalidateWeb } from '@/lib/revalidate-web'
 
 export type SaveResult = { ok: true } | { ok: false; errors: Record<string, string> }
 
@@ -37,30 +39,37 @@ export async function saveInvitation(id: string, theme: ThemeId, content: Invita
     }
     return { ok: false, errors }
   }
-  await invitations.update(id, parsed.data)
+  const inv = await invitations.update(id, parsed.data)
   revalidatePath('/invitations')
   revalidatePath(`/invitations/${id}`)
+  await revalidateWeb([cacheTags.invitation(inv.slug)])
   return { ok: true }
 }
 
 export async function setPublished(id: string, isPublished: boolean) {
   await requireAdmin()
-  await invitations.update(id, { isPublished })
+  const inv = await invitations.update(id, { isPublished })
   revalidatePath('/invitations')
   revalidatePath(`/invitations/${id}`)
+  await revalidateWeb([cacheTags.invitation(inv.slug)])
 }
 
 export async function regenerateSlug(id: string) {
   await requireAdmin()
-  await invitations.regenerateSlug(id)
+  const before = await invitations.getById(id)
+  const after = await invitations.regenerateSlug(id)
   revalidatePath('/invitations')
   revalidatePath(`/invitations/${id}`)
+  // 예전 주소의 캐시도 지워야 예전 링크로 더는 열리지 않는다
+  await revalidateWeb([...(before ? [cacheTags.invitation(before.slug)] : []), cacheTags.invitation(after.slug)])
 }
 
 export async function deleteInvitation(id: string) {
   await requireAdmin()
+  const inv = await invitations.getById(id)
   await invitations.remove(id)
   revalidatePath('/invitations')
+  if (inv) await revalidateWeb([cacheTags.invitation(inv.slug), cacheTags.photos(id)])
   redirect('/invitations')
 }
 
@@ -87,12 +96,14 @@ export async function addPhotos(invitationId: string, items: NewPhoto[]) {
   if (current.length + parsed.length > MAX_PHOTOS) throw new Error(`사진은 최대 ${MAX_PHOTOS}장까지 올릴 수 있어요`)
   await photos.add(invitationId, parsed)
   revalidatePath(`/invitations/${invitationId}`)
+  await revalidateWeb([cacheTags.photos(invitationId)])
 }
 
 export async function updatePhotoCaption(invitationId: string, photoId: string, caption: string) {
   await requireAdmin()
   await photos.updateCaption(photoId, z.string().trim().max(60).parse(caption))
   revalidatePath(`/invitations/${invitationId}`)
+  await revalidateWeb([cacheTags.photos(invitationId)])
 }
 
 export async function movePhoto(invitationId: string, photoId: string, direction: -1 | 1) {
@@ -104,16 +115,19 @@ export async function movePhoto(invitationId: string, photoId: string, direction
   ;[ids[i], ids[j]] = [ids[j]!, ids[i]!]
   await photos.reorder(invitationId, ids)
   revalidatePath(`/invitations/${invitationId}`)
+  await revalidateWeb([cacheTags.photos(invitationId)])
 }
 
 export async function setCoverPhoto(invitationId: string, photoId: string | null) {
   await requireAdmin()
-  await invitations.update(invitationId, { coverPhotoId: photoId })
+  const inv = await invitations.update(invitationId, { coverPhotoId: photoId })
   revalidatePath(`/invitations/${invitationId}`)
+  await revalidateWeb([cacheTags.invitation(inv.slug)])
 }
 
 export async function deletePhoto(invitationId: string, photoId: string) {
   await requireAdmin()
   await photos.remove(photoId)
   revalidatePath(`/invitations/${invitationId}`)
+  await revalidateWeb([cacheTags.photos(invitationId)])
 }

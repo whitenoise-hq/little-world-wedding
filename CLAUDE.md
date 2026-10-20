@@ -95,5 +95,6 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland)을 
 - 사진 업로드: 어드민 청첩장 편집 화면의 `PhotoManager`. 브라우저에서 썸네일(600px)·큰 사진(1920px) WebP로 줄여 운영자 세션으로 Storage에 직접 올리고, DB 행은 Server Action이 만든다. 순서·대표·설명·삭제. 최대 30장. 대표 미지정 시 카톡 미리보기는 첫 사진.
 - 매일 깨우기: `apps/web` `GET /api/health`(CRON_SECRET 필요) + `apps/web/vercel.json` Cron 매일 03:00 UTC.
 - 배포(Vercel)에서는 Supabase 키가 없어도 목업으로 넘어가지 않는다(web·admin). Supabase 클라이언트는 처음 쓸 때 만들어 키 없이도 빌드된다.
-- 아직 안 한 것: 어드민 저장 시 하객 페이지 캐시 갱신, 지도, 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
+- 하객 페이지 캐시: 청첩장·사진은 `unstable_cache` + 태그(`cacheTags`), 어드민 Server Action이 `revalidateWeb()`으로 web `POST /api/revalidate` 호출. 방명록은 캐시 안 함.
+- 아직 안 한 것: 지도, 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 바로 보기 화면, 그림 외주 여부, 테마 추가, 들어가기 버튼 분리).

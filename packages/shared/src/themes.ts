@@ -1,6 +1,9 @@
 export const THEME_IDS = ['space', 'village'] as const
 export type ThemeId = (typeof THEME_IDS)[number]
 
+// 홍보용 샘플(템플릿) 청첩장 주소. docs/PLANNING.md "샘플(템플릿) 청첩장".
+export const TEMPLATE_SLUGS: Record<ThemeId, string> = { village: 'seavilla', space: 'marsland' }
+
 export const THEME_LABELS: Record<ThemeId, string> = {
   space: '우주',
   village: '마을',

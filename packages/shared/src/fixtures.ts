@@ -1,11 +1,10 @@
 import type { GuestbookEntry, Invitation, Photo } from './invitation'
+import { TEMPLATE_SLUGS } from './themes'
 
 // 샘플(템플릿) 청첩장: 마을 1개, 우주 1개. 홍보용으로 공개해 두는 청첩장이다.
 // - 목업 모드(Supabase 키 없음)에서 화면에 쓰인다.
 // - `pnpm db:templates`로 실제 DB에 적용한다 (scripts/templates.mts).
 // 전화번호·계좌는 실제로 연결되지 않는 가짜 값만 쓴다.
-
-export const TEMPLATE_SLUGS = { village: 'seavilla', space: 'marsland' } as const
 
 const PHOTO_COLORS = ['#9fc8a0', '#e8c4a8', '#b8c8e6', '#e6d4a2', '#cdb6e0', '#a8d8d0', '#ecbcbc', '#d6cfae', '#c4dca0', '#f0c8d8', '#b0d0e8', '#e0c0a0']
 

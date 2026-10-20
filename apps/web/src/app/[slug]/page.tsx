@@ -7,17 +7,17 @@ import { Gallery } from '@/components/gallery'
 import { Guestbook } from '@/components/guestbook'
 import { HomeContent } from '@/components/home-content'
 import { Intro } from '@/components/intro'
-import { guestbook, invitations, photos } from '@/lib/repositories'
+import { getGuestbook, getInvitationBySlug, getPhotos } from '@/lib/cached'
 
 // 인트로 → 게임 화면. 장소에 들어가면 모달로 청첩장 내용을 보여준다.
 
-const load = cache(async (slug: string) => (isValidSlug(slug) ? invitations.getPublishedBySlug(slug) : null))
-// 메타데이터와 페이지가 같은 요청에서 사진을 두 번 읽지 않게 한다
-const loadPhotos = cache((invitationId: string) => photos.list(invitationId))
+// 청첩장·사진은 캐시에서 읽는다 (lib/cached.ts). cache(): 메타데이터와 페이지가 같은 요청에서 두 번 읽지 않게 한다.
+const load = cache(async (slug: string) => (isValidSlug(slug) ? getInvitationBySlug(slug) : null))
+const loadPhotos = cache((invitationId: string) => getPhotos(invitationId))
 
 export async function generateMetadata({ params }: PageProps<'/[slug]'>): Promise<Metadata> {
   const inv = await load((await params).slug)
-  if (!inv) return {}
+  if (!inv) return { title: '청첩장을 찾을 수 없습니다 · 리틀 월드 웨딩' }
   const { groom, bride, ceremony } = inv.content
   const title = `${groom.firstName} ♥ ${bride.firstName} 결혼합니다`
   const description = `${formatCeremonyKo(ceremony.date, ceremony.time)} · ${ceremony.venueName}`
@@ -38,7 +38,7 @@ export default async function InvitationPage({ params }: PageProps<'/[slug]'>) {
   const inv = await load(slug)
   if (!inv) notFound()
 
-  const [photoList, entries] = await Promise.all([loadPhotos(inv.id), guestbook.list(inv.id)])
+  const [photoList, entries] = await Promise.all([loadPhotos(inv.id), getGuestbook(inv.id)])
   const { groom, bride, ceremony } = inv.content
   const ui = THEME_UI[inv.theme]
   const names: [string, string] = [groom.firstName, bride.firstName]

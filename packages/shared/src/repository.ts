@@ -50,3 +50,9 @@ export interface GuestbookRepository {
   countRecent(invitationId: string, ipHash: string, since: string): Promise<number>
   remove(id: string): Promise<void> // 운영자만
 }
+
+// 하객 페이지 캐시 태그. 어드민이 바꾼 뒤 하객용 앱의 /api/revalidate 로 이 태그를 지운다.
+export const cacheTags = {
+  invitation: (slug: string) => `invitation:${slug}`, // 청첩장 내용 (주소 기준)
+  photos: (invitationId: string) => `photos:${invitationId}`, // 사진 목록
+}
