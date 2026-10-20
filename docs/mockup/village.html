@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>리틀 월드 웨딩 목업 · 마을</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+body{margin:0;background:#f1efe8;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.ph,.ph *,.tm,.tm *{box-sizing:border-box;font-family:'Galmuri11','Galmuri9',sans-serif}
+.cut{clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}
+.oct{clip-path:polygon(28% 0,72% 0,100% 28%,100% 72%,72% 100%,28% 100%,0 72%,0 28%)}
+.sec{padding:20px 0;border-bottom:2px dashed #e2d3b8}.sec:last-child{border-bottom:0}
+.sec h4{font-size:12px;color:#c8593c;margin:0 0 12px;font-weight:400}
+.ibtn{width:34px;height:34px;border:0;background:transparent;color:#7a6a5a;font-size:20px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.chip{border:2px solid #2a1a2e;background:#f6e7cc;color:#2a1a2e;padding:6px 10px;font-size:12px;cursor:pointer}
+.fld{width:100%;height:38px;border:2px solid #2a1a2e;background:#fff;color:#2a1a2e;padding:0 10px;font-size:13px;margin-bottom:8px;border-radius:0}
+.err{font-size:12px;color:#c0392b;margin:-4px 0 8px}
+.fab{width:58px;height:58px;border:0;padding:0;background:#2a1a2e;cursor:pointer}
+.fab span{position:absolute;inset:2px;background:#fbf3e4;color:#2a1a2e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px}
+.nm{position:absolute;font-size:11px;color:#f4efe6;background:#2a1a2e;padding:3px 7px;white-space:nowrap;pointer-events:none;transform:translateX(-50%)}
+.tm{position:fixed;top:14px;left:14px;display:flex;flex-direction:column;gap:6px;z-index:9}
+.tm a{border:2px solid #2a1a2e;background:#fbf3e4;color:#2a1a2e;padding:6px 10px;font-size:12px;text-decoration:none}
+.tm a[aria-current]{background:#2a1a2e;color:#f4efe6}
+.mp{position:absolute;top:5%;bottom:5%;left:5%;right:5%;padding:3px;background:#2a1a2e;display:flex;clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px);animation:pop .24s steps(4)}
+.mp>div{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;background:#fbf3e4;color:#2a1a2e;clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px)}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:10px 10px 10px 16px;background:var(--mh);color:#f4efe6;border-bottom:3px solid #2a1a2e;box-shadow:0 3px 0 var(--ma)}
+.mh #mtitle{display:flex;align-items:center;gap:8px;font-size:14px}.mh #mtitle i{font-size:18px;color:var(--ma)}
+.mx{width:32px;height:32px;border:2px solid #f4efe6;background:transparent;color:#f4efe6;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mx:active{background:#f4efe6;color:var(--mh)}
+.mb{flex:1;min-height:0;overflow-y:auto;padding:6px 14px 24px 18px;margin-top:3px}
+@supports not selector(::-webkit-scrollbar){.mb{scrollbar-width:thin;scrollbar-color:var(--mh) #efe2c8}}
+.mb::-webkit-scrollbar{width:10px}.mb::-webkit-scrollbar-track{background:#efe2c8;border-left:2px solid #e2d3b8}
+.mb::-webkit-scrollbar-thumb{background:var(--mh);border:2px solid #2a1a2e;min-height:40px}.mb::-webkit-scrollbar-thumb:active{background:#2a1a2e}
+.mb::-webkit-scrollbar-button{display:none}
+.note{font-size:11px;color:#9a8a7a;margin:8px 0 0;text-align:center}
+.ja{position:absolute;width:16px;height:8px;background:#f4efe6;opacity:.75;pointer-events:none;clip-path:polygon(6px 0,10px 0,10px 2px,12px 2px,12px 4px,14px 4px,14px 6px,16px 6px,16px 8px,0 8px,0 6px,2px 6px,2px 4px,4px 4px,4px 2px,6px 2px)}.ja.on{background:var(--ma);opacity:1}
+@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+.gal{padding:16px 0 4px}.gal-intro{font-size:11px;color:#9a8a7a;margin:0 0 14px;text-align:center}
+.ggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ggrid button{aspect-ratio:1;border:2px solid #2a1a2e;padding:4px 5px;cursor:pointer;font-size:9px;color:rgba(42,26,46,.55);display:flex;align-items:flex-end;background-image:radial-gradient(rgba(255,255,255,.4) 1px,transparent 1.5px);background-size:6px 6px;transition:transform .12s steps(2)}
+.ggrid button:active{transform:scale(.94)}
+.lb{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;background:rgba(10,8,16,.95);animation:pop .2s steps(3)}
+.lb-top{display:flex;justify-content:space-between;align-items:center;padding:20px 16px 12px;color:#f4efe6;font-size:12px}
+.lb-img{flex:1;min-height:0;margin:0 14px;border:2px solid #f4efe6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:rgba(42,26,46,.7);font-size:12px;background-image:radial-gradient(rgba(255,255,255,.4) 1px,transparent 1.5px);background-size:6px 6px;touch-action:pan-y;user-select:none;cursor:grab}
+.lb-img.sw{animation:snap .2s steps(3)}@keyframes snap{from{opacity:.3;transform:scale(.97)}to{opacity:1;transform:none}}
+.lb-cap{color:#f4efe6;text-align:center;font-size:13px;padding:16px 0 4px}
+.lb-nav{display:flex;justify-content:center;align-items:center;gap:20px;padding:10px 0 30px}
+.lbb{width:40px;height:40px;border:2px solid #f4efe6;background:transparent;color:#f4efe6;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}.lbb:active{background:#f4efe6;color:#2a1a2e}
+@keyframes bob{50%{transform:translate(-50%,-3px)}}
+</style>
+</head>
+<body>
+<nav class="tm" aria-label="테마"><a class="cut" href="index.html">우주 테마</a><a class="cut" href="village.html" aria-current="page">마을 테마</a></nav>
+<h1 class="sr-only">픽셀아트 바닷가 마을 청첩장 목업</h1>
+<div class="ph" style="--mh:#1e4660;--ma:#f6c85f;position:relative;width:340px;height:680px;border-radius:34px;overflow:hidden;background:#1f4a2a;outline:8px solid #1d1d1f;user-select:none;-webkit-user-select:none;touch-action:none">
+<canvas id="cv" width="114" height="227" tabindex="0" style="display:block;width:342px;height:681px;image-rendering:pixelated;outline:none"></canvas>
+<div style="position:absolute;top:0;left:0;right:0;height:130px;background:linear-gradient(rgba(16,36,22,.7),rgba(16,36,22,0));pointer-events:none"></div>
+<div id="nm" class="nm cut">원재 <span style="color:#f29bb5">♥</span> 은빈</div>
+<div style="position:absolute;top:0;left:0;right:0;padding:20px 18px 0;display:flex;justify-content:space-between;align-items:flex-start;color:#f4efe6;pointer-events:none">
+<div><div style="font-size:11px;color:#bfe8a0">OUR LITTLE VILLAGE</div><div style="font-size:17px;margin-top:4px">원재 <span style="color:#f29bb5">♥</span> 은빈</div><div style="font-size:11px;color:#e6efd8;margin-top:4px">2027.05.22 SAT 12:30</div></div>
+<button aria-label="배경음악" class="cut" style="pointer-events:auto;width:36px;height:36px;border:2px solid #f4efe6;background:#1e4660;color:#f4efe6;font-size:18px;display:flex;align-items:center;justify-content:center"><i class="ti ti-music" aria-hidden="true"></i></button>
+</div>
+<div id="hint" class="cut" style="position:absolute;top:104px;left:50%;transform:translateX(-50%);background:#fbf3e4;border:2px solid #2a1a2e;color:#2a1a2e;font-size:11px;padding:8px 12px;white-space:nowrap;transition:opacity .6s;pointer-events:none">조이스틱이나 버튼으로 움직여 보세요</div>
+<div id="joy" class="oct" style="position:absolute;left:18px;bottom:26px;width:90px;height:90px;touch-action:none;cursor:grab;background:rgba(20,16,30,.38)"><i class="ja" data-d="u" style="left:37px;top:7px"></i><i class="ja" data-d="d" style="left:37px;bottom:7px;transform:rotate(180deg)"></i><i class="ja" data-d="l" style="left:3px;top:41px;transform:rotate(-90deg)"></i><i class="ja" data-d="r" style="right:3px;top:41px;transform:rotate(90deg)"></i><div id="knob" class="oct" style="position:absolute;left:27px;top:27px;width:36px;height:36px;background:#f4efe6"></div></div>
+<div style="position:absolute;right:14px;bottom:42px;display:flex;gap:8px">
+<button class="fab oct" data-go="home" style="position:relative" aria-label="집으로 이동"><span class="oct"><i class="ti ti-home" style="font-size:20px" aria-hidden="true"></i>집</span></button>
+<button class="fab oct" data-go="garden" style="position:relative" aria-label="정원으로 이동"><span class="oct"><i class="ti ti-camera" style="font-size:20px" aria-hidden="true"></i>사진</span></button>
+<button class="fab oct" data-go="pier" style="position:relative" aria-label="낚시터로 이동"><span class="oct"><i class="ti ti-fish" style="font-size:20px" aria-hidden="true"></i>방명록</span></button>
+</div>
+<button id="enter" class="cut" style="display:none;position:absolute;left:50%;bottom:136px;transform:translateX(-50%);border:2px solid #2a1a2e;background:#f6c85f;color:#2a1a2e;font-size:13px;padding:10px 14px;cursor:pointer;white-space:nowrap;animation:bob 1s steps(2) infinite"></button>
+<div id="bubble" class="cut" style="display:none;position:absolute;max-width:190px;background:#fbf3e4;border:2px solid #2a1a2e;color:#2a1a2e;font-size:11px;line-height:1.6;padding:8px 10px;pointer-events:none"></div>
+<div id="modal" style="display:none;position:absolute;inset:0;background:rgba(8,20,24,.6)">
+<div class="mp" role="dialog" aria-modal="true" aria-labelledby="mtitle"><div>
+<div class="mh"><div id="mtitle"></div><button id="mclose" aria-label="닫기" class="mx cut"><i class="ti ti-x" aria-hidden="true"></i></button></div>
+<div id="mbody" class="mb"></div>
+</div></div></div>
+<div id="lb" class="lb" style="display:none" role="dialog" aria-modal="true" aria-label="사진 크게 보기"><div class="lb-top"><span id="lbno"></span><button id="lbx" class="mx cut" aria-label="닫기"><i class="ti ti-x" aria-hidden="true"></i></button></div><div class="lb-img" id="lbimg"></div><div class="lb-cap" id="lbcap"></div><div class="lb-nav"><button id="lbp" class="lbb cut" aria-label="이전 사진"><i class="ti ti-chevron-left" aria-hidden="true"></i></button><button id="lbn" class="lbb cut" aria-label="다음 사진"><i class="ti ti-chevron-right" aria-hidden="true"></i></button></div></div>
+<div id="toast" class="cut" style="display:none;position:absolute;left:50%;bottom:140px;transform:translateX(-50%);background:#2a1a2e;color:#f4efe6;font-size:11px;padding:8px 12px;white-space:nowrap"></div>
+</div>
+<script>
+(()=>{
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d'),S=3,VW=114,VH=227,W=200,H=340;
+const bgc=document.createElement('canvas');bgc.width=W;bgc.height=H;let g=bgc.getContext('2d');
+let seed=33;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+const R=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),w,h)},px=(x,y,c)=>R(x,y,1,1,c);
+const K='#2a1a2e',BY=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+const line=(x0,y0,x1,y1,c)=>{x0=Math.round(x0);y0=Math.round(y0);x1=Math.round(x1);y1=Math.round(y1);const dx=Math.abs(x1-x0),dy=-Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1;let e=dx+dy;for(;;){px(x0,y0,c);if(x0===x1&&y0===y1)break;const e2=2*e;if(e2>=dy){e+=dy;x0+=sx}if(e2<=dx){e+=dx;y0+=sy}}};
+const ell=(cx,cy,a,b,c)=>{for(let dy=-b;dy<=b;dy++){const dx=Math.round(a*Math.sqrt(1-(dy/b)**2));R(cx-dx,cy+dy,dx*2+1,1,c)}};
+function sphere(cx,cy,r,pal,atm){for(let y=cy-r-3;y<=cy+r+3;y++)for(let x=cx-r-3;x<=cx+r+3;x++){const d=Math.hypot(x+.5-cx,y+.5-cy),bt=BY[y&3][x&3]/16;if(d<=r){if(d>r-1.2){px(x,y,K);continue}const nx=(x+.5-cx)/r,ny=(y+.5-cy)/r,nz=Math.sqrt(Math.max(0,1-nx*nx-ny*ny));const l=-.45*nx-.55*ny+.7*nz+(bt-.5)*.18;px(x,y,l>.92?pal[4]:l>.7?pal[3]:l>.38?pal[2]:l>.15?pal[1]:pal[0])}else if(atm&&d<=r+2.5&&bt<.5)px(x,y,atm)}}
+// 해안선: 이 줄 아래가 바다
+const SH=Array.from({length:W},(_,x)=>Math.round(204+Math.sin(x*.07)*3+Math.sin(x*.19+1)*1.5)),sy=x=>SH[Math.max(0,Math.min(W-1,Math.round(x)))];
+const TP=['#1f4a2a','#2f6d3a','#4a9a48','#6ac05a','#9ae07a'],FL=['#f29bb5','#f6c85f','#ffffff','#d04a3a','#b48cf0'],SEA=['#1e4e86','#2a6aa0','#3a8cc0','#4fb0d0','#7fd0e0'];
+R(0,0,W,H,'#6ab04c');
+for(let i=0;i<500;i++){const x=rnd()*W|0,y=rnd()*H|0;px(x,y,rnd()<.5?'#5a9a40':'#80c860')}
+for(let i=0;i<40;i++){const x=rnd()*W|0,y=50+rnd()*140|0;px(x,y,'#4a8a3a');px(x+1,y-1,'#4a8a3a');px(x+2,y,'#4a8a3a')}
+for(let i=0;i<60;i++){const x=14+rnd()*172|0,y=50+rnd()*136|0;px(x,y,FL[i%5])}
+for(let x=0;x<W;x++){const s=SH[x];for(let y=s-14;y<H;y++){const bt=BY[y&3][x&3]/16;
+if(y<s-11){if(bt<(y-(s-14))/3)px(x,y,'#f0d8a0')}else if(y<s-1){px(x,y,bt<.12?'#e0c488':'#f0d8a0')}else if(y<s+1){px(x,y,'#d8bc80')}
+else{const d=(y-s)/(H-s),l=1-d*1.15+(bt-.5)*.22;px(x,y,l>.86?SEA[4]:l>.62?SEA[3]:l>.38?SEA[2]:l>.14?SEA[1]:SEA[0])}}}
+for(let i=0;i<14;i++){const x=14+rnd()*172|0;px(x,sy(x)-4-(rnd()*6|0),rnd()<.5?'#f29bb5':'#ffffff')}
+R(0,0,W,30,'#1f4a2a');
+for(let x=-6;x<W+10;x+=12)sphere(x+(rnd()*4|0),10+(rnd()*4|0),9,TP);
+for(let x=0;x<W+10;x+=13)sphere(x+(rnd()*4|0),29+(rnd()*4|0),8,TP);
+for(let y=48;y<186;y+=14){sphere(2+(rnd()*3|0),y,7,TP);sphere(198-(rnd()*3|0),y,7,TP)}
+const places={home:{x:55,y:120,name:'집'},garden:{x:140,y:120,name:'정원'},pier:{x:100,y:254,name:'낚시터'}};
+const paths=[[100,150,55,118],[100,150,140,118],[100,150,100,194]];
+const walk=(w,c)=>paths.forEach(([a,b,x1,y1])=>{const n=Math.hypot(x1-a,y1-b)|0;for(let i=0;i<=n;i++){const k=i/n;R(a+(x1-a)*k-w,b+(y1-b)*k-w+1,w*2+1,w*2-1,c)}});
+walk(3,'#b8945a');ell(100,150,11,6,'#b8945a');walk(2,'#e0c088');ell(100,150,10,5,'#e0c088');
+for(let i=0;i<10;i++){const a=i/10*6.283;px(100+Math.cos(a)*7,150+Math.sin(a)*3,'#c8a870')}
+[[38,118,9],[62,118,9],[123,116,8],[150,116,8]].forEach(([x,y,w])=>{R(x-1,y-1,w+2,5,K);R(x,y,w,3,'#7a4a2a');for(let i=0;i<w;i+=2){px(x+i,y,'#3a7a3a');px(x+i+1,y+1,'#3a7a3a');px(x+i,y-1,FL[(rnd()*5)|0]);px(x+i+1,y,FL[(rnd()*5)|0])}});
+R(95,72,11,68,'#d8ccb8');R(96,72,9,68,'#f4efe6');
+const mkTree=bl=>{const c=document.createElement('canvas');c.width=22;c.height=26;const o=g;g=c.getContext('2d');ell(11,23,8,2,'#4a8a3a');R(9,15,4,9,K);R(10,15,2,8,'#7a4a2a');sphere(11,9,8,TP);if(bl)[[7,6],[13,4],[15,10],[9,12],[5,9]].forEach(([a,b])=>{px(a,b,'#f29bb5');px(a+1,b,'#ffd0dc')});g=o;return c};
+const TR=[mkTree(false),mkTree(true)];
+g=ctx;
+const PAL={k:K,n:'#2a2030',N:'#7a4a30',s:'#f2c29a',w:'#f4efe6',u:'#2f3b62',r:'#d04a3a',p:'#f29bb5',y:'#f6c85f',g:'#c9c6c0'};
+const GR=[".kkkkk.","knnnnnk","knsssnk","ksksksk","ksssssk",".kwrwk.","kuuwuuk","kuuwuuk","kuuuuuk",".kn.nk.",".kk.kk."];
+const BR=[".kykyk.","kNNNNNk","kNsssNk","kskskNk","ksssssk",".kwwwk.","kwwpwwk","kwwwwwk","kwwwwwk","kgwwwgk",".kkkkk."];
+const LEG2=["..knk..","..kkk.."];
+const spr=(m,x,y,flip,alt)=>m.forEach((row,j)=>{if(alt&&j>=9)row=alt[j-9];const s=flip?[...row].reverse():[...row];s.forEach((c,i)=>{if(c!=='.')px(x+i,y+j,PAL[c])})});
+// 물고기 9×5, 머리가 오른쪽. c 몸, d 배·꼬리, w 반짝임
+const FS=["....kkkk.","kk.kcccwk","ktkccckck","kk.kddddk","....kkkk."];
+const FP=[['#f08a3a','#c05a2a'],['#f6c85f','#c89a30'],['#f29bb5','#c86a8a'],['#8ad0f0','#4a90c0'],['#b48cf0','#7a5ac0'],['#f4efe6','#c9c6c0']];
+const house={x:36,y:86},gz={x:122,y:84};
+const trees=[[22,100,0],[184,128,1],[26,150,1],[176,170,0],[42,184,0],[158,188,1]];
+const obs=[{x:88,y:135,w:5,h:4},{x:107,y:135,w:5,h:4},{x:35,y:80,w:39,h:35},{x:121,y:82,w:39,h:33},{x:87,y:61,w:26,h:10},{x:77,y:113,w:6,h:5},{x:164,y:112,w:12,h:7},{x:82,y:193,w:5,h:5},{x:84,y:245,w:7,h:7},{x:109,y:253,w:7,h:5},
+...[[78,146],[122,146],[108,184]].map(([x,y])=>({x:x-1,y:y-3,w:3,h:3})),...trees.map(([x,y])=>({x:x-3,y:y-3,w:6,h:4}))];
+const hash=s=>{let h=2166136261;for(const c of s)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0};
+const mk=(n,m,id)=>{const h=hash(id+n);return{n,m,hx:30+(h%140),hy:228+((h>>>9)%96),p:(h%100)/16,sp:.35+((h>>>4)%10)/25,rg:6+((h>>>12)%10),pal:FP[(h>>>16)%FP.length],shown:true}};
+const fpos=e=>{const a=t*e.sp+e.p;return{x:e.hx+Math.sin(a)*e.rg,y:e.hy+Math.sin(a*2)*1.5,r:Math.cos(a)>0}};
+const entries=[['엄마','우리 딸 은빈아, 행복하게 잘 살아라'],['지훈','원재야 드디어 가는구나 축하한다'],['수빈','두 사람 너무 잘 어울려요'],['김부장','결혼 진심으로 축하하네'],['하은','은빈아 웨딩드레스 기대할게'],['도윤','형 축의금 두둑이 보낼게요'],['예린','오래오래 행복하세요'],['준호','마을 최고 커플 축하해'],['소영','행복한 마을 만들어요']].map(([n,m],i)=>mk(n,m,'s'+i));
+const tw=Array.from({length:40},()=>{const x=rnd()*W|0;return{x,y:sy(x)+8+(rnd()*(H-sy(x)-10)|0),p:rnd()*6}});
+const P={x:100,y:160};let auto=null,ax=0,ay=0,keys=new Set(),cx=0,cy=0,cxf=43,cyf=46,camHold=0,holdX=100,moving=false,near=null,t=0,jump=null,lastNew=null,fc=false,splashes=[];
+const onPier=(x,y)=>(x>95&&x<105&&y>186&&y<246)||(x>85&&x<115&&y>=244&&y<263);
+const blocked=(x,y)=>x<12||x>188||y<46||(y>sy(x)-3&&!onPier(x,y))||obs.some(o=>x>o.x&&x<o.x+o.w&&y>o.y&&y<o.y+o.h);
+function fish(x,y,r,pl,sh){x=Math.round(x)-4;y=Math.round(y)-2;FS.forEach((row,j)=>{for(let i=0;i<9;i++){const c=row[r?i:8-i];if(c!=='.')px(x+i,y+j,sh?'#1a3e6a':c==='k'?K:c==='w'?'#ffffff':c==='c'?pl[0]:pl[1])}})}
+function heart(x,y){px(x-1,y,'#f29bb5');px(x+1,y,'#f29bb5');R(x-1,y+1,3,1,'#f29bb5');px(x,y+2,'#f29bb5')}
+function drawHouse(){const{x,y}=house;R(x,y+29,38,2,'#4a8a3a');
+R(x+25,y-6,6,10,K);R(x+26,y-5,4,9,'#a05a4a');px(x+27,y-3,'#7a3a30');px(x+28,y,'#7a3a30');
+R(x-1,y,38,16,K);R(x,y+1,36,14,'#c8503c');R(x,y+1,36,1,'#e88a6a');for(let r=4;r<14;r+=3){R(x,y+r,36,1,'#a03a30');for(let i=(r%2)*3;i<36;i+=6)px(x+i,y+r-1,'#e07a5a')}R(x,y+14,36,1,'#7a2a28');
+R(x+1,y+16,34,13,K);R(x+2,y+16,32,12,'#f4e4c4');R(x+2,y+16,32,1,'#d8c4a0');R(x+2,y+25,32,3,'#c9b08a');
+[x+5,x+25].forEach(a=>{R(a,y+18,7,6,K);R(a+1,y+19,5,4,'#f6c85f');R(a+3,y+19,1,4,'#c89a30');R(a+1,y+21,5,1,'#c89a30');px(a+1,y+19,'#fff1b8');R(a,y+24,7,2,'#8a5a3a');px(a+1,y+23,'#f29bb5');px(a+3,y+23,'#d04a3a');px(a+5,y+23,'#f29bb5')});
+R(x+15,y+18,8,11,K);R(x+16,y+19,6,10,'#8a5a3a');R(x+16,y+19,6,1,'#a8784a');px(x+21,y+24,'#f6c85f');heart(x+19,y+21);R(x+14,y+29,10,2,'#c9c6c0');
+for(let i=0;i<3;i++){const k=(t*.35+i/3)%1;ctx.globalAlpha=1-k;ell(x+28+Math.sin(k*5+i)*2+k*3,y-9-k*16,1+Math.round(k*2),1+Math.round(k*1.5),'#f4efe6');ctx.globalAlpha=1}}
+function drawGz(){const{x,y}=gz,c=x+18,b=y+26;ell(c,b+2,19,4,'#4a8a3a');ell(c,b,18,5,K);ell(c,b,17,4,'#e0c088');R(c-14,b-1,29,1,'#b8945a');R(c-11,b+2,23,1,'#b8945a');
+[c-15,c+14].forEach(a=>{R(a-1,y+14,4,b-y-13,K);R(a,y+14,2,b-y-14,'#f4efe6')});
+for(let i=-12;i<=12;i++)px(c+i,y+17+Math.round((1-(i/12)**2)*2),'#6d6a7a');
+[[-8,'#9fc8a0'],[-2,'#ecbcbc'],[4,'#b8c8e6'],[9,'#e6d4a2']].forEach(([a,col])=>{const yy=y+18+Math.round((1-(a/12)**2)*2);R(c+a-2,yy,5,6,K);R(c+a-1,yy+1,3,4,'#ffffff');R(c+a-1,yy+1,3,2,col)});
+for(let j=0;j<16;j++){const hw=Math.round(2+j*1.1);for(let i=-hw;i<=hw;i++){let col=K;if(j&&j<15&&i>-hw&&i<hw){const s=Math.floor((i+hw)*8/(hw*2+1))%2,sh=i>hw*.4;col=s?(sh?'#e2d6c8':'#fbf3e4'):(sh?'#d87a98':'#f29bb5')}px(c+i,y+j,col)}}
+for(let i=-18;i<=18;i++){px(c+i,y+16,((i+40)>>1)%2?'#f29bb5':'#fbf3e4');if((i+40)%4)px(c+i,y+17,K)}
+R(c-1,y-3,2,3,K);px(c-1,y-2,'#f6c85f');px(c,y-2,'#f6c85f')}
+// 버진로드 끝의 작은 분수
+function fountain(){const x=100,y=66;ell(x,y+3,13,3,'#4a8a3a');ell(x,y,12,5,K);ell(x,y,11,4,'#c9c6c0');ell(x,y-1,11,3,'#e0ddd6');ell(x,y,9,2,K);ell(x,y,8,2,'#4fb0d0');
+const rp=(t*.8)%1;for(let a=0;a<6.283;a+=.5)px(x+Math.cos(a)*(2+rp*6),y+Math.sin(a)*(1+rp*1.2),'#bfe8f8');
+R(x-1,y-8,3,8,K);R(x,y-7,1,7,'#e0ddd6');ell(x,y-8,4,1,K);R(x-3,y-9,7,1,'#c9c6c0');
+for(let i=0;i<6;i++){const k=(t*1.4+i/6)%1,s=i%2?1:-1;px(x+s*(1+k*6),y-11-Math.sin(k*Math.PI)*3+k*9,k<.8?'#bfe8f8':'#ffffff')}
+px(x,y-11,'#ffffff');px(x,y-12-Math.floor(t*6)%2,'#d8f4fa')}
+// 분수 주위를 뛰어다니다 가끔 앉아 꼬리를 흔드는 흰 강아지
+const DOG=["......kk..",".k...kwwk.","kwkkkkwkwk",".kwwwwwwk.",".kwwwwwk.."],DL=[".k.k.k.k..","..k.k.k.k.",".kk..kk..."];
+let dogA=0,dogT=0;
+function dog(){const run=t%11<8;if(run)dogA+=(t-dogT)*1.1;dogT=t;const x=Math.round(100+Math.cos(dogA)*26),y=Math.round(70+Math.sin(dogA)*11),r=-Math.sin(dogA)>0,fr=Math.floor(t*10)%2,b=run&&fr?1:0;
+ell(x,y,4,1,'rgba(20,40,20,.28)');[...DOG,DL[run?fr:2]].forEach((row,j)=>{for(let i=0;i<10;i++){let c=row[r?i:9-i];if(!run&&j<3&&(r?i:9-i)<3)c=['.k.','kwk','.kk'][j][((r?i:9-i)+Math.floor(t*6))%3];if(c!=='.')px(x-5+i,y-6+j-b,c==='k'?K:'#ffffff')}})}
+// 해변을 느릿느릿 오가는 거북이 (옆모습 15×7, 머리가 오른쪽)
+const TT=["....kkkkk......","..kkhgGggkk.kk.",".kggGgggGggksek","kGggGgggGggsssk","krrrrrrrrrrkkk."],TL=[[".kssk...kssk...",".kkkk...kkkk..."],["..kssk...kssk..","..kkkk...kkkk.."]],TC={k:K,g:'#4a9a48',G:'#2f6d3a',h:'#8ad87a',r:'#d8b070',s:'#9ad070',e:K};
+function turtle(){const a=t*.12,x=Math.round(150+Math.sin(a)*18),y=197,rt=Math.cos(a)>0;ell(x,y,7,1,'rgba(90,70,30,.25)');
+[...TT,...TL[Math.floor(t*2)%2]].forEach((row,j)=>{for(let i=0;i<15;i++){const c=row[rt?i:14-i];if(c!=='.')px(x-7+i,y-7+j,TC[c])}})}
+function mailbox(){const x=80,y=117;R(x,y-6,2,6,'#7a4a2a');R(x-3,y-11,8,6,K);R(x-2,y-10,6,4,'#d04a3a');R(x-2,y-10,6,1,'#f08a6a');R(x+5,y-13,1,5,K);R(x+6,y-13,2,2,'#f6c85f')}
+function camera(){const x=170,y=118;line(x,y-8,x-4,y,K);line(x,y-8,x+4,y,K);line(x,y-8,x,y,K);R(x-5,y-14,10,7,K);R(x-4,y-13,8,5,'#4a4458');R(x-4,y-13,8,1,'#6d6a7a');R(x-1,y-12,3,3,'#7af0c8');px(x-1,y-12,'#ffffff');R(x+2,y-15,2,1,K);
+if(t%6<.12)for(let a=0;a<6.283;a+=.785)px(x+Math.cos(a)*6,y-11+Math.sin(a)*5,'#ffffff')}
+function sign(){const x=84,y=197;R(x,y-6,2,6,'#7a4a2a');R(x-6,y-12,14,7,K);R(x-5,y-11,12,5,'#c8925a');R(x-5,y-11,12,1,'#e0aa70');R(x-2,y-9,5,2,'#1e4660');px(x+3,y-9,'#1e4660');px(x-3,y-10,'#1e4660');px(x-3,y-7,'#1e4660')}
+function lamp(x,y){R(x,y-8,1,8,'#6d6a7a');R(x-1,y-10,3,2,K);px(x,y-9,Math.sin(t*9+x)>-.8?'#fff1b8':'#c8a040');px(x-1,y,'#4a8a3a');px(x+1,y,'#4a8a3a')}
+function lights(){const a=[74,94],b=[121,96];for(let i=0;i<=30;i++){const k=i/30,x=a[0]+(b[0]-a[0])*k,y=a[1]+(b[1]-a[1])*k+Math.sin(k*Math.PI)*6;px(x,y,'#4a4458');if(i%3===1){const cs=['#f29bb5','#f6c85f','#7af0c8','#b48cf0'],on=(Math.floor(t*2)+i)%2;px(x,y+1,on?cs[i%4]:'#4a4458')}}}
+function boat(){const b=Math.sin(t*1.6)>0?1:0,x=68,y=226+b;line(79,y-1,90,221,'#c8b088');ell(x,y,11,4,K);ell(x,y,10,3,'#8a5a32');ell(x,y-1,8,2,'#c8925a');R(x-1,y-3,3,5,'#8a5a32');line(x-5,y-2,x-13,y-6,'#7a4a2a');line(x+3,y+1,x+10,y+6,'#7a4a2a');if(b)px(x-12,y+3,'#d8f4fa')}
+function pier(){const b=Math.sin(t*2.4)>0?1:0;
+g.fillStyle='rgba(10,30,60,.25)';g.fillRect(109,206,3,38);g.fillRect(119,247,3,18);g.fillRect(84,265,36,2);
+[[89,216],[89,234],[109,216],[109,234],[84,265],[115,265]].forEach(([x,y])=>{R(x,y,3,3,K);px(x+1,y,'#5a3a22');if((Math.floor(t*1.5)+x)%2)px(x-1,y+3,'#d8f4fa')});
+R(91,190,18,56,K);for(let y=191;y<246;y+=3){R(92,y,16,2,'#c8925a');R(92,y+2,16,1,'#8a5a32')}
+R(81,243,38,22,K);for(let y=244;y<264;y+=3){R(82,y,36,2,'#c8925a');R(82,y+2,36,1,'#8a5a32')}for(let y=245;y<264;y+=6){px(83,y,'#5a3a22');px(116,y,'#5a3a22')}
+R(84,245,7,7,K);R(85,246,5,5,'#8a8794');R(85,246,5,1,'#4fb0d0');px(87,244,'#f08a3a');px(88,243,'#f08a3a');px(86,243,'#f08a3a');
+R(109,253,7,5,K);R(110,254,5,3,'#7a4a2a');
+line(112,254,130,238,'#7a4a2a');line(127,241,130,238,'#c9c6c0');const by=258+b;line(130,238,132,by-1,'#e8f0f8');px(132,by-1,'#ffffff');px(132,by,'#d04a3a');if(b){px(130,by+1,'#d8f4fa');px(134,by+1,'#d8f4fa')}}
+function lighthouse(){const x=178,y=304,on=Math.floor(t*1.5)%2;ell(x,y+2,10,4,K);ell(x,y+1,9,3,'#8a8794');ell(x-1,y,5,2,'#a9a6b2');if(Math.floor(t*2)%2)px(x-10,y+4,'#ffffff');
+R(x-4,y-16,8,16,K);R(x-3,y-15,6,15,'#f4efe6');R(x-3,y-12,6,2,'#d04a3a');R(x-3,y-7,6,2,'#d04a3a');R(x-3,y-15,1,15,'#ffffff');R(x-4,y-21,8,5,K);R(x-3,y-20,6,3,on?'#fff1b8':'#c8a040');R(x-3,y-23,6,2,'#d04a3a');px(x,y-24,K);
+if(on){px(x-5,y-19,'#fff1b8');px(x+4,y-19,'#fff1b8')}}
+function gulls(){const T=(t%14)/14;if(T>.6)return;const k=T/.6;[[0,0],[-11,5],[-6,-4]].forEach(([dx,dy],i)=>{const x=W+10-k*(W+40)+dx,y=176+dy+Math.sin(t*1.5+i)*2,u=(Math.floor(t*5)+i)%2;px(x,y,'#ffffff');px(x+1,y,'#8a8794');if(u){px(x-1,y-1,'#ffffff');px(x-2,y-2,K);px(x+2,y-1,'#ffffff');px(x+3,y-2,K)}else{px(x-1,y,'#ffffff');px(x-2,y+1,K);px(x+2,y,'#ffffff');px(x+3,y+1,K)}})}
+const BF=[[136,130,'#f6c85f',0],[52,134,'#f29bb5',2],[30,118,'#ffffff',4]];
+function flies(){BF.forEach(([hx,hy,c,p])=>{const x=hx+Math.sin(t*.7+p)*12,y=hy+Math.sin(t*1.9+p)*4-Math.abs(Math.sin(t*3+p))*3,o=Math.floor(t*8+p)%2;px(x,y,K);if(o){px(x-1,y-1,c);px(x+1,y-1,c);px(x-1,y,c);px(x+1,y,c)}else{px(x-1,y,c);px(x+1,y,c)}})}
+// 웨딩 입구: 시작 위치 바로 뒤에 서 있는 꽃 아치
+const HT=[".kk.kk.","kppkppk","kpwpppk","kpppppk",".kpppk.","..kpk..","...k..."];
+function gate(){const x=100,y=138;ell(x,y+1,13,2,'#4a8a3a');
+[x-10,x+9].forEach(a=>{R(a-2,y-2,6,3,K);R(a-1,y-2,4,2,'#c9c6c0');R(a-1,y-19,4,18,K);R(a,y-18,2,17,'#f4efe6');R(a,y-18,1,17,'#ffffff')});
+const arc=f=>{for(let a=-.15;a<=3.3;a+=.14)f(x+Math.cos(a)*10,y-19-Math.sin(a)*7)};
+arc((ax,ay)=>R(ax-2,ay-2,5,5,K));arc((ax,ay)=>{R(ax-1,ay-1,3,3,'#3a7a3a');px(ax,ay-1,'#5aa04a')});
+let i=0;for(let a=0;a<=3.15;a+=.26,i++){const ax=x+Math.cos(a)*10,ay=y-19-Math.sin(a)*7,c=['#ffffff','#f29bb5','#ffd0dc'][i%3];px(ax,ay,c);px(ax+1,ay,c)}
+[-1,1].forEach(s=>{for(let k=0;k<=1;k+=.08){const fx=x+s*(6+5*k*k),fy=y-22+k*13;R(fx-1,fy,2,1,'#ffffff');px(fx+s,fy,'#d8ccb8')}px(x+s*11,y-9,'#f29bb5');px(x+s*12,y-10,'#f29bb5');px(x+s*12,y-8,'#f29bb5')});
+HT.forEach((r,j)=>[...r].forEach((c,k)=>{if(c!=='.')px(x-3+k,y-32+j,c==='k'?K:c==='w'?'#ffffff':'#f29bb5')}))}
+function draw(){ctx.drawImage(bgc,-cx,-cy);ctx.save();ctx.translate(-cx,-cy);
+tw.forEach(s=>{const v=Math.sin(t*1.4+s.p);if(v>.75){px(s.x,s.y,'#e8f8ff');if(v>.96){px(s.x-1,s.y,'#bfe8f8');px(s.x+1,s.y,'#bfe8f8')}}});
+const o=Math.round((Math.sin(t*1.3)+1)*1.2);for(let x=Math.max(0,cx-1);x<Math.min(W,cx+VW+1);x++){const s=SH[x];if(Math.sin(x*.5+t*2)>-.3)px(x,s+o,'#ffffff');if(Math.sin(x*.23-t*1.5)>.4)px(x,s+o+2,'#bfe8f8')}
+const vis=P.y>184||camHold>0;
+entries.forEach(e=>{if(!e.shown)return;const f=fpos(e);fish(f.x,f.y,f.r,e.pal,!vis&&e!==lastNew)});
+if(lastNew&&lastNew.shown&&Math.floor(t*3)%2){const f=fpos(lastNew);heart(f.x,f.y-7)}
+boat();pier();lighthouse();
+splashes=splashes.filter(s=>{const k=(t-s.t0)/.8;if(k>1)return false;const r=2+k*8;for(let a=0;a<6.283;a+=.35)px(s.x+Math.cos(a)*r,s.y+Math.sin(a)*r*.45,k<.5?'#ffffff':'#bfe8f8');if(k<.5)for(let i=0;i<4;i++)px(s.x+(i-1.5)*6*k,s.y-Math.sin(k*Math.PI*2)*6-i%2,'#ffffff');return true});
+if(jump){const k=Math.min(1,(t-jump.t0)/1.3),f=fpos(jump.e),r=f.x>jump.fx,x=jump.fx+(f.x-jump.fx)*k,y=jump.fy+(f.y-jump.fy)*k-Math.sin(k*Math.PI)*30;fish(x,y,r,jump.e.pal,false);px(x+(r?-6:6),y+2+Math.floor(t*20)%2,'#d8f4fa');if(k>=1){jump.e.shown=true;splashes.push({x:f.x,y:f.y,t0:t});jump=null}}
+const fr=moving&&Math.floor(t*8)%2===1;
+const L=[{y:house.y+29,f:drawHouse},{y:gz.y+30,f:drawGz},{y:70,f:fountain},{y:196,f:turtle},{y:117,f:mailbox},{y:118,f:camera},{y:197,f:sign},{y:101,f:lights},{y:138,f:gate},
+...[[78,146],[122,146],[108,184]].map(([x,y])=>({y,f:()=>lamp(x,y)})),...trees.map(([x,y,b])=>({y,f:()=>ctx.drawImage(TR[b],x-11,y-23)})),
+{y:Math.round(70+Math.sin(dogA)*11),f:dog},{y:P.y,f:()=>{g.fillStyle='rgba(20,40,20,.28)';g.fillRect(Math.round(P.x-8),Math.round(P.y),16,1);spr(GR,P.x-7,P.y-11-(fr?1:0),fc,fr?LEG2:null);spr(BR,P.x,P.y-11-(moving&&!fr?1:0),fc,null)}}];
+L.sort((a,b)=>a.y-b.y).forEach(o=>o.f());flies();gulls();ctx.restore();
+const nm=document.getElementById('nm');nm.style.left=(P.x-cx)*S+'px';nm.style.top=((P.y-11-cy)*S-26)+'px'}
+let last=performance.now();
+function tick(now){const dt=Math.max(0,Math.min(.05,(now-last)/1000));last=now;t+=dt;let vx=ax,vy=ay;
+if(keys.size){vx=(keys.has('r')?1:0)-(keys.has('l')?1:0);vy=(keys.has('d')?1:0)-(keys.has('u')?1:0);auto=null}
+if(vx||vy)auto=null;else if(auto){const tg=auto[0],dx=tg.x-P.x,dy=tg.y-P.y,d=Math.hypot(dx,dy);if(d<1.5){auto.shift();if(!auto.length)auto=null}else{vx=dx/d;vy=dy/d}}
+const m=Math.hypot(vx,vy),ox=P.x,oy=P.y;moving=m>.05;if(moving){if(Math.abs(vx)>.2)fc=vx<0;const s=40*dt*Math.min(1,m)/m,nx=P.x+vx*s,ny=P.y+vy*s;if(!blocked(nx,P.y))P.x=nx;if(!blocked(P.x,ny))P.y=ny;if(auto&&P.x===ox&&P.y===oy)auto=null}
+camHold=Math.max(0,camHold-dt);const tx=camHold>0?holdX-VW/2:P.x-VW/2,ty=camHold>0?H-VH:P.y-VH*.5;cxf+=(Math.max(0,Math.min(W-VW,tx))-cxf)*Math.min(1,dt*5);cyf+=(Math.max(0,Math.min(H-VH,ty))-cyf)*Math.min(1,dt*5);cx=Math.round(cxf);cy=Math.round(cyf);
+near=null;for(const k in places)if(Math.hypot(places[k].x-P.x,places[k].y-P.y)<12)near=k;
+const eb=document.getElementById('enter');if(near&&!auto){eb.style.display='block';eb.textContent=places[near].name+' 들어가기'}else eb.style.display='none';
+draw();requestAnimationFrame(tick)}
+requestAnimationFrame(tick);setTimeout(()=>document.getElementById('hint').style.opacity=0,4000);
+const joy=document.getElementById('joy'),knob=document.getElementById('knob');let jid=null;
+const ja=[...joy.querySelectorAll('.ja')],lit=()=>{const d=!ax&&!ay?'':Math.abs(ax)>Math.abs(ay)?(ax>0?'r':'l'):(ay>0?'d':'u');ja.forEach(a=>a.classList.toggle('on',a.dataset.d===d))};
+const jmove=e=>{const b=joy.getBoundingClientRect();let dx=e.clientX-b.left-45,dy=e.clientY-b.top-45;const d=Math.hypot(dx,dy),RR=28;if(d>RR){dx=dx/d*RR;dy=dy/d*RR}knob.style.transform=`translate(${Math.round(dx/3)*3}px,${Math.round(dy/3)*3}px)`;if(Math.hypot(dx,dy)/RR<.15)ax=ay=0;else{ax=dx/RR;ay=dy/RR}lit()};
+joy.addEventListener('pointerdown',e=>{jid=e.pointerId;joy.setPointerCapture(jid);auto=null;jmove(e)});joy.addEventListener('pointermove',e=>{if(e.pointerId===jid)jmove(e)});
+const jend=()=>{jid=null;ax=ay=0;knob.style.transform='';lit()};joy.addEventListener('pointerup',jend);joy.addEventListener('pointercancel',jend);
+const km={ArrowUp:'u',KeyW:'u',ArrowDown:'d',KeyS:'d',ArrowLeft:'l',KeyA:'l',ArrowRight:'r',KeyD:'r'};
+cv.addEventListener('keydown',e=>{if(km[e.code]){keys.add(km[e.code]);e.preventDefault()}if(e.code==='KeyE'&&near)openM(near)});cv.addEventListener('keyup',e=>{if(km[e.code])keys.delete(km[e.code])});cv.addEventListener('blur',()=>keys.clear());
+// 바다와 육지는 부두 입구로만 이어지므로 경유지를 거친다
+const route=k=>(k==='pier')!==(P.y>200)?[{x:100,y:186},places[k]]:[places[k]];
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{auto=route(b.dataset.go);camHold=0}));
+document.getElementById('enter').addEventListener('click',()=>near&&openM(near));
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const bub=document.getElementById('bubble');let bubT;
+cv.addEventListener('pointerdown',e=>{cv.focus();const b=cv.getBoundingClientRect(),wx=(e.clientX-b.left)/b.width*VW+cx,wy=(e.clientY-b.top)/b.height*VH+cy;let best=null,bd=7,bp=null;entries.forEach(s=>{if(!s.shown)return;const f=fpos(s),d=Math.hypot(f.x-wx,f.y-wy);if(d<bd){bd=d;best=s;bp=f}});if(best){bub.innerHTML='<span style="color:#c8593c">'+esc(best.n)+'</span><br>'+esc(best.m);bub.style.display='block';bub.style.left=Math.max(10,Math.min(140,(bp.x-cx)*S-60))+'px';bub.style.top=Math.max(80,(bp.y-cy)*S-78)+'px';clearTimeout(bubT);bubT=setTimeout(()=>bub.style.display='none',3200)}});
+const toastEl=document.getElementById('toast');let tT;const toast=m=>{toastEl.textContent=m;toastEl.style.display='block';clearTimeout(tT);tT=setTimeout(()=>toastEl.style.display='none',1600)};
+const modal=document.getElementById('modal'),mb=document.getElementById('mbody'),mt=document.getElementById('mtitle');
+document.getElementById('mclose').addEventListener('click',()=>modal.style.display='none');modal.addEventListener('click',e=>{if(e.target===modal)modal.style.display='none'});
+const copy=v=>{try{navigator.clipboard&&navigator.clipboard.writeText(v).catch(()=>{})}catch(e){}toast('복사했어요')};
+const pp=(role,name)=>`<div style="text-align:center;margin-bottom:14px"><div style="font-size:12px"><span style="color:#9a8a7a;font-size:11px;margin-right:6px">${role}</span>${name}</div><div style="margin-top:2px"><button class="ibtn" data-t="전화 연결 (목업)"><i class="ti ti-phone" aria-hidden="true"></i></button><button class="ibtn" data-t="문자 보내기 (목업)"><i class="ti ti-mail" aria-hidden="true"></i></button></div></div>`;
+const acct=(role,name,bank,no)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:2px dashed #e2d3b8"><div><div style="font-size:11px;color:#9a8a7a">${role} ${name}</div><div style="font-size:12px;margin-top:4px">${bank} ${no}</div></div><button class="chip cut" data-copy="${bank} ${no}">복사</button></div>`;
+function cal(){let h='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:11px;margin-top:12px">';['일','월','화','수','목','금','토'].forEach((d,i)=>h+=`<div style="color:${i===0?'#c8593c':'#9a8a7a'}">${d}</div>`);for(let i=0;i<6;i++)h+='<div></div>';for(let d=1;d<=31;d++)h+=`<div class="${d===22?'cut':''}" style="padding:5px 0;${d===22?'background:#c8593c;color:#fff':''}">${d}</div>`;return h+'</div>'}
+function homeHTML(){const dd=Math.ceil((new Date(2027,4,22)-new Date(new Date().setHours(0,0,0,0)))/864e5);return`
+<div class="sec" style="text-align:center"><h4>✦ 초대합니다 ✦</h4><p style="font-size:13px;line-height:2;margin:0">바다가 보이는 작은 마을에<br>두 사람이 함께 집을 지었습니다.<br>저희의 첫걸음을 함께 축복해 주세요.</p><p style="font-size:12px;color:#6a5a4a;margin:16px 0 0;line-height:2">김철수 · 이영희의 아들 <span style="color:#2a1a2e">원재</span><br>박정호 · 최미정의 딸 <span style="color:#2a1a2e">은빈</span></p></div>
+<div class="sec"><h4>✦ 예식 일시</h4><div style="font-size:13px">2027년 5월 22일 토요일 낮 12시 30분</div><div style="font-size:11px;color:#c8593c;margin-top:6px">${dd>0?'D-'+dd:'D-DAY'}</div>${cal()}</div>
+<div class="sec"><h4>✦ 예식 장소</h4><div style="font-size:13px">OO웨딩홀 3층 그랜드홀</div><div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="font-size:12px;color:#6a5a4a">서울시 강남구 테헤란로 123</span><button class="chip cut" style="padding:3px 7px" data-copy="서울시 강남구 테헤란로 123">복사</button></div><div class="cut" style="height:130px;background:#e9dcc4;margin:12px 0;display:flex;align-items:center;justify-content:center;color:#9a8a7a;font-size:11px;flex-direction:column;gap:4px;border:2px solid #2a1a2e"><i class="ti ti-map-pin" style="font-size:24px;color:#c8593c" aria-hidden="true"></i>카카오맵</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><button class="chip cut" data-t="카카오맵 열기 (목업)">카카오맵</button><button class="chip cut" data-t="네이버지도 열기 (목업)">네이버지도</button><button class="chip cut" data-t="티맵 열기 (목업)">티맵</button></div></div>
+<div class="sec"><h4>✦ 오시는 길</h4><div style="font-size:12px;line-height:2"><span style="color:#c8593c">지하철</span> 2호선 역삼역 3번 출구 도보 5분<br><span style="color:#c8593c">버스</span> 146, 341, 360 역삼역 하차<br><span style="color:#c8593c">주차</span> 건물 지하 2~4층, 2시간 무료</div></div>
+<div class="sec"><h4>✦ 연락하기</h4><div style="display:grid;grid-template-columns:1fr 1fr">${pp('신랑','김원재')}${pp('신부','박은빈')}</div><button id="ptog" style="width:100%;border:0;background:transparent;color:#6a5a4a;font-size:12px;display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding:6px">혼주에게 연락하기 <i class="ti ti-chevron-down" aria-hidden="true"></i></button><div id="parents" style="display:none;grid-template-columns:1fr 1fr;margin-top:10px"><div><div style="text-align:center;font-size:11px;color:#9a8a7a;margin-bottom:10px">신랑 측 혼주</div>${pp('아버지','김철수')}${pp('어머니','이영희')}</div><div><div style="text-align:center;font-size:11px;color:#9a8a7a;margin-bottom:10px">신부 측 혼주</div>${pp('아버지','박정호')}${pp('어머니','최미정')}</div></div></div>
+<div class="sec"><h4>✦ 마음 전하실 곳</h4>${[['신랑 측',[['신랑','김원재','국민','123456-01-234567'],['아버지','김철수','신한','110-234-567890'],['어머니','이영희','우리','1002-345-678901']]],['신부 측',[['신부','박은빈','카카오뱅크','3333-01-2345678'],['아버지','박정호','농협','302-1234-5678-91'],['어머니','최미정','하나','123-456789-01234']]]].map(([s,l],i)=>`<div class="cut" style="background:#f3e4c8;border:2px solid #2a1a2e;margin-bottom:8px"><button class="acc" data-i="${i}" style="width:100%;border:0;background:transparent;display:flex;justify-content:space-between;align-items:center;padding:12px;font-size:13px;color:#2a1a2e;cursor:pointer">${s} 계좌번호 <i class="ti ti-chevron-down" aria-hidden="true"></i></button><div id="acc${i}" style="display:none;padding:0 12px 6px">${l.map(a=>acct(...a)).join('')}</div></div>`).join('')}</div>`}
+const GC=['#9fc8a0','#e8c4a8','#b8c8e6','#e6d4a2','#cdb6e0','#a8d8d0','#ecbcbc','#d6cfae','#c4dca0','#f0c8d8','#b0d0e8','#e0c0a0'];
+const GT=['처음 만난 날','첫 여행','바닷가 산책','함께한 생일','눈 오던 날','벚꽃 구경','캠핑','프러포즈','웨딩 촬영','웨딩 촬영 비하인드','부모님과 함께','앞으로도 함께'],pad=n=>String(n).padStart(2,'0');
+function galHTML(){return`<div class="gal"><p class="gal-intro">정원에서 함께 가꿔 온 시간들</p><div class="ggrid">${GC.map((c,i)=>`<button class="cut" data-g="${i}" aria-label="${i+1}번째 사진 크게 보기" style="background-color:${c}">${pad(i+1)}</button>`).join('')}</div></div>`}
+function gbHTML(){return`<div style="padding-top:18px"><p style="font-size:12px;color:#6a5a4a;margin:0 0 12px;line-height:1.9">마음을 적어 바다에 띄우면<br>물고기가 한 마리 늘어나요.</p><input class="fld" id="gname" placeholder="이름" maxlength="12"><div class="err" id="e1"></div><textarea class="fld" id="gmsg" placeholder="축하 메시지를 남겨 주세요" maxlength="120" style="height:84px;padding:10px;resize:none"></textarea><div class="err" id="e2"></div><button id="gsend" class="cut" style="width:100%;height:44px;border:2px solid #2a1a2e;background:#1e4660;color:#f6c85f;font-size:13px;cursor:pointer;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:6px"><i class="ti ti-fish" aria-hidden="true"></i>물고기 놓아주기</button><p class="note">남긴 글은 수정하거나 지울 수 없어요</p><div style="margin-top:22px;font-size:11px;color:#9a8a7a">바다의 물고기 ${entries.length}마리</div>${entries.slice().reverse().map(e=>`<div style="padding:12px 0;border-bottom:2px dashed #e2d3b8"><div style="font-size:12px;color:#c8593c">${esc(e.n)}</div><div style="font-size:12px;margin-top:4px">${esc(e.m)}</div></div>`).join('')}</div>`}
+// 사진 전체화면 보기
+const lb=document.getElementById('lb'),lbi=document.getElementById('lbimg');let li=0,lsx=null;
+const lbSet=(i,anim)=>{li=(i+GC.length)%GC.length;lbi.style.backgroundColor=GC[li];lbi.innerHTML=`<i class="ti ti-photo" style="font-size:40px" aria-hidden="true"></i><span>PHOTO ${pad(li+1)}</span>`;if(anim){lbi.classList.remove('sw');void lbi.offsetWidth;lbi.classList.add('sw')}document.getElementById('lbno').textContent=pad(li+1)+' / '+pad(GC.length);document.getElementById('lbcap').textContent=GT[li]};
+const openLb=i=>{lbSet(i);lb.style.display='flex'};
+document.getElementById('lbx').addEventListener('click',()=>lb.style.display='none');document.getElementById('lbp').addEventListener('click',()=>lbSet(li-1,true));document.getElementById('lbn').addEventListener('click',()=>lbSet(li+1,true));
+lbi.addEventListener('pointerdown',e=>lsx=e.clientX);lbi.addEventListener('pointerup',e=>{if(lsx!==null&&Math.abs(e.clientX-lsx)>30)lbSet(li+(e.clientX<lsx?1:-1),true);lsx=null});
+function openM(k){bub.style.display='none';mt.innerHTML='<i class="ti ti-'+{home:'home',garden:'camera',pier:'fish'}[k]+'" aria-hidden="true"></i>'+{home:'집',garden:'정원 · 사진',pier:'낚시터 · 방명록'}[k];mb.innerHTML=k==='home'?homeHTML():k==='garden'?galHTML():gbHTML();mb.scrollTop=0;modal.style.display='block';bind(k)}
+function bind(k){mb.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>toast(b.dataset.t)));mb.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>copy(b.dataset.copy)));
+if(k==='home'){const pt=document.getElementById('ptog'),pa=document.getElementById('parents');pt.addEventListener('click',()=>{const o=pa.style.display==='none';pa.style.display=o?'grid':'none';pt.querySelector('i').className='ti ti-chevron-'+(o?'up':'down')});mb.querySelectorAll('.acc').forEach(b=>b.addEventListener('click',()=>{const el=document.getElementById('acc'+b.dataset.i),o=el.style.display==='none';el.style.display=o?'block':'none';b.querySelector('i').className='ti ti-chevron-'+(o?'up':'down')}))}
+if(k==='garden')mb.querySelectorAll('[data-g]').forEach(b=>b.addEventListener('click',()=>openLb(+b.dataset.g)))
+if(k==='pier'){const f=[['gname','e1','이름을 입력해 주세요'],['gmsg','e2','메시지를 입력해 주세요']];f.forEach(([i,e])=>document.getElementById(i).addEventListener('input',()=>document.getElementById(e).textContent=''));document.getElementById('gsend').addEventListener('click',()=>{let ok=true;f.forEach(([i,e,m])=>{const v=document.getElementById(i).value.trim();if(!v){document.getElementById(e).textContent=m;ok=false}});if(!ok)return;const e=mk(document.getElementById('gname').value.trim(),document.getElementById('gmsg').value.trim(),'u'+Date.now());e.shown=false;entries.push(e);lastNew=e;holdX=e.hx;modal.style.display='none';camHold=3.2;jump={e,fx:132,fy:258,t0:t};splashes.push({x:132,y:258,t0:t});setTimeout(()=>toast('물고기가 한 마리 늘었어요. 눌러 보세요'),1500)})}}
+})();
+</script>
+</body>
+</html>

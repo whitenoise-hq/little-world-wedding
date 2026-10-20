@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>리틀 플래닛 웨딩 목업</title>
+<title>리틀 월드 웨딩 목업 · 우주</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <style>
 body{margin:0;background:#f1efe8;min-height:100vh;display:flex;align-items:center;justify-content:center}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.ph,.ph *{box-sizing:border-box;font-family:'Galmuri11','Galmuri9',sans-serif}
+.ph,.ph *,.tm,.tm *{box-sizing:border-box;font-family:'Galmuri11','Galmuri9',sans-serif}
 .cut{clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}
 .oct{clip-path:polygon(28% 0,72% 0,100% 28%,100% 72%,72% 100%,28% 100%,0 72%,0 28%)}
 .sec{padding:20px 0;border-bottom:2px dashed #e2d3b8}.sec:last-child{border-bottom:0}
@@ -21,12 +21,41 @@ body{margin:0;background:#f1efe8;min-height:100vh;display:flex;align-items:cente
 .fab{width:58px;height:58px;border:0;padding:0;background:#2a1a2e;cursor:pointer}
 .fab span{position:absolute;inset:2px;background:#fbf3e4;color:#2a1a2e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px}
 .nm{position:absolute;font-size:11px;color:#f4efe6;background:#2a1a2e;padding:3px 7px;white-space:nowrap;pointer-events:none;transform:translateX(-50%)}
+.tm{position:fixed;top:14px;left:14px;display:flex;flex-direction:column;gap:6px;z-index:9}
+.tm a{border:2px solid #2a1a2e;background:#fbf3e4;color:#2a1a2e;padding:6px 10px;font-size:12px;text-decoration:none}
+.tm a[aria-current]{background:#2a1a2e;color:#f4efe6}
+.mp{position:absolute;top:5%;bottom:5%;left:5%;right:5%;padding:3px;background:#2a1a2e;display:flex;clip-path:polygon(9px 0,calc(100% - 9px) 0,100% 9px,100% calc(100% - 9px),calc(100% - 9px) 100%,9px 100%,0 calc(100% - 9px),0 9px);animation:pop .24s steps(4)}
+.mp>div{flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;background:#fbf3e4;color:#2a1a2e;clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px)}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:10px 10px 10px 16px;background:var(--mh);color:#f4efe6;border-bottom:3px solid #2a1a2e;box-shadow:0 3px 0 var(--ma)}
+.mh #mtitle{display:flex;align-items:center;gap:8px;font-size:14px}.mh #mtitle i{font-size:18px;color:var(--ma)}
+.mx{width:32px;height:32px;border:2px solid #f4efe6;background:transparent;color:#f4efe6;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mx:active{background:#f4efe6;color:var(--mh)}
+.mb{flex:1;min-height:0;overflow-y:auto;padding:6px 14px 24px 18px;margin-top:3px}
+@supports not selector(::-webkit-scrollbar){.mb{scrollbar-width:thin;scrollbar-color:var(--mh) #efe2c8}}
+.mb::-webkit-scrollbar{width:10px}.mb::-webkit-scrollbar-track{background:#efe2c8;border-left:2px solid #e2d3b8}
+.mb::-webkit-scrollbar-thumb{background:var(--mh);border:2px solid #2a1a2e;min-height:40px}.mb::-webkit-scrollbar-thumb:active{background:#2a1a2e}
+.mb::-webkit-scrollbar-button{display:none}
+.note{font-size:11px;color:#9a8a7a;margin:8px 0 0;text-align:center}
+.ja{position:absolute;width:16px;height:8px;background:#f4efe6;opacity:.75;pointer-events:none;clip-path:polygon(6px 0,10px 0,10px 2px,12px 2px,12px 4px,14px 4px,14px 6px,16px 6px,16px 8px,0 8px,0 6px,2px 6px,2px 4px,4px 4px,4px 2px,6px 2px)}.ja.on{background:var(--ma);opacity:1}
+@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+.gal{padding:16px 0 4px}.gal-intro{font-size:11px;color:#9a8a7a;margin:0 0 14px;text-align:center}
+.ggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ggrid button{aspect-ratio:1;border:2px solid #2a1a2e;padding:4px 5px;cursor:pointer;font-size:9px;color:rgba(42,26,46,.55);display:flex;align-items:flex-end;background-image:radial-gradient(rgba(255,255,255,.4) 1px,transparent 1.5px);background-size:6px 6px;transition:transform .12s steps(2)}
+.ggrid button:active{transform:scale(.94)}
+.lb{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;background:rgba(10,8,16,.95);animation:pop .2s steps(3)}
+.lb-top{display:flex;justify-content:space-between;align-items:center;padding:20px 16px 12px;color:#f4efe6;font-size:12px}
+.lb-img{flex:1;min-height:0;margin:0 14px;border:2px solid #f4efe6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:rgba(42,26,46,.7);font-size:12px;background-image:radial-gradient(rgba(255,255,255,.4) 1px,transparent 1.5px);background-size:6px 6px;touch-action:pan-y;user-select:none;cursor:grab}
+.lb-img.sw{animation:snap .2s steps(3)}@keyframes snap{from{opacity:.3;transform:scale(.97)}to{opacity:1;transform:none}}
+.lb-cap{color:#f4efe6;text-align:center;font-size:13px;padding:16px 0 4px}
+.lb-nav{display:flex;justify-content:center;align-items:center;gap:20px;padding:10px 0 30px}
+.lbb{width:40px;height:40px;border:2px solid #f4efe6;background:transparent;color:#f4efe6;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}.lbb:active{background:#f4efe6;color:#2a1a2e}
 @keyframes bob{50%{transform:translate(-50%,-3px)}}
 </style>
 </head>
 <body>
+<nav class="tm" aria-label="테마"><a class="cut" href="index.html" aria-current="page">우주 테마</a><a class="cut" href="village.html">마을 테마</a></nav>
 <h1 class="sr-only">픽셀아트 우주 행성 청첩장 목업</h1>
-<div class="ph" style="position:relative;width:340px;height:680px;border-radius:34px;overflow:hidden;background:#0b0a1e;outline:8px solid #1d1d1f;user-select:none;-webkit-user-select:none;touch-action:none">
+<div class="ph" style="--mh:#2a2450;--ma:#f6c85f;position:relative;width:340px;height:680px;border-radius:34px;overflow:hidden;background:#0b0a1e;outline:8px solid #1d1d1f;user-select:none;-webkit-user-select:none;touch-action:none">
 <canvas id="cv" width="114" height="227" tabindex="0" style="display:block;width:342px;height:681px;image-rendering:pixelated;outline:none"></canvas>
 <div id="nm" class="nm cut">원재 <span style="color:#f29bb5">♥</span> 은빈</div>
 <div style="position:absolute;top:0;left:0;right:0;padding:20px 18px 0;display:flex;justify-content:space-between;align-items:flex-start;color:#f4efe6;pointer-events:none">
@@ -34,19 +63,20 @@ body{margin:0;background:#f1efe8;min-height:100vh;display:flex;align-items:cente
 <button aria-label="배경음악" class="cut" style="pointer-events:auto;width:36px;height:36px;border:2px solid #f4efe6;background:#2a2450;color:#f4efe6;font-size:18px;display:flex;align-items:center;justify-content:center"><i class="ti ti-music" aria-hidden="true"></i></button>
 </div>
 <div id="hint" class="cut" style="position:absolute;top:104px;left:50%;transform:translateX(-50%);background:#fbf3e4;border:2px solid #2a1a2e;color:#2a1a2e;font-size:11px;padding:8px 12px;white-space:nowrap;transition:opacity .6s;pointer-events:none">조이스틱이나 버튼으로 움직여 보세요</div>
-<div id="joy" class="oct" style="position:absolute;left:18px;bottom:26px;width:90px;height:90px;touch-action:none;cursor:grab;background:rgba(244,239,230,.16)"><div id="knob" class="oct" style="position:absolute;left:27px;top:27px;width:36px;height:36px;background:#f4efe6"></div></div>
+<div id="joy" class="oct" style="position:absolute;left:18px;bottom:26px;width:90px;height:90px;touch-action:none;cursor:grab;background:rgba(20,16,30,.38)"><i class="ja" data-d="u" style="left:37px;top:7px"></i><i class="ja" data-d="d" style="left:37px;bottom:7px;transform:rotate(180deg)"></i><i class="ja" data-d="l" style="left:3px;top:41px;transform:rotate(-90deg)"></i><i class="ja" data-d="r" style="right:3px;top:41px;transform:rotate(90deg)"></i><div id="knob" class="oct" style="position:absolute;left:27px;top:27px;width:36px;height:36px;background:#f4efe6"></div></div>
 <div style="position:absolute;right:14px;bottom:42px;display:flex;gap:8px">
-<button class="fab oct" data-go="home" style="position:relative" aria-label="우리 집으로 이동"><span class="oct"><i class="ti ti-home" style="font-size:20px" aria-hidden="true"></i>집</span></button>
+<button class="fab oct" data-go="home" style="position:relative" aria-label="집으로 이동"><span class="oct"><i class="ti ti-home" style="font-size:20px" aria-hidden="true"></i>집</span></button>
 <button class="fab oct" data-go="green" style="position:relative" aria-label="온실로 이동"><span class="oct"><i class="ti ti-plant-2" style="font-size:20px" aria-hidden="true"></i>사진</span></button>
 <button class="fab oct" data-go="scope" style="position:relative" aria-label="망원경으로 이동"><span class="oct"><i class="ti ti-telescope" style="font-size:20px" aria-hidden="true"></i>방명록</span></button>
 </div>
 <button id="enter" class="cut" style="display:none;position:absolute;left:50%;bottom:136px;transform:translateX(-50%);border:2px solid #2a1a2e;background:#f6c85f;color:#2a1a2e;font-size:13px;padding:10px 14px;cursor:pointer;white-space:nowrap;animation:bob 1s steps(2) infinite"></button>
 <div id="bubble" class="cut" style="display:none;position:absolute;max-width:190px;background:#fbf3e4;border:2px solid #2a1a2e;color:#2a1a2e;font-size:11px;line-height:1.6;padding:8px 10px;pointer-events:none"></div>
 <div id="modal" style="display:none;position:absolute;inset:0;background:rgba(8,6,20,.6)">
-<div style="position:absolute;left:0;right:0;bottom:0;height:88%;background:#fbf3e4;color:#2a1a2e;border-top:3px solid #2a1a2e;display:flex;flex-direction:column;clip-path:polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%,0 6px)">
-<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#2a2450;color:#f4efe6"><div id="mtitle" style="font-size:14px"></div><button id="mclose" aria-label="닫기" class="ibtn" style="color:#f4efe6"><i class="ti ti-x" aria-hidden="true"></i></button></div>
-<div id="mbody" style="flex:1;overflow-y:auto;padding:0 20px 24px"></div>
-</div></div>
+<div class="mp" role="dialog" aria-modal="true" aria-labelledby="mtitle"><div>
+<div class="mh"><div id="mtitle"></div><button id="mclose" aria-label="닫기" class="mx cut"><i class="ti ti-x" aria-hidden="true"></i></button></div>
+<div id="mbody" class="mb"></div>
+</div></div></div>
+<div id="lb" class="lb" style="display:none" role="dialog" aria-modal="true" aria-label="사진 크게 보기"><div class="lb-top"><span id="lbno"></span><button id="lbx" class="mx cut" aria-label="닫기"><i class="ti ti-x" aria-hidden="true"></i></button></div><div class="lb-img" id="lbimg"></div><div class="lb-cap" id="lbcap"></div><div class="lb-nav"><button id="lbp" class="lbb cut" aria-label="이전 사진"><i class="ti ti-chevron-left" aria-hidden="true"></i></button><button id="lbn" class="lbb cut" aria-label="다음 사진"><i class="ti ti-chevron-right" aria-hidden="true"></i></button></div></div>
 <div id="toast" class="cut" style="display:none;position:absolute;left:50%;bottom:140px;transform:translateX(-50%);background:#2a1a2e;color:#f4efe6;font-size:11px;padding:8px 12px;white-space:nowrap"></div>
 </div>
 <script>
@@ -69,7 +99,7 @@ sphere(18,42,4,['#1d4a52','#2f6d74','#4fa0a0','#8fd0c8','#d0f0ea']);sphere(186,2
 sphere(CX,CY,PR,['#6a2a2e','#9a3f30','#c8593c','#e07a4f','#f2a06a'],'#2e2456');
 for(let i=0;i<220;i++){const a=rnd()*6.283,d=Math.sqrt(rnd())*(PR-6),x=CX+Math.cos(a)*d|0,y=CY+Math.sin(a)*d|0;px(x,y,rnd()<.6?'#b24d36':'#e88a5e')}
 [[58,150,5,2],[115,208,4,2],[48,190,4,2],[150,180,3,1],[140,82,4,2],[76,176,3,1]].forEach(([x,y,a,b])=>{ell(x,y,a,b,'#7a3028');ell(x+1,y+1,a-1,Math.max(1,b-1),'#b24d36')});
-const places={home:{x:69,y:124,name:'우리 집'},green:{x:132,y:126,name:'온실'},scope:{x:89,y:198,name:'망원경'}};
+const places={home:{x:69,y:124,name:'집'},green:{x:132,y:126,name:'온실'},scope:{x:89,y:198,name:'망원경'}};
 Object.values(places).forEach(p=>{const n=Math.hypot(p.x-100,p.y-150)/5|0;for(let i=1;i<n;i++){const k=i/n;R(100+(p.x-100)*k,150+(p.y-150)*k,2,1,'#f2a06a');px(100+(p.x-100)*k,151+(p.y-150)*k,'#b24d36')}});
 ell(128,166,8,3,K);ell(128,166,7,2,'#5ab0d8');R(124,165,4,1,'#bfe8f8');px(131,167,'#bfe8f8');
 ell(100,198,18,8,K);ell(100,198,17,7,'#5e5b6c');ell(100,198,14,5,'#8a8794');for(let x=88;x<=112;x+=4)for(let y=194;y<=202;y++){const dx=(x-100)/14,dy=(y-198)/5;if(dx*dx+dy*dy<1)px(x,y,'#6d6a7a')}ell(100,198,4,1,'#a9a6b2');
@@ -123,7 +153,7 @@ const L=[{y:hab.y+22,f:drawHab},{y:gh.y+26,f:drawGh},{y:sc.y+17,f:drawSc},{y:156
 L.sort((a,b)=>a.y-b.y).forEach(o=>o.f());ufo();ctx.restore();
 const nm=document.getElementById('nm');nm.style.left=(P.x-cx)*S+'px';nm.style.top=((P.y-11-cy)*S-26)+'px'}
 let last=performance.now();
-function tick(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;let vx=ax,vy=ay;
+function tick(now){const dt=Math.max(0,Math.min(.05,(now-last)/1000));last=now;t+=dt;let vx=ax,vy=ay;
 if(keys.size){vx=(keys.has('r')?1:0)-(keys.has('l')?1:0);vy=(keys.has('d')?1:0)-(keys.has('u')?1:0);auto=null}
 if(vx||vy)auto=null;else if(auto){const dx=auto.x-P.x,dy=auto.y-P.y,d=Math.hypot(dx,dy);if(d<1.5)auto=null;else{vx=dx/d;vy=dy/d}}
 const m=Math.hypot(vx,vy);moving=m>.05;if(moving){if(Math.abs(vx)>.2)fc=vx<0;const s=40*dt*Math.min(1,m)/m,nx=P.x+vx*s,ny=P.y+vy*s;if(!blocked(nx,P.y))P.x=nx;if(!blocked(P.x,ny))P.y=ny}
@@ -133,9 +163,10 @@ const eb=document.getElementById('enter');if(near&&!auto){eb.style.display='bloc
 draw();requestAnimationFrame(tick)}
 requestAnimationFrame(tick);setTimeout(()=>document.getElementById('hint').style.opacity=0,4000);
 const joy=document.getElementById('joy'),knob=document.getElementById('knob');let jid=null;
-const jmove=e=>{const b=joy.getBoundingClientRect();let dx=e.clientX-b.left-45,dy=e.clientY-b.top-45;const d=Math.hypot(dx,dy),RR=28;if(d>RR){dx=dx/d*RR;dy=dy/d*RR}knob.style.transform=`translate(${Math.round(dx/3)*3}px,${Math.round(dy/3)*3}px)`;if(Math.hypot(dx,dy)/RR<.15)ax=ay=0;else{ax=dx/RR;ay=dy/RR}};
+const ja=[...joy.querySelectorAll('.ja')],lit=()=>{const d=!ax&&!ay?'':Math.abs(ax)>Math.abs(ay)?(ax>0?'r':'l'):(ay>0?'d':'u');ja.forEach(a=>a.classList.toggle('on',a.dataset.d===d))};
+const jmove=e=>{const b=joy.getBoundingClientRect();let dx=e.clientX-b.left-45,dy=e.clientY-b.top-45;const d=Math.hypot(dx,dy),RR=28;if(d>RR){dx=dx/d*RR;dy=dy/d*RR}knob.style.transform=`translate(${Math.round(dx/3)*3}px,${Math.round(dy/3)*3}px)`;if(Math.hypot(dx,dy)/RR<.15)ax=ay=0;else{ax=dx/RR;ay=dy/RR}lit()};
 joy.addEventListener('pointerdown',e=>{jid=e.pointerId;joy.setPointerCapture(jid);auto=null;jmove(e)});joy.addEventListener('pointermove',e=>{if(e.pointerId===jid)jmove(e)});
-const jend=()=>{jid=null;ax=ay=0;knob.style.transform=''};joy.addEventListener('pointerup',jend);joy.addEventListener('pointercancel',jend);
+const jend=()=>{jid=null;ax=ay=0;knob.style.transform='';lit()};joy.addEventListener('pointerup',jend);joy.addEventListener('pointercancel',jend);
 const km={ArrowUp:'u',KeyW:'u',ArrowDown:'d',KeyS:'d',ArrowLeft:'l',KeyA:'l',ArrowRight:'r',KeyD:'r'};
 cv.addEventListener('keydown',e=>{if(km[e.code]){keys.add(km[e.code]);e.preventDefault()}if(e.code==='KeyE'&&near)openM(near)});cv.addEventListener('keyup',e=>{if(km[e.code])keys.delete(km[e.code])});cv.addEventListener('blur',()=>keys.clear());
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{auto=places[b.dataset.go];camHold=0}));
@@ -145,7 +176,7 @@ const bub=document.getElementById('bubble');let bubT;
 cv.addEventListener('pointerdown',e=>{cv.focus();const b=cv.getBoundingClientRect(),wx=(e.clientX-b.left)/b.width*VW+cx,wy=(e.clientY-b.top)/b.height*VH+cy;let best=null,bd=6;entries.forEach(s=>{if(!s.shown)return;const d=Math.hypot(s.x-wx,s.y-wy);if(d<bd){bd=d;best=s}});if(best){bub.innerHTML='<span style="color:#c8593c">'+esc(best.n)+'</span><br>'+esc(best.m);bub.style.display='block';bub.style.left=Math.max(10,Math.min(140,(best.x-cx)*S-60))+'px';bub.style.top=Math.max(80,(best.y-cy)*S-78)+'px';clearTimeout(bubT);bubT=setTimeout(()=>bub.style.display='none',3200)}});
 const toastEl=document.getElementById('toast');let tT;const toast=m=>{toastEl.textContent=m;toastEl.style.display='block';clearTimeout(tT);tT=setTimeout(()=>toastEl.style.display='none',1600)};
 const modal=document.getElementById('modal'),mb=document.getElementById('mbody'),mt=document.getElementById('mtitle');
-document.getElementById('mclose').addEventListener('click',()=>modal.style.display='none');
+document.getElementById('mclose').addEventListener('click',()=>modal.style.display='none');modal.addEventListener('click',e=>{if(e.target===modal)modal.style.display='none'});
 const copy=v=>{try{navigator.clipboard&&navigator.clipboard.writeText(v).catch(()=>{})}catch(e){}toast('복사했어요')};
 const pp=(role,name)=>`<div style="text-align:center;margin-bottom:14px"><div style="font-size:12px"><span style="color:#9a8a7a;font-size:11px;margin-right:6px">${role}</span>${name}</div><div style="margin-top:2px"><button class="ibtn" data-t="전화 연결 (목업)"><i class="ti ti-phone" aria-hidden="true"></i></button><button class="ibtn" data-t="문자 보내기 (목업)"><i class="ti ti-mail" aria-hidden="true"></i></button></div></div>`;
 const acct=(role,name,bank,no)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:2px dashed #e2d3b8"><div><div style="font-size:11px;color:#9a8a7a">${role} ${name}</div><div style="font-size:12px;margin-top:4px">${bank} ${no}</div></div><button class="chip cut" data-copy="${bank} ${no}">복사</button></div>`;
@@ -157,14 +188,21 @@ function homeHTML(){const dd=Math.ceil((new Date(2027,4,22)-new Date(new Date().
 <div class="sec"><h4>✦ 오시는 길</h4><div style="font-size:12px;line-height:2"><span style="color:#c8593c">지하철</span> 2호선 역삼역 3번 출구 도보 5분<br><span style="color:#c8593c">버스</span> 146, 341, 360 역삼역 하차<br><span style="color:#c8593c">주차</span> 건물 지하 2~4층, 2시간 무료</div></div>
 <div class="sec"><h4>✦ 연락하기</h4><div style="display:grid;grid-template-columns:1fr 1fr">${pp('신랑','김원재')}${pp('신부','박은빈')}</div><button id="ptog" style="width:100%;border:0;background:transparent;color:#6a5a4a;font-size:12px;display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding:6px">혼주에게 연락하기 <i class="ti ti-chevron-down" aria-hidden="true"></i></button><div id="parents" style="display:none;grid-template-columns:1fr 1fr;margin-top:10px"><div><div style="text-align:center;font-size:11px;color:#9a8a7a;margin-bottom:10px">신랑 측 혼주</div>${pp('아버지','김철수')}${pp('어머니','이영희')}</div><div><div style="text-align:center;font-size:11px;color:#9a8a7a;margin-bottom:10px">신부 측 혼주</div>${pp('아버지','박정호')}${pp('어머니','최미정')}</div></div></div>
 <div class="sec"><h4>✦ 마음 전하실 곳</h4>${[['신랑 측',[['신랑','김원재','국민','123456-01-234567'],['아버지','김철수','신한','110-234-567890'],['어머니','이영희','우리','1002-345-678901']]],['신부 측',[['신부','박은빈','카카오뱅크','3333-01-2345678'],['아버지','박정호','농협','302-1234-5678-91'],['어머니','최미정','하나','123-456789-01234']]]].map(([s,l],i)=>`<div class="cut" style="background:#f3e4c8;border:2px solid #2a1a2e;margin-bottom:8px"><button class="acc" data-i="${i}" style="width:100%;border:0;background:transparent;display:flex;justify-content:space-between;align-items:center;padding:12px;font-size:13px;color:#2a1a2e;cursor:pointer">${s} 계좌번호 <i class="ti ti-chevron-down" aria-hidden="true"></i></button><div id="acc${i}" style="display:none;padding:0 12px 6px">${l.map(a=>acct(...a)).join('')}</div></div>`).join('')}</div>`}
-const GC=['#9fc8a0','#e8c4a8','#b8c8e6','#e6d4a2','#cdb6e0','#a8d8d0','#ecbcbc','#d6cfae'];
-function galHTML(){return`<div style="padding-top:18px"><div id="gmain" class="cut" style="height:290px;background:${GC[0]};border:2px solid #2a1a2e;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:#2a1a2e;font-size:11px;position:relative"><i class="ti ti-photo" style="font-size:30px" aria-hidden="true"></i><span id="gno">1 / 8</span><button id="gp" aria-label="이전 사진" class="ibtn cut" style="position:absolute;left:6px;top:50%;margin-top:-17px;background:#fbf3e4;color:#2a1a2e"><i class="ti ti-chevron-left" aria-hidden="true"></i></button><button id="gn" aria-label="다음 사진" class="ibtn cut" style="position:absolute;right:6px;top:50%;margin-top:-17px;background:#fbf3e4;color:#2a1a2e"><i class="ti ti-chevron-right" aria-hidden="true"></i></button></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px">${GC.map((x,i)=>`<button class="cut" data-g="${i}" style="aspect-ratio:1;border:2px solid #2a1a2e;background:${x};cursor:pointer"></button>`).join('')}</div><p style="font-size:11px;color:#9a8a7a;text-align:center;margin-top:14px">온실에서 함께 키워 온 시간들</p></div>`}
-function gbHTML(){return`<div style="padding-top:18px"><p style="font-size:12px;color:#6a5a4a;margin:0 0 12px;line-height:1.9">망원경으로 마음을 보내면<br>우주에 별이 하나 떠올라요.</p><input class="fld" id="gname" placeholder="이름" maxlength="12"><div class="err" id="e1"></div><textarea class="fld" id="gmsg" placeholder="축하 메시지를 남겨 주세요" maxlength="120" style="height:84px;padding:10px;resize:none"></textarea><div class="err" id="e2"></div><input class="fld" id="gpw" type="password" placeholder="비밀번호 (삭제할 때 필요해요)" maxlength="12"><div class="err" id="e3"></div><button id="gsend" class="cut" style="width:100%;height:44px;border:2px solid #2a1a2e;background:#2a2450;color:#f6c85f;font-size:13px;cursor:pointer;margin-top:4px">✦ 별 띄우기</button><div style="margin-top:22px;font-size:11px;color:#9a8a7a">남겨진 별 ${entries.length}개</div>${entries.slice().reverse().map(e=>`<div style="padding:12px 0;border-bottom:2px dashed #e2d3b8"><div style="font-size:12px;color:#c8593c">${esc(e.n)}</div><div style="font-size:12px;margin-top:4px">${esc(e.m)}</div></div>`).join('')}</div>`}
-function openM(k){bub.style.display='none';mt.textContent={home:'우리 집',green:'온실 · 사진',scope:'망원경 · 방명록'}[k];mb.innerHTML=k==='home'?homeHTML():k==='green'?galHTML():gbHTML();mb.scrollTop=0;modal.style.display='block';bind(k)}
+const GC=['#9fc8a0','#e8c4a8','#b8c8e6','#e6d4a2','#cdb6e0','#a8d8d0','#ecbcbc','#d6cfae','#c4dca0','#f0c8d8','#b0d0e8','#e0c0a0'];
+const GT=['처음 만난 날','첫 여행','바닷가 산책','함께한 생일','눈 오던 날','벚꽃 구경','캠핑','프러포즈','웨딩 촬영','웨딩 촬영 비하인드','부모님과 함께','앞으로도 함께'],pad=n=>String(n).padStart(2,'0');
+function galHTML(){return`<div class="gal"><p class="gal-intro">온실에서 함께 키워 온 시간들</p><div class="ggrid">${GC.map((c,i)=>`<button class="cut" data-g="${i}" aria-label="${i+1}번째 사진 크게 보기" style="background-color:${c}">${pad(i+1)}</button>`).join('')}</div></div>`}
+function gbHTML(){return`<div style="padding-top:18px"><p style="font-size:12px;color:#6a5a4a;margin:0 0 12px;line-height:1.9">망원경으로 마음을 보내면<br>우주에 별이 하나 떠올라요.</p><input class="fld" id="gname" placeholder="이름" maxlength="12"><div class="err" id="e1"></div><textarea class="fld" id="gmsg" placeholder="축하 메시지를 남겨 주세요" maxlength="120" style="height:84px;padding:10px;resize:none"></textarea><div class="err" id="e2"></div><button id="gsend" class="cut" style="width:100%;height:44px;border:2px solid #2a1a2e;background:#2a2450;color:#f6c85f;font-size:13px;cursor:pointer;margin-top:4px">✦ 별 띄우기</button><p class="note">남긴 글은 수정하거나 지울 수 없어요</p><div style="margin-top:22px;font-size:11px;color:#9a8a7a">남겨진 별 ${entries.length}개</div>${entries.slice().reverse().map(e=>`<div style="padding:12px 0;border-bottom:2px dashed #e2d3b8"><div style="font-size:12px;color:#c8593c">${esc(e.n)}</div><div style="font-size:12px;margin-top:4px">${esc(e.m)}</div></div>`).join('')}</div>`}
+// 사진 전체화면 보기
+const lb=document.getElementById('lb'),lbi=document.getElementById('lbimg');let li=0,lsx=null;
+const lbSet=(i,anim)=>{li=(i+GC.length)%GC.length;lbi.style.backgroundColor=GC[li];lbi.innerHTML=`<i class="ti ti-photo" style="font-size:40px" aria-hidden="true"></i><span>PHOTO ${pad(li+1)}</span>`;if(anim){lbi.classList.remove('sw');void lbi.offsetWidth;lbi.classList.add('sw')}document.getElementById('lbno').textContent=pad(li+1)+' / '+pad(GC.length);document.getElementById('lbcap').textContent=GT[li]};
+const openLb=i=>{lbSet(i);lb.style.display='flex'};
+document.getElementById('lbx').addEventListener('click',()=>lb.style.display='none');document.getElementById('lbp').addEventListener('click',()=>lbSet(li-1,true));document.getElementById('lbn').addEventListener('click',()=>lbSet(li+1,true));
+lbi.addEventListener('pointerdown',e=>lsx=e.clientX);lbi.addEventListener('pointerup',e=>{if(lsx!==null&&Math.abs(e.clientX-lsx)>30)lbSet(li+(e.clientX<lsx?1:-1),true);lsx=null});
+function openM(k){bub.style.display='none';mt.innerHTML='<i class="ti ti-'+{home:'home',green:'plant-2',scope:'telescope'}[k]+'" aria-hidden="true"></i>'+{home:'집',green:'온실 · 사진',scope:'망원경 · 방명록'}[k];mb.innerHTML=k==='home'?homeHTML():k==='green'?galHTML():gbHTML();mb.scrollTop=0;modal.style.display='block';bind(k)}
 function bind(k){mb.querySelectorAll('[data-t]').forEach(b=>b.addEventListener('click',()=>toast(b.dataset.t)));mb.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>copy(b.dataset.copy)));
 if(k==='home'){const pt=document.getElementById('ptog'),pa=document.getElementById('parents');pt.addEventListener('click',()=>{const o=pa.style.display==='none';pa.style.display=o?'grid':'none';pt.querySelector('i').className='ti ti-chevron-'+(o?'up':'down')});mb.querySelectorAll('.acc').forEach(b=>b.addEventListener('click',()=>{const el=document.getElementById('acc'+b.dataset.i),o=el.style.display==='none';el.style.display=o?'block':'none';b.querySelector('i').className='ti ti-chevron-'+(o?'up':'down')}))}
-if(k==='green'){let gi=0;const set=i=>{gi=(i+8)%8;document.getElementById('gmain').style.background=GC[gi];document.getElementById('gno').textContent=(gi+1)+' / 8'};document.getElementById('gp').addEventListener('click',()=>set(gi-1));document.getElementById('gn').addEventListener('click',()=>set(gi+1));mb.querySelectorAll('[data-g]').forEach(b=>b.addEventListener('click',()=>set(+b.dataset.g)))}
-if(k==='scope'){const f=[['gname','e1','이름을 입력해 주세요'],['gmsg','e2','메시지를 입력해 주세요'],['gpw','e3','비밀번호를 4자 이상 입력해 주세요']];f.forEach(([i,e])=>document.getElementById(i).addEventListener('input',()=>document.getElementById(e).textContent=''));document.getElementById('gsend').addEventListener('click',()=>{let ok=true;f.forEach(([i,e,m])=>{const v=document.getElementById(i).value.trim();if(i==='gpw'?v.length<4:!v){document.getElementById(e).textContent=m;ok=false}});if(!ok)return;const e=mk(document.getElementById('gname').value.trim(),document.getElementById('gmsg').value.trim(),'u'+Date.now());e.shown=false;entries.push(e);lastNew=e;holdX=e.x;modal.style.display='none';camHold=3.2;shoot={fx:sc.x+14,fy:sc.y+9,e,t0:t,tr:[]};setTimeout(()=>toast('우주에 별이 하나 떴어요. 별을 눌러 보세요'),1500)})}}
+if(k==='green')mb.querySelectorAll('[data-g]').forEach(b=>b.addEventListener('click',()=>openLb(+b.dataset.g)))
+if(k==='scope'){const f=[['gname','e1','이름을 입력해 주세요'],['gmsg','e2','메시지를 입력해 주세요']];f.forEach(([i,e])=>document.getElementById(i).addEventListener('input',()=>document.getElementById(e).textContent=''));document.getElementById('gsend').addEventListener('click',()=>{let ok=true;f.forEach(([i,e,m])=>{const v=document.getElementById(i).value.trim();if(!v){document.getElementById(e).textContent=m;ok=false}});if(!ok)return;const e=mk(document.getElementById('gname').value.trim(),document.getElementById('gmsg').value.trim(),'u'+Date.now());e.shown=false;entries.push(e);lastNew=e;holdX=e.x;modal.style.display='none';camHold=3.2;shoot={fx:sc.x+14,fy:sc.y+9,e,t0:t,tr:[]};setTimeout(()=>toast('우주에 별이 하나 떴어요. 별을 눌러 보세요'),1500)})}}
 })();
 </script>
 </body>
