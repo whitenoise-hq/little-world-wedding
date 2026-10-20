@@ -18,14 +18,28 @@
   - `packages/engine` — 캔버스 게임 엔진 + 테마(`themes/space`, `themes/village`). web과 admin 미리보기가 같이 씀
   - `packages/shared` — 도메인 타입, zod 스키마, slug 생성, Supabase 타입, 공통 상수
 - 백엔드: Supabase (DB, 사진 스토리지, 어드민 로그인)
-- 배포: Vercel 프로젝트 2개(web, admin). `turbo-ignore`로 바뀐 앱만 빌드
+- 배포: Vercel 프로젝트 2개(web, admin). 각 앱의 `vercel.json`에서 `turbo-ignore`로 바뀐 앱만 빌드
+- 버전: Node 22, pnpm 10, Next.js 16, React 19, TypeScript 5.9, zod 4, vitest
+- 내부 패키지(`@lww/shared`, `@lww/engine`)는 빌드하지 않고 TS 소스를 그대로 내보낸다. 앱의 `next.config.ts`에서 `transpilePackages`로 컴파일한다.
+
+## 명령
+
+```bash
+pnpm install
+pnpm dev          # web(3000) + admin(3001)
+pnpm dev:web      # 하객용만
+pnpm dev:admin    # 어드민만
+pnpm typecheck
+pnpm test
+pnpm build
+```
 
 ## 진행 순서
 
 `docs/PLANNING.md` 10장을 따른다.
 
-0. 모노레포 세팅 — **다음 할 일**
-1. 데이터 구조, 어드민, `/[slug]` 일반 청첩장(게임 없이) + OG 태그 + 인트로
+0. 모노레포 세팅 — 완료
+1. 데이터 구조, 어드민, `/[slug]` 일반 청첩장(게임 없이) + OG 태그 + 인트로 — **다음 할 일**
 2. 게임 화면(엔진 + 테마)을 붙이고 장소·데이터 연결
 3. 방명록 관리·스팸 방지, 사진 최적화, 로딩·성능
 
@@ -54,5 +68,10 @@
 
 ## 현재 상태
 
-- 기획 문서와 두 테마 목업까지 완료. 코드(모노레포)는 아직 없다.
+- 0단계(모노레포 세팅) 완료. typecheck·test·build 통과.
+  - `apps/web`: `/[slug]` 자리만 있음(형식이 틀린 slug는 404, 루트는 404, 전체 `noindex`)
+  - `apps/admin`: 빈 첫 화면
+  - `packages/shared`: slug 생성·검증(테스트 포함), 테마 id, 방명록 입력 zod 스키마
+  - `packages/engine`: 화면 규격 상수와 테마 인터페이스 초안만 있음(구현은 2단계)
+- 아직 안 한 것: Supabase 프로젝트 연결과 매일 깨우기, Vercel 프로젝트 생성, 린트(ESLint) 설정, 스타일 도구 선택(어드민 UI 라이브러리 등), 갈무리 서브셋 폰트
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 바로 보기 화면, 그림 외주 여부, 테마 추가, 들어가기 버튼 분리).

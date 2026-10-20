@@ -19,7 +19,7 @@
 
 ## 구조
 
-Turborepo + pnpm 모노레포 (예정)
+Turborepo + pnpm 모노레포
 
 ```
 apps/web        하객용 청첩장  {도메인}/{slug}
@@ -29,3 +29,8 @@ packages/shared 타입, 스키마, slug, 공통 상수
 ```
 
 Next.js · Supabase · Vercel · 2D 캔버스 픽셀아트
+
+```bash
+pnpm install
+pnpm dev        # web http://localhost:3000, admin http://localhost:3001
+```

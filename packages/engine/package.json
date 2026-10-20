@@ -1,0 +1,14 @@
+{
+  "name": "@lww/engine",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@lww/shared": "workspace:*"
+  }
+}

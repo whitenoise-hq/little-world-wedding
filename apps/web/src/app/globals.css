@@ -1,0 +1,18 @@
+/* 하객용 화면 기본값. 색은 docs/ART_GUIDE.md 6장 UI 색을 따른다. */
+:root {
+  --ink: #2a1a2e;
+  --paper: #fbf3e4;
+  --accent: #c8593c;
+  --highlight: #f6c85f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+}

@@ -226,7 +226,7 @@ Supabase 무료 플랜은 최근 7일 동안 DB 활동이 충분하지 않으면
 
 ## 10. 진행 순서
 
-0. 모노레포 세팅 (Turborepo + pnpm, apps/web·apps/admin·packages/engine·packages/shared, Vercel 프로젝트 2개)
+0. ✅ 모노레포 세팅 (Turborepo + pnpm, apps/web·apps/admin·packages/engine·packages/shared, Vercel 프로젝트 2개)
    - Supabase 연결 시 매일 깨우기(8장)를 함께 만든다
 1. 데이터 구조, 어드민, `/[slug]` 페이지 (게임 없이 일반 청첩장 형태) + OG 태그 + 인트로 화면
 2. 픽셀아트 게임 화면을 붙이고 장소와 데이터 연결. 엔진(렌더러, 입력, 카메라, 충돌)과 테마(그림, 장소 좌표, 이동 범위, 방명록 연출)를 분리해 테마를 갈아끼울 수 있게 만든다
