@@ -33,7 +33,13 @@ pnpm dev:admin    # 어드민만
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm supabase <명령>   # Supabase CLI (레포 devDependency, Homebrew 불필요)
+pnpm db:push          # supabase/migrations 를 원격 DB에 적용
+pnpm db:types         # DB 타입 생성 → packages/shared/src/database.types.ts
 ```
+
+- Supabase 프로젝트: `little-world-wedding`(ref `gninsfsuhbgkzkwbdagc`, 서울). 이 레포에 `supabase link` 되어 있다.
+- 환경변수는 각 앱의 `.env.example` 참고. 실제 값은 `.env.local`(git 제외)에만 둔다.
 
 - 이 맥에서는 `pnpm dlx`가 캐시 폴더 권한(`~/Library/Caches/pnpm`) 때문에 EACCES로 실패한다. 캐시 위치를 바꿔서 실행한다.
   예: `pnpm --config.cache-dir=$TMPDIR/pnpm-cache dlx shadcn@4.22.1 add button` (`apps/admin`에서)
@@ -82,5 +88,6 @@ pnpm build
   - `apps/admin`: 청첩장 목록, 입력 폼(검증 오류 표시), 공개 전환·주소 다시 만들기·삭제, 방명록 관리. 사진은 보기만
   - `apps/web`: 인트로(표지, 게임 준비되면 들어가기) → 게임 화면(조이스틱·플로팅 버튼·들어가기는 픽셀, 크기 3단계, 태블릿 너비까지) → 장소 모달(청첩장·사진·방명록, 나눔명조). 사진 전체화면은 scroll-snap 슬라이드. 방명록을 올리면 물고기·별 연출. OG 메타, 방명록 API(IP당 10분 3회 제한)
   - 어드민과 하객용은 프로세스가 달라 목업 데이터를 공유하지 않는다. 어드민에서 고친 내용은 Supabase 연결 후에 하객 화면에 반영된다.
-- 아직 안 한 것: Supabase 연결(스키마 확정, 저장소 구현, 어드민 로그인, 사진 업로드, 매일 깨우기), 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
+- Supabase: 프로젝트 연결·초기 마이그레이션 적용·운영자 등록·DB 타입 생성 완료. 권한 점검(공개 키 차단, secret 키 허용) 완료.
+- 아직 안 한 것: 저장소를 Supabase 구현으로 교체, 어드민 로그인, 사진 업로드, 매일 깨우기, 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 바로 보기 화면, 그림 외주 여부, 테마 추가, 들어가기 버튼 분리).

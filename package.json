@@ -11,10 +11,19 @@
     "dev:admin": "turbo run dev --filter=@lww/admin",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "supabase": "supabase",
+    "db:types": "supabase gen types typescript --linked --schema public > packages/shared/src/database.types.ts",
+    "db:push": "supabase db push"
   },
   "devDependencies": {
+    "supabase": "2.120.0",
     "turbo": "2.11.9",
     "typescript": "5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "supabase"
+    ]
   }
 }
