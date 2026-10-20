@@ -72,7 +72,7 @@ export const FIXTURE_INVITATIONS: Invitation[] = [
     id: 'inv-2',
     slug: 'qmwvhzta',
     theme: 'space',
-    isPublished: false,
+    isPublished: true,
     coverPhotoId: null,
     createdAt: '2026-10-15T14:00:00+09:00',
     updatedAt: '2026-10-15T14:20:00+09:00',
