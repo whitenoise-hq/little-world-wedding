@@ -1,11 +1,19 @@
 'use server'
 
-import { emptyInvitationContent, invitationContentSchema, THEME_IDS, type InvitationContent, type ThemeId } from '@lww/shared'
+import {
+  emptyInvitationContent,
+  invitationContentSchema,
+  MAX_PHOTOS,
+  THEME_IDS,
+  type InvitationContent,
+  type NewPhoto,
+  type ThemeId,
+} from '@lww/shared'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requireAdmin } from '@/lib/auth'
-import { guestbook, invitations } from '@/lib/repositories'
+import { guestbook, invitations, photos } from '@/lib/repositories'
 
 export type SaveResult = { ok: true } | { ok: false; errors: Record<string, string> }
 
@@ -61,4 +69,51 @@ export async function deleteGuestbookEntry(invitationId: string, entryId: string
   await guestbook.remove(entryId)
   revalidatePath(`/invitations/${invitationId}/guestbook`)
   revalidatePath('/invitations')
+}
+
+// ── 사진 ─────────────────────────────
+// 파일은 브라우저가 Storage에 직접 올리고(운영자 세션, RLS), 여기서는 DB 행만 다룬다.
+
+const photoPath = (invitationId: string) =>
+  z.string().regex(new RegExp(`^${invitationId}/[0-9a-f-]{36}-(thumb|full)\\.(webp|jpg)$`), '잘못된 사진 경로입니다')
+
+export async function addPhotos(invitationId: string, items: NewPhoto[]) {
+  await requireAdmin()
+  const schema = z
+    .array(z.object({ id: z.uuid(), thumbPath: photoPath(invitationId), fullPath: photoPath(invitationId), caption: z.string().max(60) }))
+    .min(1)
+  const parsed = schema.parse(items)
+  const current = await photos.list(invitationId)
+  if (current.length + parsed.length > MAX_PHOTOS) throw new Error(`사진은 최대 ${MAX_PHOTOS}장까지 올릴 수 있어요`)
+  await photos.add(invitationId, parsed)
+  revalidatePath(`/invitations/${invitationId}`)
+}
+
+export async function updatePhotoCaption(invitationId: string, photoId: string, caption: string) {
+  await requireAdmin()
+  await photos.updateCaption(photoId, z.string().trim().max(60).parse(caption))
+  revalidatePath(`/invitations/${invitationId}`)
+}
+
+export async function movePhoto(invitationId: string, photoId: string, direction: -1 | 1) {
+  await requireAdmin()
+  const ids = (await photos.list(invitationId)).map((p) => p.id)
+  const i = ids.indexOf(photoId)
+  const j = i + direction
+  if (i < 0 || j < 0 || j >= ids.length) return
+  ;[ids[i], ids[j]] = [ids[j]!, ids[i]!]
+  await photos.reorder(invitationId, ids)
+  revalidatePath(`/invitations/${invitationId}`)
+}
+
+export async function setCoverPhoto(invitationId: string, photoId: string | null) {
+  await requireAdmin()
+  await invitations.update(invitationId, { coverPhotoId: photoId })
+  revalidatePath(`/invitations/${invitationId}`)
+}
+
+export async function deletePhoto(invitationId: string, photoId: string) {
+  await requireAdmin()
+  await photos.remove(photoId)
+  revalidatePath(`/invitations/${invitationId}`)
 }

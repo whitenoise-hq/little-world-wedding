@@ -29,6 +29,10 @@ export const memoryPhotos: PhotoRepository = {
   async list(invitationId) {
     return FIXTURE_PHOTOS.filter((p) => p.invitationId === invitationId).sort((a, b) => a.sortOrder - b.sortOrder)
   },
+  add: notForGuests,
+  updateCaption: notForGuests,
+  reorder: notForGuests,
+  remove: notForGuests,
 }
 
 export const memoryGuestbook: GuestbookRepository = {

@@ -96,9 +96,27 @@ export const memoryInvitations: InvitationRepository = {
   },
 }
 
+// 목업 모드에서는 파일을 올릴 곳이 없어 업로드는 막고, 나머지 관리 기능만 흉내 낸다.
 export const memoryPhotos: PhotoRepository = {
   async list(invitationId) {
     return clone(store.photos.filter((p) => p.invitationId === invitationId).sort((a, b) => a.sortOrder - b.sortOrder))
+  },
+  async add() {
+    throw new Error('목업 모드에서는 사진을 올릴 수 없습니다 (Supabase 키 필요)')
+  },
+  async updateCaption(id, caption) {
+    const p = store.photos.find((x) => x.id === id)
+    if (p) p.caption = caption
+  },
+  async reorder(invitationId, orderedIds) {
+    orderedIds.forEach((id, i) => {
+      const p = store.photos.find((x) => x.id === id && x.invitationId === invitationId)
+      if (p) p.sortOrder = i
+    })
+  },
+  async remove(id) {
+    store.photos = store.photos.filter((p) => p.id !== id)
+    for (const inv of store.invitations) if (inv.coverPhotoId === id) inv.coverPhotoId = null
   },
 }
 

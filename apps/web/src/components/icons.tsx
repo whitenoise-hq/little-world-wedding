@@ -72,3 +72,17 @@ export const MailIcon = (p: P) => (
     <path d="M3.5 6.5L12 13l8.5-6.5" />
   </Icon>
 )
+export const MusicIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M9 18V5l11-2v13" />
+    <circle cx="6" cy="18" r="3" />
+    <circle cx="17" cy="16" r="3" />
+  </Icon>
+)
+export const MusicOffIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M9 18V9M9 5l11-2v9" />
+    <circle cx="6" cy="18" r="3" />
+    <path d="M3 3l18 18" />
+  </Icon>
+)

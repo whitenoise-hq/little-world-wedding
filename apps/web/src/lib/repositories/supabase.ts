@@ -48,6 +48,10 @@ export const supabasePhotos: PhotoRepository = {
     const rows = must(await db.from('photos').select('*').eq('invitation_id', invitationId).order('sort_order'))
     return rows.map((r) => toPhoto(r, serverEnv.supabaseUrl))
   },
+  add: notForGuests,
+  updateCaption: notForGuests,
+  reorder: notForGuests,
+  remove: notForGuests,
 }
 
 export const supabaseGuestbook: GuestbookRepository = {

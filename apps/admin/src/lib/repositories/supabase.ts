@@ -120,6 +120,45 @@ export const supabasePhotos: PhotoRepository = {
     const rows = must(await db.from('photos').select('*').eq('invitation_id', invitationId).order('sort_order'))
     return rows.map((r) => toPhoto(r, supabaseUrl))
   },
+  async add(invitationId, photos) {
+    const db = await createSupabase()
+    const last = must(
+      await db.from('photos').select('sort_order').eq('invitation_id', invitationId).order('sort_order', { ascending: false }).limit(1),
+    )
+    const start = (last[0]?.sort_order ?? -1) + 1
+    const { error } = await db.from('photos').insert(
+      photos.map((p, i) => ({
+        id: p.id,
+        invitation_id: invitationId,
+        thumb_path: p.thumbPath,
+        full_path: p.fullPath,
+        caption: p.caption,
+        sort_order: start + i,
+      })),
+    )
+    if (error) throw new Error(error.message)
+  },
+  async updateCaption(id, caption) {
+    const db = await createSupabase()
+    const { error } = await db.from('photos').update({ caption }).eq('id', id)
+    if (error) throw new Error(error.message)
+  },
+  async reorder(invitationId, orderedIds) {
+    const db = await createSupabase()
+    // 사진 수가 많지 않아(최대 30장) 한 장씩 갱신한다
+    for (const [i, id] of orderedIds.entries()) {
+      const { error } = await db.from('photos').update({ sort_order: i }).eq('id', id).eq('invitation_id', invitationId)
+      if (error) throw new Error(error.message)
+    }
+  },
+  async remove(id) {
+    const db = await createSupabase()
+    const row = must(await db.from('photos').select('thumb_path, full_path').eq('id', id).single())
+    const { error: storageError } = await db.storage.from(PHOTO_BUCKET).remove([row.thumb_path, row.full_path])
+    if (storageError) throw new Error(storageError.message)
+    const { error } = await db.from('photos').delete().eq('id', id)
+    if (error) throw new Error(error.message)
+  },
 }
 
 const notForAdmin = () => {

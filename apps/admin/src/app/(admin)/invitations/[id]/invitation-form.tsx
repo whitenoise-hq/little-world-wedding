@@ -163,7 +163,7 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
   }
 
   return (
-    <div className="space-y-6 pb-24">
+    <div className="space-y-6">
       <Section title="기본">
         <Field label="테마">
           <Select
@@ -282,9 +282,9 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
         </div>
       </Section>
 
-      <Section title="꾸미기" description="캐릭터 헤어·옷 색은 게임 화면을 붙이는 2단계에서 추가해요.">
-        <Field label="배경음악 주소 (선택)" error={err(['decor', 'bgmUrl'])}>
-          {text(['decor', 'bgmUrl'], { placeholder: 'https://...' })}
+      <Section title="배경음악" description="하객 화면에서 꺼진 상태로 시작하고, 하객이 켤 수 있어요.">
+        <Field label="음악 파일 주소 (선택)" error={err(['decor', 'bgmUrl'])}>
+          {text(['decor', 'bgmUrl'], { placeholder: 'https://... (mp3)' })}
         </Field>
       </Section>
 

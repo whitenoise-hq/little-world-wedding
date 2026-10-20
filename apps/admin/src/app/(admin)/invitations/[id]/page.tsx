@@ -2,12 +2,13 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeftIcon, MessageSquareIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { invitationUrl } from '@/lib/env'
+import { hasSupabase } from '@/lib/supabase/env'
 import { formatDateTime } from '@/lib/format'
 import { guestbook, invitations, photos } from '@/lib/repositories'
 import { InvitationActions } from './invitation-actions'
 import { InvitationForm } from './invitation-form'
+import { PhotoManager } from './photo-manager'
 
 export default async function InvitationEditPage({ params }: PageProps<'/invitations/[id]'>) {
   const { id } = await params
@@ -17,7 +18,8 @@ export default async function InvitationEditPage({ params }: PageProps<'/invitat
   const { groom, bride } = inv.content
 
   return (
-    <div className="space-y-6">
+    // 아래 고정 저장 바(64px)에 가리지 않을 만큼만 여백을 둔다: main 아래 여백(32px) + 56px = 저장 바 + 카드 사이 간격(24px)
+    <div className="space-y-6 pb-14">
       <div className="flex items-end justify-between gap-4">
         <div>
           <Link href="/invitations" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
@@ -41,30 +43,7 @@ export default async function InvitationEditPage({ params }: PageProps<'/invitat
 
       <InvitationForm id={id} theme={inv.theme} content={inv.content} />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>사진 {photoList.length}장</CardTitle>
-          <CardDescription>업로드·순서 변경·설명 수정은 Supabase Storage를 연결한 뒤 만들어요.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {photoList.length === 0 ? (
-            <p className="text-sm text-muted-foreground">사진이 없어요</p>
-          ) : (
-            <ul className="grid grid-cols-4 gap-3 sm:grid-cols-6">
-              {photoList.map((p) => (
-                <li key={p.id} className="space-y-1">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.thumbUrl} alt={p.caption} className="aspect-square w-full rounded-md border object-cover" />
-                  <p className="truncate text-xs text-muted-foreground">
-                    {p.id === inv.coverPhotoId && '★ '}
-                    {p.caption}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-      </Card>
+      <PhotoManager invitationId={id} photos={photoList} coverPhotoId={inv.coverPhotoId} canUpload={hasSupabase} />
     </div>
   )
 }

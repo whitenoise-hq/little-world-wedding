@@ -27,8 +27,19 @@ export interface InvitationRepository {
   remove(id: string): Promise<void>
 }
 
+export interface NewPhoto {
+  id: string // 저장 경로에 쓰려고 브라우저에서 미리 만든 uuid
+  thumbPath: string
+  fullPath: string
+  caption: string
+}
+
 export interface PhotoRepository {
-  list(invitationId: string): Promise<Photo[]>
+  list(invitationId: string): Promise<Photo[]> // sort_order 순
+  add(invitationId: string, photos: NewPhoto[]): Promise<void> // 뒤에 이어 붙인다
+  updateCaption(id: string, caption: string): Promise<void>
+  reorder(invitationId: string, orderedIds: string[]): Promise<void>
+  remove(id: string): Promise<void> // 저장소 파일까지 지운다
 }
 
 export interface GuestbookRepository {

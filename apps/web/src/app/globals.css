@@ -113,6 +113,25 @@ button {
   background: var(--pixel-ink);
   padding: 3px 7px;
 }
+.music {
+  position: absolute;
+  top: calc(18px + env(safe-area-inset-top));
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #f4efe6;
+  background: rgba(20, 16, 30, 0.55);
+  color: #f4efe6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.music[aria-pressed='true'] {
+  background: #f6c85f;
+  border-color: var(--pixel-ink);
+  color: var(--pixel-ink);
+}
 .guest-card {
   position: absolute;
   top: calc(96px + env(safe-area-inset-top));

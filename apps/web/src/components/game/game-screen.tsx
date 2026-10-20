@@ -4,7 +4,7 @@ import { createTheme, Game, type GuestEntry, type Place, type PlaceId } from '@l
 import type { GuestbookEntry, ThemeId } from '@lww/shared'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { GUESTBOOK_POSTED } from '../guestbook'
-import { CameraIcon, HomeIcon, PenIcon } from '../icons'
+import { CameraIcon, HomeIcon, MusicIcon, MusicOffIcon, PenIcon } from '../icons'
 import { Modal } from '../modal'
 import { toast } from '../toast'
 import { GAME_READY, INTRO_CLOSED } from './events'
@@ -30,11 +30,12 @@ interface Props {
   tagline: string
   taglineColor: string
   accent: string
+  bgmUrl: string
   entries: GuestbookEntry[]
   contents: Record<PlaceId, ReactNode>
 }
 
-export default function GameScreen({ theme: themeId, names, date, tagline, taglineColor, accent, entries, contents }: Props) {
+export default function GameScreen({ theme: themeId, names, date, tagline, taglineColor, accent, bgmUrl, entries, contents }: Props) {
   const stageRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const nametagRef = useRef<HTMLDivElement>(null)
@@ -43,6 +44,8 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
   const [open, setOpen] = useState<PlaceId | null>(null)
   const [selected, setSelected] = useState<GuestEntry | null>(null)
   const [hint, setHint] = useState(true)
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const [playing, setPlaying] = useState(false)
 
   useEffect(() => {
     const canvas = canvasRef.current!
@@ -118,6 +121,31 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
     return () => clearTimeout(timer)
   }, [selected])
 
+  // 배경음악: 꺼진 상태로 시작한다. 앱이 백그라운드로 가면 멈춘다.
+  useEffect(() => {
+    const onHidden = () => {
+      if (document.hidden) audioRef.current?.pause()
+      else if (playing) void audioRef.current?.play()
+    }
+    document.addEventListener('visibilitychange', onHidden)
+    return () => document.removeEventListener('visibilitychange', onHidden)
+  }, [playing])
+  const toggleMusic = async () => {
+    const audio = audioRef.current
+    if (!audio) return
+    if (playing) {
+      audio.pause()
+      setPlaying(false)
+      return
+    }
+    try {
+      await audio.play()
+      setPlaying(true)
+    } catch {
+      toast('음악을 재생하지 못했어요')
+    }
+  }
+
   const onJoystick = useCallback((x: number, y: number) => {
     gameRef.current?.setJoystick(x, y)
     if (x || y) setHint(false)
@@ -150,6 +178,15 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
         </div>
         <div className="hud-date">{date}</div>
       </div>
+
+      {bgmUrl && (
+        <>
+          <audio ref={audioRef} src={bgmUrl} loop preload="none" />
+          <button type="button" className="music cut" onClick={toggleMusic} aria-label={playing ? '배경음악 끄기' : '배경음악 켜기'} aria-pressed={playing}>
+            {playing ? <MusicIcon size={18} /> : <MusicOffIcon size={18} />}
+          </button>
+        </>
+      )}
 
       <div className="hint" style={{ opacity: hint ? 1 : 0 }}>
         조이스틱이나 버튼으로 움직여 보세요

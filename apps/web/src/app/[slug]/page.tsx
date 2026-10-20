@@ -19,7 +19,9 @@ export async function generateMetadata({ params }: PageProps<'/[slug]'>): Promis
   const { groom, bride, ceremony } = inv.content
   const title = `${groom.firstName} ♥ ${bride.firstName} 결혼합니다`
   const description = `${formatCeremonyKo(ceremony.date, ceremony.time)} · ${ceremony.venueName}`
-  const cover = inv.coverPhotoId ? (await photos.list(inv.id)).find((p) => p.id === inv.coverPhotoId) : undefined
+  // 대표 사진을 지정하지 않았으면 첫 번째 사진을 쓴다
+  const list = await photos.list(inv.id)
+  const cover = list.find((p) => p.id === inv.coverPhotoId) ?? list[0]
   // 카톡 미리보기는 절대 주소 이미지만 읽는다. 목업 사진(data URL)은 건너뛴다.
   const image = cover?.fullUrl.startsWith('http') ? cover.fullUrl : undefined
   return {
@@ -49,6 +51,7 @@ export default async function InvitationPage({ params }: PageProps<'/[slug]'>) {
         tagline={ui.tagline}
         taglineColor={ui.taglineColor}
         accent={ui.accent}
+        bgmUrl={inv.content.decor.bgmUrl}
         entries={entries}
         contents={{
           home: <HomeContent content={inv.content} />,

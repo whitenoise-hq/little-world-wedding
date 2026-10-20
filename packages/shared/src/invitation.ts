@@ -82,6 +82,9 @@ export const invitationSchema = z.object({
 
 export type Invitation = z.infer<typeof invitationSchema>
 
+// 청첩장 하나에 올릴 수 있는 사진 수
+export const MAX_PHOTOS = 30
+
 export interface Photo {
   id: string
   invitationId: string
