@@ -11,10 +11,21 @@
 ## 문서
 
 - [docs/PLANNING.md](docs/PLANNING.md): 기획 전체 (서비스 구조, 테마, 인트로, 장소와 모달, 방명록, 조작, 어드민, 진행 순서)
+- [docs/ART_GUIDE.md](docs/ART_GUIDE.md): 픽셀아트 기준 (해상도, 그리기 순서, 스프라이트 표기법, 팔레트, UI 색)
+- [CLAUDE.md](CLAUDE.md): 작업 규칙 요약 (구조, 진행 순서, 공통·성능 규칙)
 - 목업 (브라우저로 열기, 왼쪽 위 버튼으로 테마 전환)
   - [docs/mockup/index.html](docs/mockup/index.html): 우주 테마
   - [docs/mockup/village.html](docs/mockup/village.html): 마을 테마
 
-## 기술 스택
+## 구조
+
+Turborepo + pnpm 모노레포 (예정)
+
+```
+apps/web        하객용 청첩장  {도메인}/{slug}
+apps/admin      어드민         admin.{도메인}
+packages/engine 캔버스 게임 엔진 + 테마
+packages/shared 타입, 스키마, slug, 공통 상수
+```
 
 Next.js · Supabase · Vercel · 2D 캔버스 픽셀아트
