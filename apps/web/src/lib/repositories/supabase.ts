@@ -3,20 +3,14 @@ import {
   toGuestbookEntry,
   toInvitation,
   toPhoto,
-  type Database,
   type GuestbookRepository,
   type InvitationRepository,
   type PhotoRepository,
 } from '@lww/shared'
-import { createClient } from '@supabase/supabase-js'
 import { serverEnv } from '../env'
+import { getDb } from '../supabase'
 
-// 하객용 앱의 Supabase 저장소. web 전용 secret 키로 서버에서만 접근한다 (docs/PLANNING.md 8장).
-// 하객에게 필요한 기능만 구현한다: slug로 읽기, 사진 목록, 방명록 읽기·쓰기.
-
-const db = createClient<Database>(serverEnv.supabaseUrl, serverEnv.supabaseSecretKey, {
-  auth: { persistSession: false, autoRefreshToken: false },
-})
+// 하객용 앱의 Supabase 저장소. 하객에게 필요한 기능만 구현한다: slug로 읽기, 사진 목록, 방명록 읽기·쓰기.
 
 const notForGuests = () => {
   throw new Error('하객용 앱에서는 쓰지 않는 기능입니다')
@@ -31,7 +25,7 @@ function must<T>(res: { data: T; error: { message: string } | null }): NonNullab
 
 export const supabaseInvitations: InvitationRepository = {
   async getPublishedBySlug(slug) {
-    const { data, error } = await db.from('invitations').select('*').eq('slug', slug).eq('is_published', true).maybeSingle()
+    const { data, error } = await getDb().from('invitations').select('*').eq('slug', slug).eq('is_published', true).maybeSingle()
     if (error) throw new Error(error.message)
     return data ? toInvitation(data) : null
   },
@@ -45,7 +39,7 @@ export const supabaseInvitations: InvitationRepository = {
 
 export const supabasePhotos: PhotoRepository = {
   async list(invitationId) {
-    const rows = must(await db.from('photos').select('*').eq('invitation_id', invitationId).order('sort_order'))
+    const rows = must(await getDb().from('photos').select('*').eq('invitation_id', invitationId).order('sort_order'))
     return rows.map((r) => toPhoto(r, serverEnv.supabaseUrl))
   },
   add: notForGuests,
@@ -57,7 +51,7 @@ export const supabasePhotos: PhotoRepository = {
 export const supabaseGuestbook: GuestbookRepository = {
   async list(invitationId) {
     const rows = must(
-      await db
+      await getDb()
         .from('guestbook_entries')
         .select('id, invitation_id, name, message, created_at')
         .eq('invitation_id', invitationId)
@@ -67,7 +61,7 @@ export const supabaseGuestbook: GuestbookRepository = {
   },
   async add(invitationId, input, ipHash) {
     const row = must(
-      await db
+      await getDb()
         .from('guestbook_entries')
         .insert({ invitation_id: invitationId, name: input.name, message: input.message, ip_hash: ipHash ?? null })
         .select('id, invitation_id, name, message, created_at')
@@ -76,7 +70,7 @@ export const supabaseGuestbook: GuestbookRepository = {
     return toGuestbookEntry(row)
   },
   async countRecent(invitationId, ipHash, since) {
-    const { count, error } = await db
+    const { count, error } = await getDb()
       .from('guestbook_entries')
       .select('id', { count: 'exact', head: true })
       .eq('invitation_id', invitationId)

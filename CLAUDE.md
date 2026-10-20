@@ -36,7 +36,7 @@ pnpm build
 pnpm supabase <명령>   # Supabase CLI (레포 devDependency, Homebrew 불필요)
 pnpm db:push          # supabase/migrations 를 원격 DB에 적용
 pnpm db:types         # DB 타입 생성 → packages/shared/src/database.types.ts
-pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland)을 DB에 적용. 사진·방문자 글은 건드리지 않음
+pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland)을 DB에 적용. 사진·방문자 글은 건드리지 않음 (--reset-samples: 샘플 방명록만 갈아 끼움)
 ```
 
 - Supabase 프로젝트: `little-world-wedding`(ref `gninsfsuhbgkzkwbdagc`, 서울). 이 레포에 `supabase link` 되어 있다.
@@ -93,5 +93,7 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland)을 
 - Supabase: 프로젝트 연결·초기 마이그레이션 적용·운영자 등록·DB 타입 생성 완료. 권한 점검(공개 키 차단, secret 키 허용) 완료.
 - 저장소 Supabase 교체 완료: 하객용(web secret 키, 방명록 연속 작성 제한은 DB의 IP 해시 기준), 어드민(운영자 세션 + RLS, 로그인·로그아웃). DB에 샘플(템플릿) 청첩장 2개 적용됨: 마을 `/seavilla`, 우주 `/marsland` (내용은 `packages/shared/src/fixtures.ts`).
 - 사진 업로드: 어드민 청첩장 편집 화면의 `PhotoManager`. 브라우저에서 썸네일(600px)·큰 사진(1920px) WebP로 줄여 운영자 세션으로 Storage에 직접 올리고, DB 행은 Server Action이 만든다. 순서·대표·설명·삭제. 최대 30장. 대표 미지정 시 카톡 미리보기는 첫 사진.
-- 아직 안 한 것: 매일 깨우기 헬스체크, 어드민 저장 시 하객 페이지 캐시 갱신, 지도, 배경음악, 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
+- 매일 깨우기: `apps/web` `GET /api/health`(CRON_SECRET 필요) + `apps/web/vercel.json` Cron 매일 03:00 UTC.
+- 배포(Vercel)에서는 Supabase 키가 없어도 목업으로 넘어가지 않는다(web·admin). Supabase 클라이언트는 처음 쓸 때 만들어 키 없이도 빌드된다.
+- 아직 안 한 것: 어드민 저장 시 하객 페이지 캐시 갱신, 지도, 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 바로 보기 화면, 그림 외주 여부, 테마 추가, 들어가기 버튼 분리).

@@ -27,16 +27,16 @@ export const FIXTURE_INVITATIONS: Invitation[] = [
     updatedAt: '2026-10-20T21:00:00+09:00',
     content: {
       groom: {
-        fullName: '김원재',
-        firstName: '원재',
+        fullName: '최신랑',
+        firstName: '신랑',
         phone: fakePhone,
         showPhone: true,
-        father: { name: '김정훈', phone: fakePhone, showPhone: true },
+        father: { name: '최정훈', phone: fakePhone, showPhone: true },
         mother: { name: '이미숙', phone: fakePhone, showPhone: true },
       },
       bride: {
-        fullName: '박은빈',
-        firstName: '은빈',
+        fullName: '박신부',
+        firstName: '신부',
         phone: fakePhone,
         showPhone: true,
         father: { name: '박성호', phone: fakePhone, showPhone: true },
@@ -61,12 +61,12 @@ export const FIXTURE_INVITATIONS: Invitation[] = [
       ],
       accounts: {
         groom: [
-          { relation: '신랑', holder: '김원재', bank: '국민은행', number: '000000-00-000000', kakaoPayUrl: '', visible: true },
-          { relation: '아버지', holder: '김정훈', bank: '신한은행', number: '000-000-000000', kakaoPayUrl: '', visible: true },
+          { relation: '신랑', holder: '최신랑', bank: '국민은행', number: '000000-00-000000', kakaoPayUrl: '', visible: true },
+          { relation: '아버지', holder: '최정훈', bank: '신한은행', number: '000-000-000000', kakaoPayUrl: '', visible: true },
           { relation: '어머니', holder: '이미숙', bank: '우리은행', number: '0000-000-000000', kakaoPayUrl: '', visible: true },
         ],
         bride: [
-          { relation: '신부', holder: '박은빈', bank: '카카오뱅크', number: '0000-00-0000000', kakaoPayUrl: '', visible: true },
+          { relation: '신부', holder: '박신부', bank: '카카오뱅크', number: '0000-00-0000000', kakaoPayUrl: '', visible: true },
           { relation: '아버지', holder: '박성호', bank: '농협은행', number: '000-0000-0000-00', kakaoPayUrl: '', visible: true },
           { relation: '어머니', holder: '최윤정', bank: '하나은행', number: '000-000000-00000', kakaoPayUrl: '', visible: true },
         ],
@@ -84,19 +84,19 @@ export const FIXTURE_INVITATIONS: Invitation[] = [
     updatedAt: '2026-10-20T21:00:00+09:00',
     content: {
       groom: {
-        fullName: '이도윤',
-        firstName: '도윤',
+        fullName: '최신랑',
+        firstName: '신랑',
         phone: fakePhone,
         showPhone: true,
-        father: { name: '이상민', phone: fakePhone, showPhone: true },
+        father: { name: '최상민', phone: fakePhone, showPhone: true },
         mother: { name: '정수진', phone: fakePhone, showPhone: true },
       },
       bride: {
-        fullName: '한지우',
-        firstName: '지우',
+        fullName: '박신부',
+        firstName: '신부',
         phone: fakePhone,
         showPhone: true,
-        father: { name: '한경호', phone: fakePhone, showPhone: true },
+        father: { name: '박경호', phone: fakePhone, showPhone: true },
         mother: { name: '오미숙', phone: fakePhone, showPhone: true },
       },
       greeting: {
@@ -118,13 +118,13 @@ export const FIXTURE_INVITATIONS: Invitation[] = [
       ],
       accounts: {
         groom: [
-          { relation: '신랑', holder: '이도윤', bank: '신한은행', number: '000-000-000000', kakaoPayUrl: '', visible: true },
-          { relation: '아버지', holder: '이상민', bank: '국민은행', number: '000000-00-000000', kakaoPayUrl: '', visible: true },
+          { relation: '신랑', holder: '최신랑', bank: '신한은행', number: '000-000-000000', kakaoPayUrl: '', visible: true },
+          { relation: '아버지', holder: '최상민', bank: '국민은행', number: '000000-00-000000', kakaoPayUrl: '', visible: true },
           { relation: '어머니', holder: '정수진', bank: '우리은행', number: '0000-000-000000', kakaoPayUrl: '', visible: true },
         ],
         bride: [
-          { relation: '신부', holder: '한지우', bank: '토스뱅크', number: '0000-0000-0000', kakaoPayUrl: '', visible: true },
-          { relation: '아버지', holder: '한경호', bank: '기업은행', number: '000-000000-00-000', kakaoPayUrl: '', visible: true },
+          { relation: '신부', holder: '박신부', bank: '토스뱅크', number: '0000-0000-0000', kakaoPayUrl: '', visible: true },
+          { relation: '아버지', holder: '박경호', bank: '기업은행', number: '000-000000-00-000', kakaoPayUrl: '', visible: true },
           { relation: '어머니', holder: '오미숙', bank: '하나은행', number: '000-000000-00000', kakaoPayUrl: '', visible: true },
         ],
       },
@@ -146,21 +146,21 @@ export const FIXTURE_PHOTOS: Photo[] = PHOTO_COLORS.map((color, i) => ({
 // 샘플 방명록. 방문자가 남긴 글과 섞여도 어색하지 않게 담백하게 쓴다.
 const GUESTBOOK_SEED: Record<string, [string, string][]> = {
   'inv-1': [
-    ['지훈', '원재야, 결혼 진심으로 축하한다. 두 사람 늘 지금처럼 웃으며 살길 바라.'],
-    ['수빈', '은빈아 너무 축하해! 바닷가 마을처럼 평온한 날들만 가득하길.'],
+    ['지훈', '결혼 진심으로 축하한다. 두 사람 늘 지금처럼 웃으며 살길 바라.'],
+    ['수빈', '너무 축하해! 바닷가 마을처럼 평온한 날들만 가득하길.'],
     ['김 팀장', '두 분의 새로운 출발을 진심으로 축하드립니다.'],
     ['하은', '청첩장 너무 예뻐요. 결혼식 날 꼭 갈게요.'],
     ['도현', '드디어 가는구나. 행복하게 잘 살아라, 친구야.'],
     ['예린', '서로 아껴 주는 모습이 늘 보기 좋았어요. 오래오래 행복하세요.'],
-    ['이모', '우리 은빈이 시집가는구나. 예쁘게 잘 살아라.'],
+    ['이모', '우리 조카 시집가는구나. 예쁘게 잘 살아라.'],
   ],
   'inv-2': [
-    ['준호', '도윤아, 우주에서 제일 잘 어울리는 커플이다. 축하해!'],
-    ['서연', '지우야 결혼 축하해. 두 사람의 궤도가 언제나 반짝이길.'],
+    ['준호', '우주에서 제일 잘 어울리는 커플이다. 축하해!'],
+    ['서연', '결혼 축하해. 두 사람의 궤도가 언제나 반짝이길.'],
     ['박 선배', '결혼 진심으로 축하합니다. 행복한 가정 이루세요.'],
     ['민재', '망원경으로 보니 별이 정말 많네요. 저도 하나 띄우고 갑니다.'],
     ['소율', '두 분 정말 잘 어울려요. 예식 날 뵐게요!'],
-    ['고모', '도윤이 장가가는 날, 기쁜 마음으로 축하한다.'],
+    ['고모', '우리 조카 장가가는 날, 기쁜 마음으로 축하한다.'],
   ],
 }
 
