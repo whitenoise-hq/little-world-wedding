@@ -18,11 +18,14 @@ export async function proxy(request: NextRequest) {
       },
     },
   })
-  const { data } = await supabase.auth.getUser()
+  // getClaims: 토큰 서명을 서버에서 직접 검증한다(비대칭 키). Supabase에 묻지 않아 빠르고,
+  // 만료된 토큰이면 갱신해서 쿠키에 다시 쓴다.
+  const { data } = await supabase.auth.getClaims()
+  const loggedIn = Boolean(data?.claims.sub)
 
   const isLogin = request.nextUrl.pathname.startsWith('/login')
-  if (!data.user && !isLogin) return NextResponse.redirect(new URL('/login', request.url))
-  if (data.user && isLogin) return NextResponse.redirect(new URL('/invitations', request.url))
+  if (!loggedIn && !isLogin) return NextResponse.redirect(new URL('/login', request.url))
+  if (loggedIn && isLogin) return NextResponse.redirect(new URL('/invitations', request.url))
   return response
 }
 

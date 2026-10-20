@@ -279,7 +279,8 @@ button {
   font-family: var(--font-pixel), sans-serif;
   font-size: var(--hud-font);
 }
-.fab:active > span {
+/* 누름 표시는 JS(pressed)로 켜고 끈다. :active는 휴대폰에서 손을 뗀 뒤에도 남는 경우가 있다. */
+.fab.pressed > span {
   background: #f6c85f;
 }
 

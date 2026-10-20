@@ -202,21 +202,15 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
         <Joystick onChange={onJoystick} />
         <div className="fabs">
           {FABS.map((f) => (
-            <button
+            <FabButton
               key={f.id}
-              type="button"
-              className="fab oct"
-              aria-label={`${f.label}(으)로 이동`}
-              onClick={() => {
+              label={f.label}
+              icon={f.icon}
+              onPress={() => {
                 gameRef.current?.goTo(f.id)
                 setHint(false)
               }}
-            >
-              <span className="oct">
-                {f.icon}
-                {f.label}
-              </span>
-            </button>
+            />
           ))}
         </div>
       </div>
@@ -227,5 +221,39 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
         </Modal>
       )}
     </div>
+  )
+}
+
+// 픽셀 플로팅 버튼. 누르는 동안만 노란색: 손을 떼거나(취소·벗어남 포함) 늦어도 0.25초 뒤에는 돌아온다.
+function FabButton({ label, icon, onPress }: { label: string; icon: ReactNode; onPress: () => void }) {
+  const [pressed, setPressed] = useState(false)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const release = () => {
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = setTimeout(() => setPressed(false), 80)
+  }
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current)
+  }, [])
+  return (
+    <button
+      type="button"
+      className={`fab oct${pressed ? ' pressed' : ''}`}
+      aria-label={`${label}(으)로 이동`}
+      onPointerDown={() => {
+        setPressed(true)
+        if (timer.current) clearTimeout(timer.current)
+        timer.current = setTimeout(() => setPressed(false), 250)
+      }}
+      onPointerUp={release}
+      onPointerCancel={release}
+      onPointerLeave={release}
+      onClick={onPress}
+    >
+      <span className="oct">
+        {icon}
+        {label}
+      </span>
+    </button>
   )
 }

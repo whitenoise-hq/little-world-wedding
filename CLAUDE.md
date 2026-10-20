@@ -18,7 +18,7 @@
   - `packages/engine` — 캔버스 게임 엔진 + 테마(`themes/space`, `themes/village`). web과 admin 미리보기가 같이 씀
   - `packages/shared` — 도메인 타입, zod 스키마, slug 생성, Supabase 타입, 공통 상수
 - 백엔드: Supabase (DB, 사진 스토리지, 어드민 로그인)
-- 배포: Vercel 프로젝트 2개(web, admin). 각 앱의 `vercel.json`에서 `turbo-ignore`로 바뀐 앱만 빌드
+- 배포: Vercel 프로젝트 2개(web, admin). 각 앱의 `vercel.json`에서 `turbo-ignore`로 바뀐 앱만 빌드, 함수 실행 위치는 서울(`regions: ["icn1"]`). Supabase도 서울이라 둘을 떼어 놓으면 요청마다 미국 왕복이 생겨 느려진다
 - 버전: Node 22, pnpm 10, Next.js 16, React 19, TypeScript 5.9, zod 4, vitest
 - 어드민 UI: Tailwind 4 + shadcn/ui(Radix, Nova 프리셋). 하객용(`apps/web`)은 Tailwind 없이 `globals.css`. 글꼴은 나눔명조(청첩장 글자) + 갈무리 서브셋(게임 세계 안 이름표·말풍선)
 - 내부 패키지(`@lww/shared`, `@lww/engine`)는 빌드하지 않고 TS 소스를 그대로 내보낸다. 앱의 `next.config.ts`에서 `transpilePackages`로 컴파일한다.
