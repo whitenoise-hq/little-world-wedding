@@ -20,6 +20,7 @@
 - 백엔드: Supabase (DB, 사진 스토리지, 어드민 로그인)
 - 배포: Vercel 프로젝트 2개(web, admin). 각 앱의 `vercel.json`에서 `turbo-ignore`로 바뀐 앱만 빌드
 - 버전: Node 22, pnpm 10, Next.js 16, React 19, TypeScript 5.9, zod 4, vitest
+- 어드민 UI: Tailwind 4 + shadcn/ui(Radix, Nova 프리셋). 하객용(`apps/web`)은 Tailwind 없이 `globals.css` + 갈무리 서브셋 폰트
 - 내부 패키지(`@lww/shared`, `@lww/engine`)는 빌드하지 않고 TS 소스를 그대로 내보낸다. 앱의 `next.config.ts`에서 `transpilePackages`로 컴파일한다.
 
 ## 명령
@@ -34,18 +35,24 @@ pnpm test
 pnpm build
 ```
 
+- 이 맥에서는 `pnpm dlx`가 캐시 폴더 권한(`~/Library/Caches/pnpm`) 때문에 EACCES로 실패한다. 캐시 위치를 바꿔서 실행한다.
+  예: `pnpm --config.cache-dir=$TMPDIR/pnpm-cache dlx shadcn@4.22.1 add button` (`apps/admin`에서)
+
 ## 진행 순서
 
 `docs/PLANNING.md` 10장을 따른다.
 
 0. 모노레포 세팅 — 완료
-1. 데이터 구조, 어드민, `/[slug]` 일반 청첩장(게임 없이) + OG 태그 + 인트로 — **다음 할 일**
+1. 데이터 구조, 어드민, `/[slug]` 일반 청첩장(게임 없이) + OG 태그 + 인트로 — **진행 중** (화면 완료, Supabase 연결 전)
 2. 게임 화면(엔진 + 테마)을 붙이고 장소·데이터 연결
 3. 방명록 관리·스팸 방지, 사진 최적화, 로딩·성능
 
 - DB 스키마는 처음부터 확정하지 않는다. 1단계에서 어드민 화면을 만들며 드러난 필드를 PLANNING.md에 먼저 적고 확정한다.
 
 ## 공통 규칙
+
+- **데이터 접근은 저장소를 거친다.** 화면 코드는 각 앱의 `src/lib/repositories`(인터페이스는 `packages/shared`의 `repository.ts`)만 쓴다. 지금은 목업(in-memory) 구현이고, Supabase 구현으로 바꿔도 화면 코드는 고치지 않는다.
+- **하객 브라우저는 데이터 서버에 직접 붙지 않는다.** 하객용 앱은 서버 컴포넌트와 Route Handler에서만 저장소를 쓴다(`server-only`).
 
 - **문서 먼저.** 기획·그림 규칙이 바뀌면 `docs/PLANNING.md` / `docs/ART_GUIDE.md`를 먼저 고친 뒤 코드를 바꾼다.
 - **공유 코드는 `packages/`에만.** 앱끼리 서로 import하지 않는다. 타입·스키마·상수는 `packages/shared`에 한 번만 정의한다.
@@ -68,10 +75,11 @@ pnpm build
 
 ## 현재 상태
 
-- 0단계(모노레포 세팅) 완료. typecheck·test·build 통과.
-  - `apps/web`: `/[slug]` 자리만 있음(형식이 틀린 slug는 404, 루트는 404, 전체 `noindex`)
-  - `apps/admin`: 빈 첫 화면
-  - `packages/shared`: slug 생성·검증(테스트 포함), 테마 id, 방명록 입력 zod 스키마
-  - `packages/engine`: 화면 규격 상수와 테마 인터페이스 초안만 있음(구현은 2단계)
-- 아직 안 한 것: Supabase 프로젝트 연결과 매일 깨우기, Vercel 프로젝트 생성, 린트(ESLint) 설정, 스타일 도구 선택(어드민 UI 라이브러리 등), 갈무리 서브셋 폰트
+- 0단계 완료, 1단계 화면 완료(목업 데이터). typecheck·test·build 통과.
+  - `packages/shared`: 청첩장 내용 스키마(`invitation.ts`), 저장소 인터페이스, 날짜 포맷, slug, 방명록 스키마, 목업 데이터(`@lww/shared/fixtures`)
+  - `packages/engine`: 화면 규격 상수, 테마 인터페이스 초안, 신랑·신부 스프라이트
+  - `apps/admin`: 청첩장 목록, 입력 폼(검증 오류 표시), 공개 전환·주소 다시 만들기·삭제, 방명록 관리. 사진은 보기만
+  - `apps/web`: 인트로(표지 + 진행 막대 + 들어가기), 게임 없는 일반 청첩장(인사말, 일시·달력·D-day, 장소·길찾기, 오시는 길, 연락하기, 계좌, 사진 3칸 격자 + 전체화면, 방명록), OG 메타, 방명록 API(IP당 10분 3회 제한)
+  - 어드민과 하객용은 프로세스가 달라 목업 데이터를 공유하지 않는다. 어드민에서 고친 내용은 Supabase 연결 후에 하객 화면에 반영된다.
+- 아직 안 한 것: Supabase 연결(스키마 확정, 저장소 구현, 어드민 로그인, 사진 업로드, 매일 깨우기), 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 바로 보기 화면, 그림 외주 여부, 테마 추가, 들어가기 버튼 분리).

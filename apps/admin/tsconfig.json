@@ -2,6 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
+    // shadcn/Radix 컴포넌트가 지원하지 않아 어드민에서만 끈다. packages/는 유지.
+    "exactOptionalPropertyTypes": false,
     "allowJs": false,
     "incremental": true,
     "plugins": [{ "name": "next" }],

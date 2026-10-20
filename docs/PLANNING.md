@@ -210,6 +210,27 @@ Supabase 무료 플랜은 최근 7일 동안 DB 활동이 충분하지 않으면
 - 헬스체크 주소는 비밀 토큰으로 보호해 아무나 부르지 못하게 한다.
 - 0단계(모노레포 세팅)나 1단계에서 Supabase를 연결할 때 함께 만든다.
 
+### 데이터 구조 (초안)
+
+1단계 화면을 만들며 다듬는 초안이다. 확정은 Supabase 연결 직전에 한다. 코드상 정의는 `packages/shared`의 zod 스키마(`invitation.ts`)가 기준이다.
+
+| 테이블 | 필드 |
+|---|---|
+| `invitations` | id, slug(unique), theme, is_published, content(jsonb), cover_photo_id, created_at, updated_at |
+| `photos` | id, invitation_id, thumb_url, full_url, caption, sort_order |
+| `guestbook_entries` | id, invitation_id, name, message, created_at |
+
+- **content(jsonb):** 청첩장 단위로 한꺼번에 읽고 저장하는 내용은 jsonb 하나에 둔다. 따로 검색할 일이 없고, 항목이 바뀌어도 마이그레이션이 거의 필요 없다.
+  - `groom` / `bride`: 이름(성 포함), 이름표용 이름, 전화번호와 노출 여부, 아버지·어머니(이름, 전화번호와 노출 여부)
+  - `intro`: 인트로 문구
+  - `greeting`: 인사말
+  - `ceremony`: 날짜, 시간, 예식장 이름, 홀, 주소, 좌표
+  - `directions`: 교통 안내 목록 (항목 이름 + 내용. 지하철·버스·주차 등)
+  - `accounts`: 신랑 측·신부 측 계좌 목록 (관계, 예금주, 은행, 계좌번호, 카카오페이 링크, 노출 여부)
+  - `decor`: 배경음악 등 꾸미기 (캐릭터 헤어·옷 색은 2단계에서 추가)
+- 사진과 방명록은 따로 늘어나고 지워지므로 별도 테이블로 둔다.
+- 화면 코드는 저장소 인터페이스(`packages/shared`의 repository 타입)만 쓴다. 1단계 화면 작업 중에는 목업(in-memory) 구현을 쓰고, Supabase 구현으로 바꿔도 화면 코드는 고치지 않는다.
+
 ## 9. 꼭 챙길 것
 
 1. **카톡 공유 미리보기:** 청첩장마다 OG 태그(제목, 설명, 대표 사진)를 다르게 생성한다. 가장 중요하다. `/[slug]`의 `generateMetadata`로 처리하므로 1단계에서 함께 만든다.
