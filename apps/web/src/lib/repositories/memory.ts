@@ -6,6 +6,7 @@ import { FIXTURE_GUESTBOOK, FIXTURE_INVITATIONS, FIXTURE_PHOTOS } from '@lww/sha
 
 const g = globalThis as typeof globalThis & { __lwwGuestbook?: GuestbookEntry[] }
 const entries = (g.__lwwGuestbook ??= structuredClone(FIXTURE_GUESTBOOK))
+const hashes = new Map<string, string | undefined>()
 
 const notForGuests = () => {
   throw new Error('하객용 앱에서는 쓰지 않는 기능입니다')
@@ -34,10 +35,14 @@ export const memoryGuestbook: GuestbookRepository = {
   async list(invitationId) {
     return entries.filter((e) => e.invitationId === invitationId).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   },
-  async add(invitationId, input) {
+  async add(invitationId, input, ipHash) {
     const entry: GuestbookEntry = { id: `gb-${crypto.randomUUID()}`, invitationId, ...input, createdAt: new Date().toISOString() }
     entries.push(entry)
+    hashes.set(entry.id, ipHash)
     return entry
+  },
+  async countRecent(invitationId, ipHash, since) {
+    return entries.filter((e) => e.invitationId === invitationId && hashes.get(e.id) === ipHash && e.createdAt >= since).length
   },
   remove: notForGuests,
 }

@@ -36,6 +36,7 @@ pnpm build
 pnpm supabase <명령>   # Supabase CLI (레포 devDependency, Homebrew 불필요)
 pnpm db:push          # supabase/migrations 를 원격 DB에 적용
 pnpm db:types         # DB 타입 생성 → packages/shared/src/database.types.ts
+pnpm db:seed          # 목업 청첩장·방명록을 DB에 넣기 (같은 slug는 건너뜀)
 ```
 
 - Supabase 프로젝트: `little-world-wedding`(ref `gninsfsuhbgkzkwbdagc`, 서울). 이 레포에 `supabase link` 되어 있다.
@@ -57,7 +58,8 @@ pnpm db:types         # DB 타입 생성 → packages/shared/src/database.types.
 
 ## 공통 규칙
 
-- **데이터 접근은 저장소를 거친다.** 화면 코드는 각 앱의 `src/lib/repositories`(인터페이스는 `packages/shared`의 `repository.ts`)만 쓴다. 지금은 목업(in-memory) 구현이고, Supabase 구현으로 바꿔도 화면 코드는 고치지 않는다.
+- **데이터 접근은 저장소를 거친다.** 화면 코드는 각 앱의 `src/lib/repositories`(인터페이스는 `packages/shared`의 `repository.ts`)만 쓴다. Supabase 키가 있으면 Supabase 구현, 없으면 목업(in-memory) 구현을 쓴다. DB 행 ↔ 화면 모델 변환은 `packages/shared`의 `supabase-mappers.ts`.
+- **어드민 인증:** `src/proxy.ts`(Next 16의 미들웨어)가 세션을 갱신하고 비로그인을 `/login`으로 보낸다. `(admin)` 그룹 레이아웃과 모든 Server Action은 `requireAdmin()`으로 운영자인지 다시 확인하고, 데이터 권한은 RLS가 최종 판단한다.
 - **하객 브라우저는 데이터 서버에 직접 붙지 않는다.** 하객용 앱은 서버 컴포넌트와 Route Handler에서만 저장소를 쓴다(`server-only`).
 
 - **문서 먼저.** 기획·그림 규칙이 바뀌면 `docs/PLANNING.md` / `docs/ART_GUIDE.md`를 먼저 고친 뒤 코드를 바꾼다.
@@ -89,5 +91,6 @@ pnpm db:types         # DB 타입 생성 → packages/shared/src/database.types.
   - `apps/web`: 인트로(표지, 게임 준비되면 들어가기) → 게임 화면(조이스틱·플로팅 버튼·들어가기는 픽셀, 크기 3단계, 태블릿 너비까지) → 장소 모달(청첩장·사진·방명록, 나눔명조). 사진 전체화면은 scroll-snap 슬라이드. 방명록을 올리면 물고기·별 연출. OG 메타, 방명록 API(IP당 10분 3회 제한)
   - 어드민과 하객용은 프로세스가 달라 목업 데이터를 공유하지 않는다. 어드민에서 고친 내용은 Supabase 연결 후에 하객 화면에 반영된다.
 - Supabase: 프로젝트 연결·초기 마이그레이션 적용·운영자 등록·DB 타입 생성 완료. 권한 점검(공개 키 차단, secret 키 허용) 완료.
-- 아직 안 한 것: 저장소를 Supabase 구현으로 교체, 어드민 로그인, 사진 업로드, 매일 깨우기, 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
+- 저장소 Supabase 교체 완료: 하객용(web secret 키, 방명록 연속 작성 제한은 DB의 IP 해시 기준), 어드민(운영자 세션 + RLS, 로그인·로그아웃). DB에 목업 청첩장 2개 시드됨.
+- 아직 안 한 것: 사진 업로드, 매일 깨우기 헬스체크, 어드민 저장 시 하객 페이지 캐시 갱신, 지도, 배경음악, 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 바로 보기 화면, 그림 외주 여부, 테마 추가, 들어가기 버튼 분리).

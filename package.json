@@ -14,15 +14,18 @@
     "test": "turbo run test",
     "supabase": "supabase",
     "db:types": "supabase gen types typescript --linked --schema public > packages/shared/src/database.types.ts",
-    "db:push": "supabase db push"
+    "db:push": "supabase db push",
+    "db:seed": "tsx scripts/seed.mts"
   },
   "devDependencies": {
     "supabase": "2.120.0",
+    "tsx": "4.23.15",
     "turbo": "2.11.9",
     "typescript": "5.9.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "esbuild",
       "supabase"
     ]
   }

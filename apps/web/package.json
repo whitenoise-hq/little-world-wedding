@@ -11,6 +11,7 @@
   "dependencies": {
     "@lww/engine": "workspace:*",
     "@lww/shared": "workspace:*",
+    "@supabase/supabase-js": "2.117.2",
     "next": "16.4.2",
     "react": "19.3.1",
     "react-dom": "19.3.1",

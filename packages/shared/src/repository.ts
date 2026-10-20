@@ -33,6 +33,9 @@ export interface PhotoRepository {
 
 export interface GuestbookRepository {
   list(invitationId: string): Promise<GuestbookEntry[]> // 최신순
-  add(invitationId: string, input: GuestbookInput): Promise<GuestbookEntry>
+  // ipHash: 연속 작성 제한용 IP 해시 (원본 IP는 저장하지 않는다)
+  add(invitationId: string, input: GuestbookInput, ipHash?: string): Promise<GuestbookEntry>
+  // since(ISO 시각) 이후 같은 IP 해시로 남긴 글 수
+  countRecent(invitationId: string, ipHash: string, since: string): Promise<number>
   remove(id: string): Promise<void> // 운영자만
 }

@@ -113,6 +113,9 @@ export const memoryGuestbook: GuestbookRepository = {
     store.guestbook.push(entry)
     return clone(entry)
   },
+  async countRecent() {
+    return 0
+  },
   async remove(id) {
     store.guestbook = store.guestbook.filter((e) => e.id !== id)
   },

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
-import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
@@ -20,19 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko" className={cn('font-sans', geist.variable)}>
       <body className="min-h-screen bg-muted text-foreground">
-        <header className="sticky top-0 z-20 border-b bg-background">
-          <div className="mx-auto flex h-14 max-w-5xl items-center gap-6 px-6">
-            <Link href="/invitations" className="font-semibold">
-              리틀 월드 웨딩
-            </Link>
-            <nav className="text-sm text-muted-foreground">
-              <Link href="/invitations" className="hover:text-foreground">
-                청첩장
-              </Link>
-            </nav>
-          </div>
-        </header>
-        <main className="mx-auto max-w-5xl px-6 py-8">{children}</main>
+        {children}
         <Toaster position="top-center" />
       </body>
     </html>
