@@ -1,6 +1,6 @@
 'use client'
 
-import { createTheme, Game, type GuestEntry, type Place, type PlaceId } from '@lww/engine'
+import { Game, loadTheme, type GuestEntry, type Place, type PlaceId, type Theme } from '@lww/engine'
 import type { GuestbookEntry, ThemeId } from '@lww/shared'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { GUESTBOOK_POSTED, withPosted } from '../guestbook'
@@ -52,33 +52,51 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
   useEffect(() => {
     const canvas = canvasRef.current!
     const stage = stageRef.current!
-    const game = new Game(
-      canvas,
-      createTheme(themeId),
-      {
-        onNearChange: (place, auto) => setNear({ place, auto }),
-        onEnter: (place) => setOpen(place.id),
-        onGuestTap: (entry) => setSelected(entry),
-      },
-      nametagRef.current,
-    )
-    game.setGuests(withPosted(entries).map(({ id, name, message }) => ({ id, name, message })))
-    gameRef.current = game
-    // 개발 중 확인용
-    if (process.env.NODE_ENV !== 'production') (window as Window & { __lwwGame?: Game }).__lwwGame = game
-    const fit = () => game.resize(stage.clientWidth, stage.clientHeight)
-    fit()
-    const ro = new ResizeObserver(fit)
-    ro.observe(stage)
-    game.start()
-    requestAnimationFrame(() => {
-      ;(window as Window & { __lwwGameReady?: boolean }).__lwwGameReady = true
-      window.dispatchEvent(new Event(GAME_READY))
-    })
+    let cancelled = false
+    let stop = () => {}
+
+    // 테마 청크가 도착하면 게임을 만든다. 인트로는 GAME_READY까지 진행 막대를 보여주므로 이 기다림도 그 안에 들어간다.
+    const start = (theme: Theme) => {
+      const game = new Game(
+        canvas,
+        theme,
+        {
+          onNearChange: (place, auto) => setNear({ place, auto }),
+          onEnter: (place) => setOpen(place.id),
+          onGuestTap: (entry) => setSelected(entry),
+        },
+        nametagRef.current,
+      )
+      game.setGuests(withPosted(entries).map(({ id, name, message }) => ({ id, name, message })))
+      gameRef.current = game
+      // 개발 중 확인용
+      if (process.env.NODE_ENV !== 'production') (window as Window & { __lwwGame?: Game }).__lwwGame = game
+      const fit = () => game.resize(stage.clientWidth, stage.clientHeight)
+      fit()
+      const ro = new ResizeObserver(fit)
+      ro.observe(stage)
+      game.start()
+      requestAnimationFrame(() => {
+        ;(window as Window & { __lwwGameReady?: boolean }).__lwwGameReady = true
+        window.dispatchEvent(new Event(GAME_READY))
+      })
+      stop = () => {
+        ro.disconnect()
+        game.destroy()
+        gameRef.current = null
+      }
+    }
+
+    loadTheme(themeId)
+      .then((theme) => {
+        if (!cancelled) start(theme)
+      })
+      .catch(() => {
+        if (!cancelled) toast('화면을 불러오지 못했습니다. 새로고침해 주세요.')
+      })
     return () => {
-      ro.disconnect()
-      game.destroy()
-      gameRef.current = null
+      cancelled = true
+      stop()
     }
     // 처음 한 번만 만든다. 이후 방명록은 addGuest로 더한다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
