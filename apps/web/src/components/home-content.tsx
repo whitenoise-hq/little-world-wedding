@@ -45,15 +45,12 @@ export function HomeContent({ content }: { content: InvitationContent }) {
           <PinIcon size={22} style={{ color: 'var(--accent)' }} />
           지도는 준비 중입니다
         </div>
-        <div className="grid3">
+        <div className="grid2">
           <a className="btn" href={kakao} target="_blank" rel="noreferrer">
             카카오맵
           </a>
           <a className="btn" href={`https://map.naver.com/p/search/${q}`} target="_blank" rel="noreferrer">
             네이버지도
-          </a>
-          <a className="btn" href={`tmap://search?name=${encodeURIComponent(ceremony.venueName)}`}>
-            티맵
           </a>
         </div>
         {directions.length > 0 && (
