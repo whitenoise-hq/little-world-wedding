@@ -12,7 +12,7 @@ export interface Point {
 
 export interface Place extends Point {
   id: PlaceId
-  label: string // 들어가기 버튼과 모달 제목에 쓰는 이름 (예: 집, 정원, 낚시터)
+  label: string // 세계 안 장소 이름. 들어가기 버튼에 쓴다 (예: 정원 들어가기). 집은 web에서 "청첩장 보기"로 바꿔 쓴다
 }
 
 export interface PlayerState extends Point {

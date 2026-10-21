@@ -12,8 +12,10 @@ import { Joystick } from './joystick'
 
 
 const MODAL_TITLES: Record<PlaceId, string> = { home: '청첩장', photo: '사진', guestbook: '방명록' }
+// 들어가기 버튼 문구. 없는 장소는 "{장소} 들어가기"
+const ENTER_LABELS: Partial<Record<PlaceId, string>> = { home: '청첩장 보기' }
 const FABS: { id: PlaceId; label: string; icon: ReactNode }[] = [
-  { id: 'home', label: '집', icon: <HomeIcon size={18} /> },
+  { id: 'home', label: '청첩장', icon: <HomeIcon size={18} /> },
   { id: 'photo', label: '사진', icon: <CameraIcon size={18} /> },
   { id: 'guestbook', label: '방명록', icon: <PenIcon size={18} /> },
 ]
@@ -194,7 +196,7 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
 
       {near.place && !near.auto && (
         <button type="button" className="enter cut" onClick={() => setOpen(near.place!.id)}>
-          {near.place.label} 들어가기
+          {ENTER_LABELS[near.place.id] ?? `${near.place.label} 들어가기`}
         </button>
       )}
 
