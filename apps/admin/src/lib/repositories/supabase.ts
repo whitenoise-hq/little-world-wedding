@@ -145,7 +145,7 @@ export const supabasePhotos: PhotoRepository = {
   },
   async reorder(invitationId, orderedIds) {
     const db = await createSupabase()
-    // 사진 수가 많지 않아(최대 30장) 한 장씩 갱신한다
+    // 사진 수가 많지 않아(최대 20장) 한 장씩 갱신한다
     for (const [i, id] of orderedIds.entries()) {
       const { error } = await db.from('photos').update({ sort_order: i }).eq('id', id).eq('invitation_id', invitationId)
       if (error) throw new Error(error.message)

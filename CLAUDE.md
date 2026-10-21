@@ -92,7 +92,7 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland)을 
   - 어드민과 하객용은 프로세스가 달라 목업 데이터를 공유하지 않는다. 어드민에서 고친 내용은 Supabase 연결 후에 하객 화면에 반영된다.
 - Supabase: 프로젝트 연결·초기 마이그레이션 적용·운영자 등록·DB 타입 생성 완료. 권한 점검(공개 키 차단, secret 키 허용) 완료.
 - 저장소 Supabase 교체 완료: 하객용(web secret 키, 방명록 연속 작성 제한은 DB의 IP 해시 기준), 어드민(운영자 세션 + RLS, 로그인·로그아웃). DB에 샘플(템플릿) 청첩장 2개 적용됨: 마을 `/seavilla`, 우주 `/marsland` (내용은 `packages/shared/src/fixtures.ts`).
-- 사진 업로드: 어드민 청첩장 편집 화면의 `PhotoManager`. 브라우저에서 썸네일(600px)·큰 사진(1920px) WebP로 줄여 운영자 세션으로 Storage에 직접 올리고, DB 행은 Server Action이 만든다. 순서·대표·설명·삭제. 최대 30장. 대표 미지정 시 카톡 미리보기는 첫 사진.
+- 사진 업로드: 어드민 청첩장 편집 화면의 `PhotoManager`. 브라우저에서 썸네일(600px)·큰 사진(1920px) WebP로 줄여 운영자 세션으로 Storage에 직접 올리고, DB 행은 Server Action이 만든다. 순서·대표·설명·삭제. 최대 20장. 대표 미지정 시 카톡 미리보기는 첫 사진.
 - 매일 깨우기: `apps/web` `GET /api/health`(CRON_SECRET 필요) + `apps/web/vercel.json` Cron 매일 03:00 UTC.
 - 배포(Vercel)에서는 Supabase 키가 없어도 목업으로 넘어가지 않는다(web·admin). Supabase 클라이언트는 처음 쓸 때 만들어 키 없이도 빌드된다.
 - 하객 페이지 캐시: 청첩장·사진은 `unstable_cache` + 태그(`cacheTags`), 어드민 Server Action이 `revalidateWeb()`으로 web `POST /api/revalidate` 호출. 방명록은 캐시 안 함.
