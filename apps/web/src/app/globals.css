@@ -368,6 +368,37 @@ button {
   border-radius: 3px;
 }
 
+/* 전체화면 모달 (표지의 "청첩장 바로 보기"): 인트로보다 위에 뜨고, 머리에는 왼쪽 닫기 버튼만 */
+.modal-backdrop.full {
+  z-index: 55;
+}
+.modal.full {
+  inset: 0;
+  max-width: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+.modal.full .modal-head {
+  justify-content: flex-start;
+  padding: max(10px, env(safe-area-inset-top)) 12px 4px;
+}
+.modal.full .modal-body {
+  padding: 0 max(clamp(16px, 5vw, 28px), calc((100% - 640px) / 2)) calc(40px + env(safe-area-inset-bottom));
+}
+.card-cover {
+  text-align: center;
+  padding: 12px 0 28px;
+}
+.card-names {
+  font-size: 24px;
+  font-weight: 700;
+}
+.card-date {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--sub);
+}
+
 /* ── 청첩장 본문 ─────────────────────────────── */
 
 /* 모달 안은 가로 스크롤 없이 줄어든다: 그리드·플렉스 자식이 내용보다 작아질 수 있게 */
@@ -976,8 +1007,14 @@ textarea.field {
   opacity: 0.8;
 }
 .intro-foot {
-  height: 52px;
   margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.intro-slot {
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1002,9 +1039,19 @@ textarea.field {
   color: var(--text);
   font-size: 15px;
   font-weight: 700;
+  min-width: 200px;
   padding: 14px 34px;
   cursor: pointer;
   animation: fade 0.4s ease-out;
+}
+/* 들어가기와 같은 크기·모양. 반투명 바탕으로 한 단계 낮춘다 */
+.intro-card {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  animation: none;
+}
+.intro-card:active {
+  background: rgba(255, 255, 255, 0.26);
 }
 
 @keyframes intro-out {

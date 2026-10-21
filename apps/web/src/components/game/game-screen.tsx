@@ -3,7 +3,7 @@
 import { createTheme, Game, type GuestEntry, type Place, type PlaceId } from '@lww/engine'
 import type { GuestbookEntry, ThemeId } from '@lww/shared'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { GUESTBOOK_POSTED } from '../guestbook'
+import { GUESTBOOK_POSTED, withPosted } from '../guestbook'
 import { CameraIcon, HomeIcon, MusicIcon, MusicOffIcon, PenIcon } from '../icons'
 import { Modal } from '../modal'
 import { toast } from '../toast'
@@ -62,7 +62,7 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
       },
       nametagRef.current,
     )
-    game.setGuests(entries.map(({ id, name, message }) => ({ id, name, message })))
+    game.setGuests(withPosted(entries).map(({ id, name, message }) => ({ id, name, message })))
     gameRef.current = game
     // 개발 중 확인용
     if (process.env.NODE_ENV !== 'production') (window as Window & { __lwwGame?: Game }).__lwwGame = game
@@ -92,12 +92,17 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
     return () => document.removeEventListener('visibilitychange', sync)
   }, [open])
 
-  // 방명록이 올라가면 모달을 닫고 새 오브젝트 연출을 보여준다
+  // 방명록이 올라가면 모달을 닫고 새 오브젝트 연출을 보여준다.
+  // 표지의 "청첩장 바로 보기"에서 올렸으면(게임 화면이 아직 가려져 있음) 오브젝트만 더하고 짧게 알린다.
   useEffect(() => {
     const onPosted = (e: Event) => {
       const entry = (e as CustomEvent<GuestbookEntry>).detail
-      setOpen(null)
       gameRef.current?.addGuest({ id: entry.id, name: entry.name, message: entry.message })
+      if (!(window as Window & { __lwwIntroClosed?: boolean }).__lwwIntroClosed) {
+        toast('축하 메시지를 남겼습니다')
+        return
+      }
+      setOpen(null)
       setTimeout(() => toast(NEW_GUEST_TOAST[themeId]), 1500)
     }
     window.addEventListener(GUESTBOOK_POSTED, onPosted)

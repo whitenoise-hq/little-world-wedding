@@ -7,9 +7,11 @@ import { Gallery } from '@/components/gallery'
 import { Guestbook } from '@/components/guestbook'
 import { HomeContent } from '@/components/home-content'
 import { Intro } from '@/components/intro'
+import { Section } from '@/components/section'
 import { getGuestbook, getInvitationBySlug, getPhotos } from '@/lib/cached'
 
 // 인트로 → 게임 화면. 장소에 들어가면 모달로 청첩장 내용을 보여준다.
+// 인트로의 "청첩장 바로 보기"는 같은 내용을 한 화면(전체화면 모달)에 이어서 보여준다.
 
 // 청첩장·사진은 캐시에서 읽는다 (lib/cached.ts). cache(): 메타데이터와 페이지가 같은 요청에서 두 번 읽지 않게 한다.
 const load = cache(async (slug: string) => (isValidSlug(slug) ? getInvitationBySlug(slug) : null))
@@ -43,6 +45,9 @@ export default async function InvitationPage({ params }: PageProps<'/[slug]'>) {
   const ui = THEME_UI[inv.theme]
   const names: [string, string] = [groom.firstName, bride.firstName]
   const date = formatCeremonyShort(ceremony.date, ceremony.time)
+  const home = <HomeContent content={inv.content} />
+  const gallery = <Gallery photos={photoList} />
+  const guestbook = <Guestbook slug={slug} theme={inv.theme} initial={entries} />
 
   return (
     <>
@@ -55,13 +60,29 @@ export default async function InvitationPage({ params }: PageProps<'/[slug]'>) {
         accent={ui.accent}
         bgmUrl={inv.content.decor.bgmUrl}
         entries={entries}
-        contents={{
-          home: <HomeContent content={inv.content} />,
-          photo: <Gallery photos={photoList} />,
-          guestbook: <Guestbook slug={slug} theme={inv.theme} initial={entries} />,
-        }}
+        contents={{ home, photo: gallery, guestbook }}
       />
-      <Intro slug={slug} tagline={ui.tagline} names={names} date={date} bg={ui.introBg} />
+      <Intro
+        slug={slug}
+        tagline={ui.tagline}
+        names={names}
+        date={date}
+        bg={ui.introBg}
+        accent={ui.accent}
+        card={
+          <>
+            {home}
+            {photoList.length > 0 && (
+              <Section label="GALLERY" title="사진">
+                {gallery}
+              </Section>
+            )}
+            <Section label="GUESTBOOK" title="방명록">
+              {guestbook}
+            </Section>
+          </>
+        }
+      />
     </>
   )
 }

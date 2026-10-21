@@ -7,6 +7,13 @@ import { toast } from './toast'
 // 방명록이 올라가면 게임 화면에 알린다 (물고기·별이 생기는 연출)
 export const GUESTBOOK_POSTED = 'lww-guestbook-posted'
 
+// 이 페이지에서 새로 올린 글. 방명록(장소 모달·청첩장 바로 보기)이나 게임 화면이 나중에 열려도 빠지지 않게 모아 둔다.
+let posted: GuestbookEntry[] = []
+export function withPosted(list: GuestbookEntry[]): GuestbookEntry[] {
+  const ids = new Set(list.map((e) => e.id))
+  return [...posted.filter((e) => !ids.has(e.id)), ...list]
+}
+
 // 글이 게임 화면에서 무엇이 되는지 (방명록 안내 한 줄만 테마 문구를 쓴다. docs/ART_GUIDE.md 6장)
 const BECOMES: Record<ThemeId, string> = {
   village: '남겨 주신 메시지는 바다의 물고기 한 마리가 됩니다.',
@@ -16,7 +23,7 @@ const BECOMES: Record<ThemeId, string> = {
 const dateFmt = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'long', day: 'numeric' })
 
 export function Guestbook({ slug, theme, initial }: { slug: string; theme: ThemeId; initial: GuestbookEntry[] }) {
-  const [entries, setEntries] = useState(initial)
+  const [entries, setEntries] = useState(() => withPosted(initial))
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<{ name?: string | undefined; message?: string | undefined }>({})
@@ -47,6 +54,7 @@ export function Guestbook({ slug, theme, initial }: { slug: string; theme: Theme
         return
       }
       const entry = body.entry
+      posted = [entry, ...posted]
       setEntries((list) => [entry, ...list])
       setName('')
       setMessage('')

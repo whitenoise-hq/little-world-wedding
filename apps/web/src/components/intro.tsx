@@ -1,11 +1,13 @@
 'use client'
 
 import { BRIDE, CHARACTER_PALETTE, GROOM, GROOM_STEP_LEGS, withLegs } from '@lww/engine'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { GAME_READY, INTRO_CLOSED } from './game/events'
+import { Modal } from './modal'
 import { PixelSprite } from './pixel-sprite'
 
 // 첫 화면. 서버가 HTML로 바로 보내고, 뒤에서 게임과 글꼴이 준비되면 "들어가기" 버튼으로 바뀐다.
+// "청첩장 바로 보기"는 게임을 기다리지 않고 처음부터 누를 수 있다 (전체화면 모달).
 // docs/PLANNING.md 3장.
 
 const FALLBACK_MS = 8000 // 무언가 늦어져도 이 시간이 지나면 들어갈 수 있게 한다
@@ -16,12 +18,15 @@ interface Props {
   names: [string, string]
   date: string
   bg: string
+  accent: string
+  card: ReactNode
 }
 
-export function Intro({ slug, tagline, names, date, bg }: Props) {
+export function Intro({ slug, tagline, names, date, bg, accent, card }: Props) {
   const [progress, setProgress] = useState(0.1)
   const [ready, setReady] = useState(false)
   const [phase, setPhase] = useState<'open' | 'leaving' | 'closed'>('open')
+  const [cardOpen, setCardOpen] = useState(false)
 
   useEffect(() => {
     let alive = true
@@ -58,44 +63,65 @@ export function Intro({ slug, tagline, names, date, bg }: Props) {
   if (phase === 'closed') return null
 
   return (
-    <div
-      className={`intro${phase === 'leaving' ? ' leaving' : ''}`}
-      style={{ '--intro-bg': bg } as React.CSSProperties}
-      onAnimationEnd={(e) => {
-        if (e.target === e.currentTarget && phase === 'leaving') {
-          setPhase('closed')
-          window.dispatchEvent(new Event(INTRO_CLOSED))
-        }
-      }}
-      role="dialog"
-      aria-modal="true"
-      aria-label="청첩장 표지"
-    >
-      <div className="intro-tag">{tagline}</div>
-      <div className="intro-chars">
-        <span>
-          <PixelSprite className="base" rows={GROOM} palette={CHARACTER_PALETTE} scale={5} />
-          <PixelSprite className="step" rows={withLegs(GROOM, GROOM_STEP_LEGS)} palette={CHARACTER_PALETTE} scale={5} />
-        </span>
-        <span>
-          <PixelSprite rows={BRIDE} palette={CHARACTER_PALETTE} scale={5} />
-        </span>
-      </div>
-      <div className="intro-names">
-        {names[0]} <span className="heart">♥</span> {names[1]}
-      </div>
-      <div className="intro-date">{date}</div>
-      <div className="intro-foot">
-        {ready ? (
-          <button type="button" className="intro-enter" onClick={() => setPhase('leaving')} autoFocus>
-            들어가기
-          </button>
-        ) : (
-          <div className="intro-bar" role="progressbar" aria-label="불러오는 중" aria-valuenow={Math.round(progress * 100)}>
-            <i style={{ width: `${progress * 100}%` }} />
+    <>
+      <div
+        className={`intro${phase === 'leaving' ? ' leaving' : ''}`}
+        style={{ '--intro-bg': bg } as React.CSSProperties}
+        onAnimationEnd={(e) => {
+          if (e.target === e.currentTarget && phase === 'leaving') {
+            setPhase('closed')
+            ;(window as Window & { __lwwIntroClosed?: boolean }).__lwwIntroClosed = true
+            window.dispatchEvent(new Event(INTRO_CLOSED))
+          }
+        }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="청첩장 표지"
+      >
+        <div className="intro-tag">{tagline}</div>
+        <div className="intro-chars">
+          <span>
+            <PixelSprite className="base" rows={GROOM} palette={CHARACTER_PALETTE} scale={5} />
+            <PixelSprite className="step" rows={withLegs(GROOM, GROOM_STEP_LEGS)} palette={CHARACTER_PALETTE} scale={5} />
+          </span>
+          <span>
+            <PixelSprite rows={BRIDE} palette={CHARACTER_PALETTE} scale={5} />
+          </span>
+        </div>
+        <div className="intro-names">
+          {names[0]} <span className="heart">♥</span> {names[1]}
+        </div>
+        <div className="intro-date">{date}</div>
+        <div className="intro-foot">
+          <div className="intro-slot">
+            {ready ? (
+              <button type="button" className="intro-enter" onClick={() => setPhase('leaving')} autoFocus>
+                들어가기
+              </button>
+            ) : (
+              <div className="intro-bar" role="progressbar" aria-label="불러오는 중" aria-valuenow={Math.round(progress * 100)}>
+                <i style={{ width: `${progress * 100}%` }} />
+              </div>
+            )}
           </div>
-        )}
+          <button type="button" className="intro-enter intro-card" onClick={() => setCardOpen(true)}>
+            청첩장 바로 보기
+          </button>
+        </div>
       </div>
-    </div>
+      {cardOpen && (
+        <div style={{ '--accent': accent } as React.CSSProperties}>
+          <Modal title="청첩장" full onClose={() => setCardOpen(false)}>
+            <div className="card-cover">
+              <div className="card-names">
+                {names[0]} <span className="heart">♥</span> {names[1]}
+              </div>
+              <div className="card-date">{date}</div>
+            </div>
+            {card}
+          </Modal>
+        </div>
+      )}
+    </>
   )
 }
