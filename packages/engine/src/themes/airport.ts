@@ -4,7 +4,7 @@ import { createRng, hashString } from '../random'
 import type { Drawable, Frame, GuestVisual, Place, PlaceId, Theme } from '../theme'
 
 // 공항 테마: 신혼여행을 떠나는 날의 공항 터미널 출국장.
-// 위로 앞 유리벽 너머 도로, 아래로 탑승구 유리창 너머 계류장(신혼여행 여객기)과 활주로.
+// 위로 앞 벽과 유리, 아래로 탑승구 유리창 너머 계류장(신혼여행 여객기)과 활주로.
 // 방명록은 탑승구, 글 하나 = 종이비행기 한 대. 색은 docs/ART_GUIDE.md 5장.
 
 const W = 200
@@ -51,8 +51,8 @@ const obstacles = [
   { x: 126, y: 44, w: 56, h: 36 }, // 포토존 탑승권 판
   { x: 122, y: 76, w: 4, h: 4 }, // 풍선
   { x: 178, y: 84, w: 11, h: 12 }, // 캐리어
-  { x: 72, y: 120, w: 5, h: 5 }, // 출발 안내판 기둥
-  { x: 126, y: 120, w: 5, h: 5 },
+  { x: 87, y: 134, w: 8, h: 5 }, // 보안 검색대 게이트 기둥
+  { x: 106, y: 134, w: 8, h: 5 },
   { x: 28, y: 98, w: 18, h: 10 }, // 안내 데스크
   { x: 148, y: 110, w: 30, h: 8 }, // 카트
   { x: 14, y: 176, w: 48, h: 7 }, // 대기 의자
@@ -152,6 +152,7 @@ const PAPER = [
   '.kbbbkkk.....',
   '.kkk.........',
 ]
+const HEART_BIG = ['.kk.kk.', 'kppkppk', 'kpwpppk', 'kpppppk', '.kpppk.', '..kpk..', '...k...']
 const PAPER_COLORS: [string, string, string][] = [
   ['#ffffff', '#c9d3e0', '#8e9bb0'],
   ['#ffe1ea', '#eaa7bb', '#b8708a'],
@@ -160,14 +161,6 @@ const PAPER_COLORS: [string, string, string][] = [
   ['#dcf7e7', '#97d4b1', '#5f9f7c'],
   ['#eee4ff', '#bfa8ea', '#8b72bb'],
 ]
-const DESTINATIONS: [string, string][] = [
-  ['JEJU', '3'],
-  ['PARIS', '5'],
-  ['BALI', '2'],
-  ['TOKYO', '9'],
-  ['ROME', '4'],
-]
-
 interface PaperPlane {
   hx: number
   hy: number
@@ -283,12 +276,11 @@ export function createAirportTheme(): Theme {
   function drawBackground(p: Painter) {
     const r = createRng(17)
 
-    // 바깥 도로 (위 차선은 왼쪽으로, 아래 차선은 오른쪽으로)와 보도
-    p.rect(0, 0, W, 3, '#6a9a52')
-    p.rect(0, 3, W, 15, '#50545c')
-    for (let x = 2; x < W; x += 12) p.rect(x, 10, 6, 1, '#e8e4da')
-    p.rect(0, 18, W, 6, '#c9c4ba')
-    for (let x = 0; x < W; x += 8) p.rect(x, 18, 1, 6, '#bab5aa')
+    // 터미널 앞 벽 (위쪽은 그늘, 세로 이음선)
+    p.rect(0, 0, W, 24, '#d8d2c6')
+    p.rect(0, 0, W, 4, '#c4bdaf')
+    p.rect(0, 4, W, 1, '#cbc4b6')
+    for (let x = 10; x < W; x += 20) p.rect(x, 5, 1, 19, '#cbc4b6')
 
     // 앞 유리벽과 DEPARTURES 간판 (자동문은 움직이므로 drawUnder)
     p.rect(0, 24, W, 2, '#3a4150')
@@ -583,29 +575,25 @@ export function createAirportTheme(): Theme {
     p.px(186, 92, '#ffffff')
   }
 
-  // 출발 안내판: 위 줄은 신혼여행, 아래 줄은 몇 초마다 행선지가 넘어간다
-  const drawDepartures = (p: Painter, t: number) => {
-    const x = 64
-    const y = 96
-    p.rect(72, 118, 4, 7, K)
-    p.rect(73, 118, 2, 6, '#4a4e58')
-    p.rect(126, 118, 4, 7, K)
-    p.rect(127, 118, 2, 6, '#4a4e58')
-    p.rect(x, y, 72, 24, K)
-    p.rect(x + 1, y + 1, 70, 22, '#2b2f38')
-    p.rect(x + 2, y + 2, 68, 20, '#11151c')
-    text(p, 'DEPARTURES', x + 4, y + 3, YELLOW)
-    p.rect(x + 2, y + 9, 68, 1, '#2b2f38')
-    text(p, '12:30', x + 4, y + 11, YELLOW)
-    text(p, 'HONEYMOON', x + 24, y + 11, '#ffffff')
-    text(p, '7', x + 64, y + 11, Math.floor(t * 2) % 2 ? '#7af08a' : YELLOW)
-    const i = Math.floor(t / 4) % DESTINATIONS.length
-    const [dest, gate] = DESTINATIONS[i]!
-    text(p, '13:10', x + 4, y + 17, YELLOW)
-    if (t % 4 < 0.3) {
-      for (let c = 0; c < 6; c++) if ((hashString(String(Math.floor(t * 20) + c)) & 3) !== 0) p.rect(x + 24 + c * 4, y + 17, 3, 5, '#5b616c')
-    } else text(p, dest, x + 24, y + 17, '#ffffff')
-    text(p, gate, x + 64, y + 17, YELLOW)
+  // 시작 위치 바로 뒤의 보안 검색대 게이트 (마을 테마의 웨딩 입구 역할). 위에 하트, 불빛은 초록이다가 가끔 노랑
+  const drawSecurityGate = (p: Painter, t: number) => {
+    const x = 100
+    const y = 138
+    p.ellipse(x, y + 1, 14, 1, 'rgba(40,40,50,.15)')
+    p.rect(x - 7, y - 3, 15, 4, '#5b616c')
+    p.rect(x - 7, y - 3, 15, 1, '#6d7480')
+    for (const a of [x - 12, x + 7]) {
+      p.rect(a, y - 24, 6, 25, K)
+      p.rect(a + 1, y - 23, 4, 23, '#c9ccd1')
+      p.rect(a + 1, y - 23, 1, 23, '#eef0f2')
+      p.rect(a + 4, y - 23, 1, 23, '#9aa3b0')
+      for (let j = 0; j < 4; j++) p.px(a + 3, y - 20 + j * 5, '#7fb0d8')
+    }
+    p.rect(x - 13, y - 29, 27, 6, K)
+    p.rect(x - 12, y - 28, 25, 4, '#eef0f2')
+    p.rect(x - 12, y - 25, 25, 1, '#c9ccd1')
+    p.rect(x - 1, y - 27, 3, 2, Math.floor(t * 1.5) % 4 === 0 ? YELLOW : '#7af08a')
+    p.sprite(HEART_BIG, { k: K, p: '#f29bb5', w: '#ffffff' }, x - 3, y - 37)
   }
 
   const drawColumn = (p: Painter, x: number, y: number) => {
@@ -743,17 +731,6 @@ export function createAirportTheme(): Theme {
     drawBackground,
     drawUnder(p, f) {
       const t = f.t
-      // 도로: 택시(오른쪽으로), 공항버스(왼쪽으로)
-      const tx = ((t * 24) % (W + 40)) - 20
-      p.rect(tx, 11, 15, 6, K)
-      p.rect(tx + 1, 12, 13, 4, YELLOW)
-      p.rect(tx + 10, 12, 2, 4, '#2f3b55')
-      p.rect(tx + 5, 13, 2, 2, '#ffffff')
-      const bx = W + 20 - ((t * 14 + 90) % (W + 70))
-      p.rect(bx, 3, 30, 7, K)
-      p.rect(bx + 1, 4, 28, 5, '#f4f1ea')
-      p.rect(bx + 1, 6, 28, 1, BLUE)
-      p.rect(bx + 1, 4, 2, 5, '#2f3b55')
       // 자동문: 가까이 가면 열린다
       const open = Math.abs(f.player.x - 100) < 16 && f.player.y < 58 ? 5 : 0
       p.rect(88, 26, 24, 13, K)
@@ -830,8 +807,8 @@ export function createAirportTheme(): Theme {
         { y: 96, draw: drawSuitcases },
         { y: 108, draw: drawInfo },
         { y: 118, draw: drawCarts },
-        { y: 125, draw: (p) => drawDepartures(p, t) },
-        { y: 199, draw: (p) => drawSeats(p, 14, 199, 8, { 2: '#2a2030', 5: '#c8925a' }) },
+        { y: 138, draw: (p) => drawSecurityGate(p, t) },
+              { y: 199, draw: (p) => drawSeats(p, 14, 199, 8, { 2: '#2a2030', 5: '#c8925a' }) },
         { y: 183, draw: (p) => drawSeats(p, 14, 183, 8, { 6: '#7a4a30' }) },
         { y: 183, draw: (p) => drawSeats(p, 122, 183, 11, { 1: '#3a2a20', 7: '#2a2030' }) },
         { y: 199, draw: (p) => drawSeats(p, 122, 199, 11, { 4: '#d8b070' }) },

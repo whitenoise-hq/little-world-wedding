@@ -134,6 +134,7 @@ const FISH = [
 | 색 | 쓰임 |
 |---|---|
 | `#e8e4dc` `#dcd7cd` `#f4f1ea` | 출국장 바닥 타일, 줄눈, 빛 |
+| `#d8d2c6` `#c4bdaf` `#cbc4b6` | 터미널 앞 벽, 벽 위 그늘, 벽 이음선 |
 | `#4f5d78` `#57668a` | 탑승구 카펫 |
 | `#9cc3dd` `#c9e2f2` `#4a5568` | 유리, 유리 반사, 창틀 |
 | `#24324d` `#3d5a80` | 항공사 남색 (안내판, 카운터, 의자) |
@@ -216,12 +217,31 @@ INVITATION        ← 12px, 굵게(700), 자간 0.18em, --accent
 3. **로컬에서 확인하고 고치기**
    - `pnpm dev` 후 `localhost:3000/seavilla?theme={id}`. 개발 환경에서만 `?theme=`로 기존 샘플 데이터에 새 테마를 입혀 본다(배포에서는 무시).
    - 장소 3곳 자동 이동(플로팅 버튼), 들어가기 버튼, 방명록 남기기 연출, 오브젝트 탭, 휴대폰 크기 화면을 확인한다.
-4. **DB 반영 (화면 확정 후, 운영자가 직접)**
-   - `supabase/migrations/`에 테마 제약(`invitations_theme_check`)을 바꾸는 마이그레이션을 만들고 `pnpm db:push`.
-5. **샘플 청첩장**
-   - `packages/shared/src/templates.ts`에 샘플을 추가하고 `pnpm db:templates`. 없는 페이지(`not-found.tsx`)의 샘플 링크와 `docs/PLANNING.md` 샘플 표도 고친다.
+4. **파일 준비 (코드에서)**
+   - `supabase/migrations/`에 테마 제약(`invitations_theme_check`)을 바꾸는 마이그레이션 파일을 만든다.
+   - `packages/shared/src/templates.ts`에 샘플 청첩장을 추가한다. 없는 페이지(`not-found.tsx`)의 샘플 링크와 `docs/PLANNING.md` 샘플 표도 고친다.
+   - 여기까지 끝나면 운영자에게 5단계 할 일 목록을 알려 준다(아래 순서 그대로).
+5. **반영 (화면 확정 후, 운영자가 직접). 순서는 DB 먼저, 프론트 나중**
+   1. `pnpm db:push`: DB가 새 테마 값을 받게 한다. 허용 값이 늘 뿐이라 기존 화면에 영향이 없다.
+   2. `pnpm db:templates`: 샘플 청첩장을 넣는다(선택).
+   3. 커밋하고 `git push`: Vercel이 web·admin을 배포한다. 프론트를 먼저 배포하면 어드민에 새 테마가 보이는데 저장하면 DB가 거부한다.
 6. **배포 후**
-   - 실제 주소에서 확인하고, `docs/STORE_GUIDE.md` 테마별 값 표에 열을 추가한다.
+   - 실제 주소에서 샘플 청첩장과 어드민 테마 선택을 확인하고, `docs/STORE_GUIDE.md` 테마별 값 표에 열을 추가한다.
+
+테마 목록이 적힌 곳 (테마를 추가하면 모두 고친다):
+
+| 파일 | 고칠 곳 |
+|---|---|
+| `docs/PLANNING.md` | 2장 테마 비교표, 4장 장소 표(장소 이름), 5장 방명록 안내 문구, 7장 어드민 테마 선택지, 7장 샘플 청첩장 표, 1장 샘플 주소 목록·없는 페이지 샘플 링크 |
+| `docs/ART_GUIDE.md` | 5장 팔레트, 6장 테마별 강조색 |
+| `docs/STORE_GUIDE.md` | 샘플 주소, 테마별 값 표 (배포 후) |
+| `README.md` | 맨 위 테마 표 |
+| `CLAUDE.md` | 프로젝트 요약의 테마 목록, 기술 스택의 `packages/engine` 테마 목록, `pnpm db:templates` 설명의 샘플 주소, 현재 상태의 테마·샘플 목록 |
+| `packages/shared/src/themes.ts` | `THEME_IDS`, `THEME_LABELS`, `THEME_UI`, `TEMPLATE_SLUGS` |
+| `packages/shared/src/templates.ts` | 샘플 청첩장 내용·샘플 방명록 |
+| `packages/engine/src/themes/` | `{id}.ts`, `index.ts` 등록 |
+| `apps/web` | `guestbook.tsx` 안내 문구, `game-screen.tsx` 토스트, `not-found.tsx` 샘플 링크 |
+| `supabase/migrations/` | 테마 제약(`invitations_theme_check`) 마이그레이션 |
 
 그림을 정할 때:
 
