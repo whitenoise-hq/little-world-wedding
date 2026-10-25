@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { ArrowLeftIcon, MessageSquareIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { invitationUrl } from '@/lib/env'
-import { hasSupabase } from '@/lib/supabase/env'
 import { formatDateTime } from '@/lib/format'
 import { guestbook, invitations, photos } from '@/lib/repositories'
 import { InvitationActions } from './invitation-actions'
@@ -43,7 +42,7 @@ export default async function InvitationEditPage({ params }: PageProps<'/invitat
 
       <InvitationForm id={id} theme={inv.theme} content={inv.content} />
 
-      <PhotoManager invitationId={id} photos={photoList} coverPhotoId={inv.coverPhotoId} canUpload={hasSupabase} />
+      <PhotoManager invitationId={id} photos={photoList} coverPhotoId={inv.coverPhotoId} />
     </div>
   )
 }

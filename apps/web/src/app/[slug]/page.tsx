@@ -1,4 +1,4 @@
-import { formatCeremonyKo, formatCeremonyShort, isValidSlug, THEME_UI } from '@lww/shared'
+import { formatCeremonyKo, formatCeremonyShort, isValidSlug, THEME_IDS, THEME_UI, type ThemeId } from '@lww/shared'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { cache } from 'react'
@@ -17,6 +17,14 @@ import { getGuestbook, getInvitationBySlug, getPhotos } from '@/lib/cached'
 const load = cache(async (slug: string) => (isValidSlug(slug) ? getInvitationBySlug(slug) : null))
 const loadPhotos = cache((invitationId: string) => getPhotos(invitationId))
 
+// 개발 환경에서만: ?theme={id}로 다른 테마를 입혀 본다 (docs/ART_GUIDE.md 7장 "새 테마 추가 순서").
+// 배포에서는 searchParams를 읽지 않아 페이지 동작이 그대로다.
+async function previewTheme(searchParams: Promise<Record<string, string | string[] | undefined>>, theme: ThemeId): Promise<ThemeId> {
+  if (process.env.NODE_ENV !== 'development') return theme
+  const want = (await searchParams).theme
+  return THEME_IDS.find((id) => id === want) ?? theme
+}
+
 export async function generateMetadata({ params }: PageProps<'/[slug]'>): Promise<Metadata> {
   const inv = await load((await params).slug)
   if (!inv) return { title: '청첩장을 찾을 수 없습니다 · 리틀 월드 웨딩' }
@@ -26,7 +34,7 @@ export async function generateMetadata({ params }: PageProps<'/[slug]'>): Promis
   // 대표 사진을 지정하지 않았으면 첫 번째 사진을 쓴다
   const list = await loadPhotos(inv.id)
   const cover = list.find((p) => p.id === inv.coverPhotoId) ?? list[0]
-  // 카톡 미리보기는 절대 주소 이미지만 읽는다. 목업 사진(data URL)은 건너뛴다.
+  // 카톡 미리보기는 절대 주소 이미지만 읽는다.
   const image = cover?.fullUrl.startsWith('http') ? cover.fullUrl : undefined
   return {
     title,
@@ -35,24 +43,25 @@ export async function generateMetadata({ params }: PageProps<'/[slug]'>): Promis
   }
 }
 
-export default async function InvitationPage({ params }: PageProps<'/[slug]'>) {
+export default async function InvitationPage({ params, searchParams }: PageProps<'/[slug]'>) {
   const { slug } = await params
   const inv = await load(slug)
   if (!inv) notFound()
 
   const [photoList, entries] = await Promise.all([loadPhotos(inv.id), getGuestbook(inv.id)])
   const { groom, bride, ceremony } = inv.content
-  const ui = THEME_UI[inv.theme]
+  const theme = await previewTheme(searchParams, inv.theme)
+  const ui = THEME_UI[theme]
   const names: [string, string] = [groom.firstName, bride.firstName]
   const date = formatCeremonyShort(ceremony.date, ceremony.time)
   const home = <HomeContent content={inv.content} />
   const gallery = <Gallery photos={photoList} />
-  const guestbook = <Guestbook slug={slug} theme={inv.theme} initial={entries} />
+  const guestbook = <Guestbook slug={slug} theme={theme} initial={entries} />
 
   return (
     <>
       <GameLoader
-        theme={inv.theme}
+        theme={theme}
         names={names}
         date={date}
         tagline={ui.tagline}

@@ -6,6 +6,7 @@ import type { Theme } from '../theme'
 const modules: Record<ThemeId, () => Promise<() => Theme>> = {
   space: () => import('./space').then((m) => m.createSpaceTheme),
   village: () => import('./village').then((m) => m.createVillageTheme),
+  airport: () => import('./airport').then((m) => m.createAirportTheme),
 }
 
 export function loadTheme(id: ThemeId): Promise<Theme> {

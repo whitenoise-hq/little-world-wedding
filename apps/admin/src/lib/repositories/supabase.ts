@@ -8,6 +8,7 @@ import {
   type GuestbookRepository,
   type InvitationContent,
   type InvitationRepository,
+  type ThemeId,
   type PhotoRepository,
 } from '@lww/shared'
 import { supabaseUrl } from '../supabase/env'
@@ -49,7 +50,7 @@ export const supabaseInvitations: InvitationRepository = {
       return {
         id: r.id,
         slug: r.slug,
-        theme: r.theme as 'space' | 'village',
+        theme: r.theme as ThemeId,
         isPublished: r.is_published,
         groomName: content.groom?.fullName ?? '',
         brideName: content.bride?.fullName ?? '',

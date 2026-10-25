@@ -23,6 +23,7 @@ const FABS: { id: PlaceId; label: string; icon: ReactNode }[] = [
 const NEW_GUEST_TOAST: Record<ThemeId, string> = {
   village: '바다에 새 물고기가 들어왔어요. 눌러 보세요',
   space: '하늘에 새 별이 떴어요. 눌러 보세요',
+  airport: '하늘에 새 종이비행기가 날아올랐어요. 눌러 보세요',
 }
 
 interface Props {

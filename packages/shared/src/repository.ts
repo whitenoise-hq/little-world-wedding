@@ -2,7 +2,7 @@ import type { ThemeId } from './themes'
 import type { GuestbookEntry, Invitation, InvitationContent, Photo } from './invitation'
 import type { GuestbookInput } from './guestbook'
 
-// 화면 코드는 이 인터페이스만 쓴다. 목업(in-memory)과 Supabase 구현을 바꿔 끼운다.
+// 화면 코드는 이 인터페이스만 쓴다. 구현은 각 앱의 lib/repositories/supabase.ts.
 
 export interface InvitationSummary {
   id: string

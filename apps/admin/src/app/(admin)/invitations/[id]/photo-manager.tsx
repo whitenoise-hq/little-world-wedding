@@ -28,11 +28,10 @@ interface Props {
   invitationId: string
   photos: Photo[]
   coverPhotoId: string | null
-  canUpload: boolean // Supabase 키가 없는 목업 모드면 false
 }
 
 // 사진 올리기·순서·대표 사진·설명·삭제. docs/PLANNING.md "어드민 사진 관리".
-export function PhotoManager({ invitationId, photos, coverPhotoId, canUpload }: Props) {
+export function PhotoManager({ invitationId, photos, coverPhotoId }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null)
@@ -112,43 +111,39 @@ export function PhotoManager({ invitationId, photos, coverPhotoId, canUpload }: 
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {canUpload ? (
-          <label
-            className={cn(
-              'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-sm text-muted-foreground transition-colors',
-              dragging && 'border-primary bg-primary/5',
-              (busy || left === 0) && 'pointer-events-none opacity-60',
-            )}
-            onDragOver={(e) => {
-              e.preventDefault()
-              setDragging(true)
-            }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={(e) => {
-              e.preventDefault()
-              setDragging(false)
-              void upload([...e.dataTransfer.files])
-            }}
-          >
-            <ImagePlusIcon className="size-6" />
-            {progress
-              ? `올리는 중… ${progress.done} / ${progress.total}`
-              : left === 0
-                ? '사진을 더 올릴 수 없어요'
-                : '사진을 끌어다 놓거나 눌러서 고르세요 (여러 장 가능)'}
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              className="sr-only"
-              disabled={busy || left === 0}
-              onChange={(e) => void upload([...(e.target.files ?? [])])}
-            />
-          </label>
-        ) : (
-          <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">목업 모드라 사진을 올릴 수 없어요. Supabase 키를 넣으면 올릴 수 있어요.</p>
-        )}
+        <label
+          className={cn(
+            'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-sm text-muted-foreground transition-colors',
+            dragging && 'border-primary bg-primary/5',
+            (busy || left === 0) && 'pointer-events-none opacity-60',
+          )}
+          onDragOver={(e) => {
+            e.preventDefault()
+            setDragging(true)
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault()
+            setDragging(false)
+            void upload([...e.dataTransfer.files])
+          }}
+        >
+          <ImagePlusIcon className="size-6" />
+          {progress
+            ? `올리는 중… ${progress.done} / ${progress.total}`
+            : left === 0
+              ? '사진을 더 올릴 수 없어요'
+              : '사진을 끌어다 놓거나 눌러서 고르세요 (여러 장 가능)'}
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="sr-only"
+            disabled={busy || left === 0}
+            onChange={(e) => void upload([...(e.target.files ?? [])])}
+          />
+        </label>
 
         {photos.length > 0 && (
           <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

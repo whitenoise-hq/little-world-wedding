@@ -1,21 +1,13 @@
-import type { GuestbookEntry, Invitation, Photo } from './invitation'
+import type { GuestbookEntry, Invitation } from './invitation'
 import { TEMPLATE_SLUGS } from './themes'
 
-// 샘플(템플릿) 청첩장: 마을 1개, 우주 1개. 홍보용으로 공개해 두는 청첩장이다.
-// - 목업 모드(Supabase 키 없음)에서 화면에 쓰인다.
-// - `pnpm db:templates`로 실제 DB에 적용한다 (scripts/templates.mts).
+// 샘플(템플릿) 청첩장: 마을·우주·공항 1개씩. 홍보용으로 공개해 두는 청첩장이다.
+// `pnpm db:templates`로 실제 DB에 적용한다 (scripts/templates.mts). 사진은 어드민에서 직접 올린다.
 // 전화번호·계좌는 실제로 연결되지 않는 가짜 값만 쓴다.
-
-const PHOTO_COLORS = ['#9fc8a0', '#e8c4a8', '#b8c8e6', '#e6d4a2', '#cdb6e0', '#a8d8d0', '#ecbcbc', '#d6cfae', '#c4dca0', '#f0c8d8', '#b0d0e8', '#e0c0a0']
-
-function placeholder(color: string, label: string, w: number, h: number): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="100%" height="100%" fill="${color}"/><text x="50%" y="50%" font-family="sans-serif" font-size="${Math.round(w / 12)}" fill="rgba(42,26,46,.6)" text-anchor="middle" dominant-baseline="middle">${label}</text></svg>`
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
-}
 
 const fakePhone = '010-0000-0000'
 
-export const FIXTURE_INVITATIONS: Invitation[] = [
+export const TEMPLATE_INVITATIONS: Invitation[] = [
   {
     id: 'inv-1',
     slug: TEMPLATE_SLUGS.village,
@@ -130,17 +122,64 @@ export const FIXTURE_INVITATIONS: Invitation[] = [
       decor: { bgmUrl: '' },
     },
   },
+  {
+    id: 'inv-3',
+    slug: TEMPLATE_SLUGS.airport,
+    theme: 'airport',
+    isPublished: true,
+    coverPhotoId: null,
+    createdAt: '2026-10-25T14:00:00+09:00',
+    updatedAt: '2026-10-25T14:00:00+09:00',
+    content: {
+      groom: {
+        fullName: '최신랑',
+        firstName: '신랑',
+        phone: fakePhone,
+        showPhone: true,
+        father: { name: '최정훈', phone: fakePhone, showPhone: true },
+        mother: { name: '이미숙', phone: fakePhone, showPhone: true },
+      },
+      bride: {
+        fullName: '박신부',
+        firstName: '신부',
+        phone: fakePhone,
+        showPhone: true,
+        father: { name: '박성호', phone: fakePhone, showPhone: true },
+        mother: { name: '최윤정', phone: fakePhone, showPhone: true },
+      },
+      greeting: {
+        text: '각자의 길을 걷던 두 사람이\n이제 같은 비행기에 오르려 합니다.\n\n어디로 가든 서로의 옆자리를 지키며\n긴 여행을 함께하겠습니다.\n\n저희의 첫 출발을\n따뜻한 마음으로 배웅해 주세요.',
+      },
+      ceremony: {
+        date: '2027-10-16',
+        time: '13:00',
+        venueName: '리틀월드 그랜드홀',
+        hall: '5층 스카이홀',
+        address: '인천광역시 중구 공항로 272',
+        lat: null,
+        lng: null,
+      },
+      directions: [
+        { label: '지하철', text: '공항철도 인천공항1터미널역에서 도보 5분' },
+        { label: '버스', text: '인천공항1터미널 정류장 하차 (공항버스 6001, 6015)' },
+        { label: '주차', text: '건물 지하 주차장 3시간 무료' },
+      ],
+      accounts: {
+        groom: [
+          { relation: '신랑', holder: '최신랑', bank: '국민은행', number: '000000-00-000000', kakaoPayUrl: '', visible: true },
+          { relation: '아버지', holder: '최정훈', bank: '신한은행', number: '000-000-000000', kakaoPayUrl: '', visible: true },
+          { relation: '어머니', holder: '이미숙', bank: '우리은행', number: '0000-000-000000', kakaoPayUrl: '', visible: true },
+        ],
+        bride: [
+          { relation: '신부', holder: '박신부', bank: '카카오뱅크', number: '0000-00-0000000', kakaoPayUrl: '', visible: true },
+          { relation: '아버지', holder: '박성호', bank: '농협은행', number: '000-0000-0000-00', kakaoPayUrl: '', visible: true },
+          { relation: '어머니', holder: '최윤정', bank: '하나은행', number: '000-000000-00000', kakaoPayUrl: '', visible: true },
+        ],
+      },
+      decor: { bgmUrl: '' },
+    },
+  },
 ]
-
-// 목업 모드에서만 쓰는 자리 표시 사진 (DB 템플릿에는 넣지 않는다. 사진은 어드민에서 직접 올린다)
-export const FIXTURE_PHOTOS: Photo[] = PHOTO_COLORS.map((color, i) => ({
-  id: `inv-1-photo-${i}`,
-  invitationId: 'inv-1',
-  thumbUrl: placeholder(color, `PHOTO ${String(i + 1).padStart(2, '0')}`, 300, 300),
-  fullUrl: placeholder(color, `PHOTO ${String(i + 1).padStart(2, '0')}`, 900, 1200),
-  caption: '',
-  sortOrder: i,
-}))
 
 // 샘플 방명록. 방문자가 남긴 글과 섞여도 어색하지 않게 담백하게 쓴다.
 const GUESTBOOK_SEED: Record<string, [string, string][]> = {
@@ -161,9 +200,17 @@ const GUESTBOOK_SEED: Record<string, [string, string][]> = {
     ['소율', '두 분 정말 잘 어울려요. 예식 날 뵐게요!'],
     ['고모', '우리 조카 장가가는 날, 기쁜 마음으로 축하한다.'],
   ],
+  'inv-3': [
+    ['지훈', '드디어 같은 비행기 타는구나. 결혼 진심으로 축하해.'],
+    ['수빈', '두 사람의 긴 여행이 늘 맑은 날씨이길 바라요.'],
+    ['김 팀장', '두 분의 새로운 출발을 진심으로 축하드립니다.'],
+    ['하은', '신혼여행 사진 꼭 보여 줘. 예식 날 갈게!'],
+    ['도현', '좋은 비행 되길. 행복하게 잘 살아라, 친구야.'],
+    ['이모', '우리 조카, 예쁘게 잘 살아라.'],
+  ],
 }
 
-export const FIXTURE_GUESTBOOK: GuestbookEntry[] = Object.entries(GUESTBOOK_SEED).flatMap(([invitationId, list]) =>
+export const TEMPLATE_GUESTBOOK: GuestbookEntry[] = Object.entries(GUESTBOOK_SEED).flatMap(([invitationId, list]) =>
   list.map(([name, message], i) => ({
     id: `${invitationId}-gb-${i}`,
     invitationId,

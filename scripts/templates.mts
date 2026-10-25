@@ -1,12 +1,12 @@
-// 샘플(템플릿) 청첩장을 실제 DB에 적용한다. 내용은 packages/shared/src/fixtures.ts 가 기준이다.
+// 샘플(템플릿) 청첩장을 실제 DB에 적용한다. 내용은 packages/shared/src/templates.ts 가 기준이다.
 // - 같은 주소(slug)가 있으면 내용만 갱신하고, 없으면 새로 만든다. 올린 사진은 건드리지 않는다.
 // - 예전 목업 주소(ejdushfe, qmwvhzta)로 된 청첩장이 있으면 그 행을 템플릿으로 바꾼다.
 // - 샘플 방명록은 방명록이 비어 있을 때만 넣는다 (방문자가 남긴 글을 지우지 않는다).
-// - --reset-samples: 샘플 방명록만 지우고 새 내용으로 다시 넣는다. 샘플 글은 fixtures의 작성 시각과
+// - --reset-samples: 샘플 방명록만 지우고 새 내용으로 다시 넣는다. 샘플 글은 templates.ts의 작성 시각과
 //   정확히 같은 시각으로 들어가 있어서, 그 시각의 글만 지우면 방문자 글은 그대로 남는다.
 // 실행: pnpm db:templates [--reset-samples]  (apps/admin/.env.local 의 URL과 admin secret 키를 쓴다)
 import { readFileSync } from 'node:fs'
-import { FIXTURE_GUESTBOOK, FIXTURE_INVITATIONS } from '../packages/shared/src/fixtures'
+import { TEMPLATE_GUESTBOOK, TEMPLATE_INVITATIONS } from '../packages/shared/src/templates'
 
 const resetSamples = process.argv.includes('--reset-samples')
 const LEGACY_SLUGS: Record<string, string> = { village: 'ejdushfe', space: 'qmwvhzta' }
@@ -29,10 +29,11 @@ async function rest<T>(path: string, init: RequestInit = {}): Promise<T> {
   return (text ? JSON.parse(text) : null) as T
 }
 
-for (const tpl of FIXTURE_INVITATIONS) {
+for (const tpl of TEMPLATE_INVITATIONS) {
   const fields = { slug: tpl.slug, theme: tpl.theme, is_published: true, content: tpl.content }
   const legacy = LEGACY_SLUGS[tpl.theme]
-  const found = await rest<{ id: string; slug: string }[]>(`invitations?select=id,slug&slug=in.(${tpl.slug},${legacy})`)
+  const slugs = legacy ? `${tpl.slug},${legacy}` : tpl.slug
+  const found = await rest<{ id: string; slug: string }[]>(`invitations?select=id,slug&slug=in.(${slugs})`)
   const target = found.find((r) => r.slug === tpl.slug) ?? found[0]
   let id: string
   if (target) {
@@ -49,7 +50,7 @@ for (const tpl of FIXTURE_INVITATIONS) {
     console.log(`추가: /${tpl.slug} (${tpl.theme})`)
   }
 
-  const samples = FIXTURE_GUESTBOOK.filter((e) => e.invitationId === tpl.id)
+  const samples = TEMPLATE_GUESTBOOK.filter((e) => e.invitationId === tpl.id)
   if (resetSamples) {
     const times = samples.map((e) => `"${e.createdAt}"`).join(',')
     const removed = await rest<unknown[]>(`guestbook_entries?invitation_id=eq.${id}&created_at=in.(${times})`, {

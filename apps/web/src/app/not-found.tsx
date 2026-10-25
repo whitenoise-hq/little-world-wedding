@@ -35,6 +35,9 @@ export default function NotFound() {
           <Link href={`/${TEMPLATE_SLUGS.space}`} className="notfound-link">
             우주 테마 보기
           </Link>
+          <Link href={`/${TEMPLATE_SLUGS.airport}`} className="notfound-link">
+            공항 테마 보기
+          </Link>
         </div>
       </div>
     </main>

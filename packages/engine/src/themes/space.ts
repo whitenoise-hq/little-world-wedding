@@ -4,7 +4,7 @@ import { createRng, hashString } from '../random'
 import type { Drawable, GuestVisual, Place, PlaceId, Point, Theme } from '../theme'
 
 // 우주 테마: 마션풍 붉은 행성, 아래로 우주. 방명록은 망원경, 글 하나 = 별 하나.
-// 원본 시안은 docs/mockup/index.html, 색은 docs/ART_GUIDE.md 5장.
+// 색은 docs/ART_GUIDE.md 5장.
 
 const W = 200
 const H = 340

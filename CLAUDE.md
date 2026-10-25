@@ -2,21 +2,21 @@
 
 ## 프로젝트 요약
 
-게임처럼 캐릭터를 움직이며 둘러보는 픽셀아트 모바일 청첩장. 커플마다 `/{slug}` 고유 주소를 받고, 무대는 테마(우주·마을) 중 하나를 고른다. 운영자 1명이 어드민에서 청첩장을 만든다.
+게임처럼 캐릭터를 움직이며 둘러보는 픽셀아트 모바일 청첩장. 커플마다 `/{slug}` 고유 주소를 받고, 무대는 테마(우주·마을·공항) 중 하나를 고른다. 운영자 1명이 어드민에서 청첩장을 만든다.
 
 ## 먼저 읽을 문서
 
 - `docs/PLANNING.md` — **기획의 단일 출처.** 서비스 구조, 테마, 인트로, 장소와 모달, 방명록, 조작, 어드민 항목, 데이터·백엔드, 진행 순서.
 - `docs/ART_GUIDE.md` — 픽셀아트 기준. 해상도, 그리기 순서, 외곽선·디더링, 스프라이트 표기법, 팔레트, UI 색. **게임 화면·테마 작업 전에 확인.**
 - `docs/STORE_GUIDE.md` — 스마트스토어 상품·상세 이미지 기준(크기, 글꼴, 테마별 색, 섹션 순서와 문구, 규칙)과 기준 이미지(`docs/store/reference/`). **스토어 이미지를 만들 때는 이 문서대로 만들고 기준 이미지와 비교한다.** 만든 이미지는 커밋하지 않는다.
-- `docs/mockup/index.html`(우주), `docs/mockup/village.html`(마을) — 브라우저로 여는 시안. 구현의 참고일 뿐 정답은 아니다. 코드를 그대로 옮기지 말고 엔진 구조에 맞게 다시 짠다.
+- 별도 HTML 시안(목업)은 만들지 않는다. 테마 그림은 엔진(`packages/engine/src/themes/`)에서 바로 만들고 로컬 화면(`pnpm dev`)에서 확인한다.
 
 ## 기술 스택
 
 - 모노레포: Turborepo + pnpm. npm 스코프 `@lww/*`.
   - `apps/web` — 하객용 청첩장 (Next.js App Router). `{도메인}/{slug}`
   - `apps/admin` — 어드민 (Next.js App Router). `admin.{도메인}`
-  - `packages/engine` — 캔버스 게임 엔진 + 테마(`themes/space`, `themes/village`). web과 admin 미리보기가 같이 씀
+  - `packages/engine` — 캔버스 게임 엔진 + 테마(`themes/space`, `themes/village`, `themes/airport`). web과 admin 미리보기가 같이 씀
   - `packages/shared` — 도메인 타입, zod 스키마, slug 생성, Supabase 타입, 공통 상수
 - 백엔드: Supabase (DB, 사진 스토리지, 어드민 로그인)
 - 배포: Vercel 프로젝트 2개(web, admin). 각 앱의 `vercel.json`에서 `turbo-ignore`로 바뀐 앱만 빌드, 함수 실행 위치는 서울(`regions: ["icn1"]`). Supabase도 서울이라 둘을 떼어 놓으면 요청마다 미국 왕복이 생겨 느려진다
@@ -37,7 +37,7 @@ pnpm build
 pnpm supabase <명령>   # Supabase CLI (레포 devDependency, Homebrew 불필요)
 pnpm db:push          # supabase/migrations 를 원격 DB에 적용
 pnpm db:types         # DB 타입 생성 → packages/shared/src/database.types.ts
-pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland)을 DB에 적용. 사진·방문자 글은 건드리지 않음 (--reset-samples: 샘플 방명록만 갈아 끼움)
+pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공항 /loveport)을 DB에 적용. 사진·방문자 글은 건드리지 않음 (--reset-samples: 샘플 방명록만 갈아 끼움)
 ```
 
 - Supabase 프로젝트: `little-world-wedding`(ref `gninsfsuhbgkzkwbdagc`, 서울). 이 레포에 `supabase link` 되어 있다.
@@ -59,12 +59,13 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland)을 
 
 ## 공통 규칙
 
-- **데이터 접근은 저장소를 거친다.** 화면 코드는 각 앱의 `src/lib/repositories`(인터페이스는 `packages/shared`의 `repository.ts`)만 쓴다. Supabase 키가 있으면 Supabase 구현, 없으면 목업(in-memory) 구현을 쓴다. DB 행 ↔ 화면 모델 변환은 `packages/shared`의 `supabase-mappers.ts`.
+- **데이터 접근은 저장소를 거친다.** 화면 코드는 각 앱의 `src/lib/repositories`(인터페이스는 `packages/shared`의 `repository.ts`)만 쓴다. 구현은 Supabase 하나이고, 로컬 개발도 `.env.local`의 키로 실제 DB에 붙는다(목업 모드 없음). DB 행 ↔ 화면 모델 변환은 `packages/shared`의 `supabase-mappers.ts`.
 - **어드민 인증:** `src/proxy.ts`(Next 16의 미들웨어)가 세션을 갱신하고 비로그인을 `/login`으로 보낸다. `(admin)` 그룹 레이아웃과 모든 Server Action은 `requireAdmin()`으로 운영자인지 다시 확인하고, 데이터 권한은 RLS가 최종 판단한다.
 - **하객 브라우저는 데이터 서버에 직접 붙지 않는다.** 하객용 앱은 서버 컴포넌트와 Route Handler에서만 저장소를 쓴다(`server-only`).
 
 - **문서 먼저.** 기획·그림 규칙이 바뀌면 `docs/PLANNING.md` / `docs/ART_GUIDE.md`를 먼저 고친 뒤 코드를 바꾼다.
 - **공유 코드는 `packages/`에만.** 앱끼리 서로 import하지 않는다. 타입·스키마·상수는 `packages/shared`에 한 번만 정의한다.
+- **테마 추가는 `docs/ART_GUIDE.md` 7장 순서대로.** 로컬에서 `/{slug}?theme={id}`(개발 환경 전용)로 화면을 확정한 뒤, 마지막에 운영자가 `pnpm db:push`·`pnpm db:templates`를 실행한다.
 - **엔진과 테마 분리.** 엔진(렌더러, 입력, 카메라, 충돌, 루프)은 테마를 모른다. 테마는 그림, 장소 좌표, 이동 범위, 충돌 영역, 방명록 연출을 데이터와 함수로 넘긴다.
 - **하객용 앱에 어드민 것을 넣지 않는다.** Supabase 서비스 키, 어드민 전용 의존성은 `apps/admin`에만 둔다.
 - **slug:** 영어 소문자 8자리. `crypto.getRandomValues`로 만들고, 234 이상인 바이트는 버려서 글자 분포를 균등하게 한다. `Math.random` 금지. DB unique 제약 + 겹치면 재생성.
@@ -86,17 +87,16 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland)을 
 
 ## 현재 상태
 
-- 0단계 완료, 1단계 화면 완료(목업 데이터). typecheck·test·build 통과.
-  - `packages/shared`: 청첩장 내용 스키마(`invitation.ts`), 저장소 인터페이스, 날짜 포맷, slug, 방명록 스키마, 목업 데이터(`@lww/shared/fixtures`)
+- 0단계 완료, 1단계 화면 완료. typecheck·test·build 통과.
+  - `packages/shared`: 청첩장 내용 스키마(`invitation.ts`), 저장소 인터페이스, 날짜 포맷, slug, 방명록 스키마, 샘플 청첩장 내용(`@lww/shared/templates`, `pnpm db:templates`용)
   - `packages/engine`: 게임 루프·입력·카메라·충돌(`game.ts`), 그리기 도구(`painter.ts`), 마을·우주 테마(`themes/`), 신랑·신부 스프라이트. 캔버스는 화면 배율에 가까운 정수배 해상도로 그려 움직임을 1/3~1/4픽셀 단위로 부드럽게 하고, 움직일 때는 매 프레임·가만히 있을 때는 30fps
   - `apps/admin`: 청첩장 목록, 입력 폼(검증 오류 표시), 공개 전환·주소 다시 만들기·삭제, 방명록 관리. 사진은 보기만
   - `apps/web`: 인트로(표지, 게임 준비되면 들어가기) → 게임 화면(조이스틱·플로팅 버튼·들어가기는 픽셀, 크기 3단계, 태블릿 너비까지) → 장소 모달(청첩장·사진·방명록, 나눔명조). 사진 전체화면은 scroll-snap 슬라이드. 방명록을 올리면 물고기·별 연출. OG 메타, 방명록 API(IP당 10분 3회 제한)
-  - 어드민과 하객용은 프로세스가 달라 목업 데이터를 공유하지 않는다. 어드민에서 고친 내용은 Supabase 연결 후에 하객 화면에 반영된다.
 - Supabase: 프로젝트 연결·초기 마이그레이션 적용·운영자 등록·DB 타입 생성 완료. 권한 점검(공개 키 차단, secret 키 허용) 완료.
-- 저장소 Supabase 교체 완료: 하객용(web secret 키, 방명록 연속 작성 제한은 DB의 IP 해시 기준), 어드민(운영자 세션 + RLS, 로그인·로그아웃). DB에 샘플(템플릿) 청첩장 2개 적용됨: 마을 `/seavilla`, 우주 `/marsland` (내용은 `packages/shared/src/fixtures.ts`).
+- 저장소 Supabase 교체 완료: 하객용(web secret 키, 방명록 연속 작성 제한은 DB의 IP 해시 기준), 어드민(운영자 세션 + RLS, 로그인·로그아웃). DB에 샘플(템플릿) 청첩장 적용됨: 마을 `/seavilla`, 우주 `/marsland`. 공항 `/loveport`는 `templates.ts`에 추가됨(마이그레이션 `pnpm db:push` 후 `pnpm db:templates`로 적용). 내용은 `packages/shared/src/templates.ts`.
 - 사진 업로드: 어드민 청첩장 편집 화면의 `PhotoManager`. 브라우저에서 썸네일(600px)·큰 사진(1920px) WebP로 줄여 운영자 세션으로 Storage에 직접 올리고, DB 행은 Server Action이 만든다. 순서·대표·설명·삭제. 최대 20장. 대표 미지정 시 카톡 미리보기는 첫 사진.
 - 매일 깨우기: `apps/web` `GET /api/health`(CRON_SECRET 필요) + `apps/web/vercel.json` Cron 매일 03:00 UTC.
-- 배포(Vercel)에서는 Supabase 키가 없어도 목업으로 넘어가지 않는다(web·admin). Supabase 클라이언트는 처음 쓸 때 만들어 키 없이도 빌드된다.
+- Supabase 클라이언트는 처음 쓸 때 만들어 키 없이도 빌드된다(키가 없으면 요청 때 오류).
 - 하객 페이지 캐시: 청첩장·사진은 `unstable_cache` + 태그(`cacheTags`), 어드민 Server Action이 `revalidateWeb()`으로 web `POST /api/revalidate` 호출. 방명록은 캐시 안 함.
 - 아직 안 한 것: 지도, 지도 표시, 캐시·갱신(어드민 저장 시 하객 페이지 갱신), Vercel 프로젝트 생성, ESLint
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 바로 보기 화면, 그림 외주 여부, 테마 추가, 들어가기 버튼 분리).

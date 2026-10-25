@@ -4,7 +4,7 @@ import { createRng, hashString } from '../random'
 import type { Drawable, Frame, GuestVisual, Place, PlaceId, Point, Theme } from '../theme'
 
 // 마을 테마: 숲으로 둘러싸인 마을, 아래로 해변과 바다. 방명록은 낚시터, 글 하나 = 물고기 한 마리.
-// 원본 시안은 docs/mockup/village.html, 색은 docs/ART_GUIDE.md 5장.
+// 색은 docs/ART_GUIDE.md 5장.
 
 const W = 200
 const H = 340

@@ -18,6 +18,7 @@ export function withPosted(list: GuestbookEntry[]): GuestbookEntry[] {
 const BECOMES: Record<ThemeId, string> = {
   village: '남겨 주신 메시지는 바다의 물고기 한 마리가 됩니다.',
   space: '남겨 주신 메시지는 하늘의 별 하나가 됩니다.',
+  airport: '남겨 주신 메시지는 종이비행기 한 대가 되어 날아갑니다.',
 }
 
 const dateFmt = new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'long', day: 'numeric' })

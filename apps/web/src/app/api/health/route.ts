@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { hasSupabase, serverEnv } from '@/lib/env'
+import { serverEnv } from '@/lib/env'
 import { getDb } from '@/lib/supabase'
 
 // 매일 깨우기 헬스체크 (docs/PLANNING.md 8장).
@@ -12,7 +12,6 @@ export async function GET(req: NextRequest) {
   if (!serverEnv.cronSecret || req.headers.get('authorization') !== `Bearer ${serverEnv.cronSecret}`) {
     return NextResponse.json({ ok: false }, { status: 401 })
   }
-  if (!hasSupabase) return NextResponse.json({ ok: true, db: 'skipped' })
 
   const started = Date.now()
   const { error } = await getDb().from('invitations').select('id').limit(1)
