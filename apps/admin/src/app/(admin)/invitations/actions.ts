@@ -15,9 +15,13 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { requireAdmin } from '@/lib/auth'
 import { guestbook, invitations, photos } from '@/lib/repositories'
+import { geocodeVenue, searchVenues as searchKakaoVenues, type VenueResult } from '@/lib/geocode'
 import { revalidateWeb } from '@/lib/revalidate-web'
 
-export type SaveResult = { ok: true } | { ok: false; errors: Record<string, string> }
+// located: 주소가 있는데 지도 위치(좌표)를 못 찾았으면 false. coords는 저장된 좌표(폼에 다시 반영한다)
+export type SaveResult =
+  | { ok: true; located: boolean; coords: { lat: number | null; lng: number | null } }
+  | { ok: false; errors: Record<string, string> }
 
 export async function createInvitation() {
   await requireAdmin()
@@ -39,11 +43,36 @@ export async function saveInvitation(id: string, theme: ThemeId, content: Invita
     }
     return { ok: false, errors }
   }
-  const inv = await invitations.update(id, parsed.data)
+  const located = await withCoordinates(parsed.data.content)
+  const inv = await invitations.update(id, { theme: parsed.data.theme, content: located })
   revalidatePath('/invitations')
   revalidatePath(`/invitations/${id}`)
   await revalidateWeb([cacheTags.invitation(inv.slug)])
-  return { ok: true }
+  const { address, lat, lng } = located.ceremony
+  return { ok: true, located: !address.trim() || (lat !== null && lng !== null), coords: { lat, lng } }
+}
+
+// 어드민 "예식장 검색": 예식장 이름으로 카카오 장소를 찾는다
+export async function searchVenues(query: string): Promise<{ ok: true; results: VenueResult[] } | { ok: false; error: string }> {
+  await requireAdmin()
+  const q = query.trim()
+  if (q.length < 2 || q.length > 60) return { ok: false, error: '두 글자 이상 입력해 주세요' }
+  try {
+    return { ok: true, results: await searchKakaoVenues(q) }
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : '장소 검색에 실패했어요' }
+  }
+}
+
+// 좌표가 비어 있으면 카카오 로컬 API로 주소 → 좌표를 찾아 채운다(하객 화면 지도용).
+// 폼은 예식장 검색으로 고르면 좌표를 넣고, 주소를 손으로 고치면 좌표를 비운다. 그래서 좌표가 있으면 그대로 쓴다.
+// 못 찾으면 좌표를 비워 두고 저장한다.
+async function withCoordinates(content: InvitationContent): Promise<InvitationContent> {
+  const { address, venueName, lat, lng } = content.ceremony
+  if (!address.trim()) return { ...content, ceremony: { ...content.ceremony, lat: null, lng: null } }
+  if (lat !== null && lng !== null) return content
+  const found = await geocodeVenue(address, venueName)
+  return { ...content, ceremony: { ...content.ceremony, lat: found?.lat ?? null, lng: found?.lng ?? null } }
 }
 
 export async function setPublished(id: string, isPublished: boolean) {

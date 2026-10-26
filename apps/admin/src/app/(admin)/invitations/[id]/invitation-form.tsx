@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { saveInvitation } from '../actions'
+import { VenueSearch } from './venue-search'
 
 type Path = (string | number)[]
 
@@ -63,7 +64,9 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
       if (res.ok) {
         setErrors({})
         setDirty(false)
-        toast.success('저장했어요')
+        setContent((c) => ({ ...c, ceremony: { ...c.ceremony, ...res.coords } }))
+        if (res.located) toast.success('저장했어요')
+        else toast.warning('저장했어요. 다만 주소로 지도 위치를 못 찾았어요. 주소를 확인하거나 예식장 검색으로 골라 주세요')
       } else {
         setErrors(res.errors)
         toast.error(`입력을 확인해 주세요 (${Object.keys(res.errors).length}곳)`)
@@ -205,6 +208,12 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
       </Section>
 
       <Section title="예식">
+        <VenueSearch
+          onPick={(v) => {
+            setContent((c) => ({ ...c, ceremony: { ...c.ceremony, venueName: v.name, address: v.address, lat: v.lat, lng: v.lng } }))
+            setDirty(true)
+          }}
+        />
         <div className="grid grid-cols-2 gap-3">
           <Field label="날짜" error={err(['ceremony', 'date'])}>
             {text(['ceremony', 'date'], { type: 'date' })}
@@ -220,20 +229,23 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
           </Field>
         </div>
         <Field label="주소" error={err(['ceremony', 'address'])}>
-          {text(['ceremony', 'address'])}
+          <Input
+            value={content.ceremony.address}
+            onChange={(e) => {
+              // 주소를 손으로 고치면 예전 좌표는 맞지 않으므로 비운다. 저장할 때 주소로 다시 찾는다.
+              setContent((c) => ({ ...c, ceremony: { ...c.ceremony, address: e.target.value, lat: null, lng: null } }))
+              setDirty(true)
+            }}
+            aria-invalid={!!err(['ceremony', 'address'])}
+          />
         </Field>
-        <div className="grid grid-cols-2 gap-3">
-          {(['lat', 'lng'] as const).map((k) => (
-            <Field key={k} label={k === 'lat' ? '위도 (지도용, 선택)' : '경도 (지도용, 선택)'} error={err(['ceremony', k])}>
-              <Input
-                type="number"
-                step="any"
-                value={content.ceremony[k] ?? ''}
-                onChange={(e) => set(['ceremony', k], e.target.value === '' ? null : Number(e.target.value))}
-              />
-            </Field>
-          ))}
-        </div>
+        <p className="text-sm text-muted-foreground">
+          {content.ceremony.lat !== null && content.ceremony.lng !== null
+            ? `지도 위치: ${content.ceremony.lat.toFixed(5)}, ${content.ceremony.lng.toFixed(5)}`
+            : content.ceremony.address.trim()
+              ? '지도 위치: 저장할 때 주소로 찾아요'
+              : '지도 위치: 없음 (예식장을 검색하거나 주소를 입력해 주세요)'}
+        </p>
       </Section>
 
       <Section title="오시는 길">

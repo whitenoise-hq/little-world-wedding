@@ -98,11 +98,10 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공
 - 매일 깨우기: `apps/web` `GET /api/health`(CRON_SECRET 필요) + `apps/web/vercel.json` Cron 매일 03:00 UTC.
 - 이용기간 만료: `apps/web` `GET /api/cron/expire`(CRON_SECRET 필요, Cron 매일 19:00 UTC = 04:00 KST)가 예식일 + 3개월이 지난 공개 고객 청첩장을 비공개로 바꾸고 캐시를 지운 뒤 운영자에게 메일. 삭제는 어드민에서 운영자가 직접(목록에 이용기간·만료 표시). 날짜 계산은 `packages/shared/src/lifecycle.ts`.
 - 에러 처리·알림: `app/error.tsx`, `global-error.tsx`, 사진·방명록 목록 실패는 빈 목록. 서버(`instrumentation.ts`)·브라우저(`/api/report-error`) 오류를 Resend 메일로 알림(`lib/alert.ts`, `RESEND_API_KEY`, `ALERT_EMAIL_TO`).
+- 지도: 하객 화면은 카카오맵 JS SDK(`NEXT_PUBLIC_KAKAO_MAP_KEY`, 좌표가 있을 때만 `kakao-map.tsx`). 어드민은 "예식장 검색"(카카오 로컬 키워드 검색, `KAKAO_REST_API_KEY`, `lib/geocode.ts`)으로 이름·주소·좌표를 채우고, 주소를 손으로 고치면 저장할 때 주소로 좌표를 찾는다.
 - 하객 페이지 캐시: 청첩장·사진은 `unstable_cache`(하루) + 태그(`cacheTags`), 어드민 Server Action이 `revalidateWeb()`으로 web `POST /api/revalidate` 호출. 방명록은 캐시 안 함.
 - Supabase 클라이언트는 처음 쓸 때 만들어 키 없이도 빌드된다(키가 없으면 요청 때 오류).
 - 아직 안 한 것:
-  - 지도 표시(카카오맵 앱 키 필요). 지금은 "지도는 준비 중입니다" 자리와 길찾기 버튼만 있다
-  - 사진 업로드 도중 창을 닫으면 DB 기록 없이 Storage에 남는 파일 정리(청첩장 삭제 때 `photos/{청첩장 id}/` 폴더 전체를 비우기)
   - 배경음악 기본 곡 목록(지금은 주소 입력만)
   - ESLint
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 들어가기 버튼 분리, 그림 외주 여부, 테마 추가).

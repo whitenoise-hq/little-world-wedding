@@ -3,7 +3,7 @@ import { Accounts } from './accounts'
 import { Calendar } from './calendar'
 import { Contacts } from './contacts'
 import { CopyButton } from './copy-chip'
-import { PinIcon } from './icons'
+import { KakaoMap } from './kakao-map'
 import { Section } from './section'
 
 // "집" 모달 내용: 인사말, 예식 일시, 장소·오시는 길, 연락처, 계좌. 서버에서 그린다.
@@ -41,10 +41,9 @@ export function HomeContent({ content }: { content: InvitationContent }) {
           <span className="small sub">{ceremony.address}</span>
           <CopyButton value={ceremony.address} label="주소 복사" />
         </div>
-        <div className="map">
-          <PinIcon size={22} style={{ color: 'var(--accent)' }} />
-          지도는 준비 중입니다
-        </div>
+        {ceremony.lat !== null && ceremony.lng !== null && (
+          <KakaoMap lat={ceremony.lat} lng={ceremony.lng} href={kakao} label={ceremony.venueName} />
+        )}
         <div className="grid2">
           <a className="btn" href={kakao} target="_blank" rel="noreferrer">
             카카오맵

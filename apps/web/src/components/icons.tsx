@@ -36,12 +36,6 @@ export const CloseIcon = (p: P) => (
     <path d="M6 6l12 12M18 6L6 18" />
   </Icon>
 )
-export const PinIcon = (p: P) => (
-  <Icon {...p}>
-    <path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z" />
-    <circle cx="12" cy="9" r="2.5" />
-  </Icon>
-)
 export const HomeIcon = (p: P) => (
   <Icon {...p}>
     <path d="M4 11l8-7 8 7M6 9.5V20h12V9.5" />
