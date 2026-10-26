@@ -31,11 +31,29 @@ export function Toaster() {
   ) : null
 }
 
-export async function copyText(value: string) {
+export async function copyText(value: string, done = '복사했어요') {
   try {
     await navigator.clipboard.writeText(value)
-    toast('복사했어요')
+    toast(done)
   } catch {
-    toast('복사하지 못했어요')
+    // 카톡 등 앱 안 브라우저는 clipboard API를 막는 경우가 있어 예전 방식으로 한 번 더 시도한다
+    toast(copyWithTextarea(value) ? done : '복사하지 못했어요')
+  }
+}
+
+function copyWithTextarea(value: string): boolean {
+  const el = document.createElement('textarea')
+  el.value = value
+  el.setAttribute('readonly', '')
+  el.style.position = 'fixed'
+  el.style.opacity = '0'
+  document.body.appendChild(el)
+  el.select()
+  try {
+    return document.execCommand('copy')
+  } catch {
+    return false
+  } finally {
+    el.remove()
   }
 }

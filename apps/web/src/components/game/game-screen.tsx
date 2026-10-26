@@ -7,6 +7,7 @@ import { GUESTBOOK_POSTED, withPosted } from '../guestbook'
 import { CameraIcon, HomeIcon, PenIcon } from '../icons'
 import { Modal } from '../modal'
 import { MusicButton } from '../music-button'
+import { ShareButton } from '../share-button'
 import { toast } from '../toast'
 import { GAME_READY, INTRO_CLOSED } from './events'
 import { Joystick } from './joystick'
@@ -182,8 +183,11 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
         <div className="hud-date">{date}</div>
       </div>
 
-      {/* 배경음악은 인트로 버튼을 누를 때 시작한다(components/bgm.ts). 여기는 끄고 켜는 버튼만 둔다 */}
-      {hasBgm && <MusicButton className="music oct" pixel />}
+      <div className="hud-actions">
+        <ShareButton className="hud-button oct" pixel />
+        {/* 배경음악은 인트로 버튼을 누를 때 시작한다(components/bgm.ts). 여기는 끄고 켜는 버튼만 둔다 */}
+        {hasBgm && <MusicButton className="hud-button oct" pixel />}
+      </div>
 
       <div className="hint" style={{ opacity: hint ? 1 : 0 }}>
         조이스틱이나 버튼으로 움직여 보세요

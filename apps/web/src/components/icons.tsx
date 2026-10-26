@@ -80,3 +80,9 @@ export const MusicOffIcon = (p: P) => (
     <path d="M3 3l18 18" />
   </Icon>
 )
+export const ShareIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M12 3v12M7 8l5-5 5 5" />
+    <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" />
+  </Icon>
+)

@@ -72,7 +72,7 @@ button {
   position: absolute;
   top: 0;
   left: 0;
-  padding: calc(18px + env(safe-area-inset-top)) 64px 40px 20px;
+  padding: calc(18px + env(safe-area-inset-top)) 112px 40px 20px;
   color: #fff;
   pointer-events: none;
   /* 글자가 있는 왼쪽 위만 은은하게 어둡게 */
@@ -115,10 +115,15 @@ button {
   background: var(--pixel-ink);
   padding: 3px 7px;
 }
-.music {
+.hud-actions {
   position: absolute;
   top: calc(18px + env(safe-area-inset-top));
   right: 18px;
+  display: flex;
+  gap: 8px;
+}
+.hud-button {
+  position: relative;
   width: 40px;
   height: 40px;
   border: 0;
@@ -126,8 +131,8 @@ button {
   background: var(--pixel-ink);
   cursor: pointer;
 }
-/* 플로팅 버튼(.fab)과 같은 팔각 픽셀 버튼. 켜짐: 크림 바탕, 꺼짐: 어두운 반투명 바탕 */
-.music > span {
+/* 플로팅 버튼(.fab)과 같은 팔각 픽셀 버튼. 음악 꺼짐(aria-pressed=false)만 어두운 반투명 바탕 */
+.hud-button > span {
   position: absolute;
   inset: 2px;
   background: #fbf3e4;
@@ -136,10 +141,10 @@ button {
   align-items: center;
   justify-content: center;
 }
-.music[aria-pressed='false'] {
+.hud-button[aria-pressed='false'] {
   background: rgba(251, 243, 228, 0.7);
 }
-.music[aria-pressed='false'] > span {
+.hud-button[aria-pressed='false'] > span {
   background: rgba(20, 16, 30, 0.6);
   color: #fbf3e4;
 }
@@ -393,6 +398,7 @@ button {
 }
 .modal-actions {
   margin-left: auto;
+  display: flex;
 }
 .modal-actions .icon-button[aria-pressed='false'] {
   opacity: 0.55;

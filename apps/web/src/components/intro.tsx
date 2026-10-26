@@ -8,6 +8,7 @@ import { Modal } from './modal'
 import { MusicButton } from './music-button'
 import { PixelSprite } from './pixel-sprite'
 import { PrivacyLink } from './privacy-link'
+import { ShareButton } from './share-button'
 
 // 첫 화면. 서버가 HTML로 바로 보내고, 뒤에서 게임과 글꼴이 준비되면 "들어가기" 버튼으로 바뀐다.
 // "청첩장 바로 보기"는 게임을 기다리지 않고 처음부터 누를 수 있다 (전체화면 모달).
@@ -141,7 +142,12 @@ export function Intro({ slug, bgm, tagline, names, date, bg, accent, card }: Pro
               pauseBgm() // 표지에서는 음악이 들리지 않는다
               setCardOpen(false)
             }}
-            actions={bgm ? <MusicButton className="icon-button" size={20} /> : null}
+            actions={
+              <>
+                <ShareButton className="icon-button" size={20} />
+                {bgm && <MusicButton className="icon-button" size={20} />}
+              </>
+            }
           >
             <div className="card-cover">
               <div className="card-names">
