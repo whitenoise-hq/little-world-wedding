@@ -54,9 +54,15 @@ export async function setPublished(id: string, isPublished: boolean) {
   await revalidateWeb([cacheTags.invitation(inv.slug)])
 }
 
+// 템플릿(홍보용 샘플)은 주소가 스토어 상세 QR에 들어가 있어 삭제·주소 변경을 막는다. docs/PLANNING.md 7장
+function assertNotTemplate(inv: { kind: string } | null) {
+  if (inv?.kind === 'template') throw new Error('템플릿은 삭제하거나 주소를 바꿀 수 없어요')
+}
+
 export async function regenerateSlug(id: string) {
   await requireAdmin()
   const before = await invitations.getById(id)
+  assertNotTemplate(before)
   const after = await invitations.regenerateSlug(id)
   revalidatePath('/invitations')
   revalidatePath(`/invitations/${id}`)
@@ -67,6 +73,7 @@ export async function regenerateSlug(id: string) {
 export async function deleteInvitation(id: string) {
   await requireAdmin()
   const inv = await invitations.getById(id)
+  assertNotTemplate(inv)
   await invitations.remove(id)
   revalidatePath('/invitations')
   if (inv) await revalidateWeb([cacheTags.invitation(inv.slug), cacheTags.photos(id)])

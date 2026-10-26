@@ -25,10 +25,12 @@ interface Props {
   id: string
   url: string
   isPublished: boolean
+  template: boolean
 }
 
 // 저장 버튼 없이 바로 반영되는 동작: 공개 여부, 주소 다시 만들기, 삭제
-export function InvitationActions({ id, url, isPublished }: Props) {
+// 템플릿은 삭제·주소 다시 만들기를 두지 않는다(샘플 주소가 스토어 상세 QR에 들어가 있다)
+export function InvitationActions({ id, url, isPublished, template }: Props) {
   const [pending, start] = useTransition()
 
   return (
@@ -60,56 +62,60 @@ export function InvitationActions({ id, url, isPublished }: Props) {
           </Button>
         </div>
 
-        <div className="flex items-center gap-2">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" size="sm" disabled={pending}>
-                <RefreshCwIcon />
-                주소 다시 만들기
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>주소를 다시 만들까요?</AlertDialogTitle>
-                <AlertDialogDescription>지금 주소로는 더 이상 들어올 수 없어요. 링크가 원치 않는 곳에 퍼졌을 때 쓰세요.</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>취소</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() =>
-                    start(async () => {
-                      await regenerateSlug(id)
-                      toast.success('새 주소를 만들었어요')
-                    })
-                  }
-                >
-                  다시 만들기
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+        {template ? (
+          <p className="text-sm text-muted-foreground">템플릿은 삭제하거나 주소를 바꿀 수 없어요</p>
+        ) : (
+          <div className="flex items-center gap-2">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" size="sm" disabled={pending}>
+                  <RefreshCwIcon />
+                  주소 다시 만들기
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>주소를 다시 만들까요?</AlertDialogTitle>
+                  <AlertDialogDescription>지금 주소로는 더 이상 들어올 수 없어요. 링크가 원치 않는 곳에 퍼졌을 때 쓰세요.</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>취소</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      start(async () => {
+                        await regenerateSlug(id)
+                        toast.success('새 주소를 만들었어요')
+                      })
+                    }
+                  >
+                    다시 만들기
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-destructive" disabled={pending}>
-                <Trash2Icon />
-                삭제
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>청첩장을 삭제할까요?</AlertDialogTitle>
-                <AlertDialogDescription>사진과 방명록도 함께 지워지고 되돌릴 수 없어요.</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>취소</AlertDialogCancel>
-                <AlertDialogAction variant="destructive" onClick={() => start(() => deleteInvitation(id))}>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-destructive" disabled={pending}>
+                  <Trash2Icon />
                   삭제
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>청첩장을 삭제할까요?</AlertDialogTitle>
+                  <AlertDialogDescription>사진과 방명록도 함께 지워지고 되돌릴 수 없어요.</AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>취소</AlertDialogCancel>
+                  <AlertDialogAction variant="destructive" onClick={() => start(() => deleteInvitation(id))}>
+                    삭제
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        )}
       </CardContent>
     </Card>
   )

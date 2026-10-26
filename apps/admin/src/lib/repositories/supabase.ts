@@ -104,16 +104,31 @@ export const supabaseInvitations: InvitationRepository = {
   },
   async remove(id) {
     const db = await createSupabase()
-    // 사진 파일을 먼저 지운다 (DB 행은 cascade로 함께 지워진다)
+    // 사진 파일을 먼저 지운다 (DB 행은 cascade로 함께 지워진다).
+    // DB에 기록된 사진뿐 아니라 청첩장 폴더(photos/{id}/) 전체를 비운다: 업로드 도중 창을 닫아
+    // 기록 없이 남은 파일까지 지워야 "이용기간 후 사진까지 삭제" 약속을 지킬 수 있다.
     const photos = must(await db.from('photos').select('thumb_path, full_path').eq('invitation_id', id))
-    const paths = photos.flatMap((p) => [p.thumb_path, p.full_path])
-    if (paths.length) {
-      const { error } = await db.storage.from(PHOTO_BUCKET).remove(paths)
+    const paths = new Set(photos.flatMap((p) => [p.thumb_path, p.full_path]))
+    for (const name of await listFolder(db, id)) paths.add(`${id}/${name}`)
+    const list = [...paths]
+    for (let i = 0; i < list.length; i += 100) {
+      const { error } = await db.storage.from(PHOTO_BUCKET).remove(list.slice(i, i + 100))
       if (error) throw new Error(error.message)
     }
     const { error } = await db.from('invitations').delete().eq('id', id)
     if (error) throw new Error(error.message)
   },
+}
+
+// 사진 폴더 안의 파일 이름을 모두 가져온다 (한 번에 최대 100개씩)
+async function listFolder(db: Awaited<ReturnType<typeof createSupabase>>, folder: string): Promise<string[]> {
+  const names: string[] = []
+  for (let offset = 0; ; offset += 100) {
+    const { data, error } = await db.storage.from(PHOTO_BUCKET).list(folder, { limit: 100, offset })
+    if (error) throw new Error(error.message)
+    names.push(...data.map((f) => f.name))
+    if (data.length < 100) return names
+  }
 }
 
 export const supabasePhotos: PhotoRepository = {

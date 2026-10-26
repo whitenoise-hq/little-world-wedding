@@ -38,7 +38,7 @@ export default async function InvitationEditPage({ params }: PageProps<'/invitat
         </Button>
       </div>
 
-      <InvitationActions id={id} url={invitationUrl(inv.slug)} isPublished={inv.isPublished} />
+      <InvitationActions id={id} url={invitationUrl(inv.slug)} isPublished={inv.isPublished} template={inv.kind === 'template'} />
 
       <InvitationForm id={id} theme={inv.theme} content={inv.content} />
 
