@@ -1,11 +1,9 @@
+import { GUESTBOOK_LIMITS, GUESTBOOK_RATE_LIMITS } from '@lww/shared'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeftIcon } from 'lucide-react'
-import { Card } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { formatDateTime } from '@/lib/format'
+import { ArrowLeftIcon, ShieldCheckIcon } from 'lucide-react'
 import { guestbook, invitations } from '@/lib/repositories'
-import { DeleteEntryButton } from './delete-entry-button'
+import { GuestbookTable } from './guestbook-table'
 
 export default async function GuestbookPage({ params }: PageProps<'/invitations/[id]/guestbook'>) {
   const { id } = await params
@@ -26,37 +24,23 @@ export default async function GuestbookPage({ params }: PageProps<'/invitations/
         </p>
       </div>
 
-      <Card className="py-0">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-32 pl-4">이름</TableHead>
-              <TableHead>메시지</TableHead>
-              <TableHead className="w-40">작성</TableHead>
-              <TableHead className="w-16 pr-4" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {entries.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={4} className="py-12 text-center text-muted-foreground">
-                  아직 글이 없어요
-                </TableCell>
-              </TableRow>
-            )}
-            {entries.map((e) => (
-              <TableRow key={e.id}>
-                <TableCell className="pl-4 font-medium">{e.name}</TableCell>
-                <TableCell className="whitespace-normal">{e.message}</TableCell>
-                <TableCell className="text-sm text-muted-foreground tabular-nums">{formatDateTime(e.createdAt)}</TableCell>
-                <TableCell className="pr-4 text-right">
-                  <DeleteEntryButton invitationId={id} entryId={e.id} name={e.name} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
+      {/* 작성 제한 안내. 값은 packages/shared/src/guestbook.ts 한 곳에서 가져온다 */}
+      <div className="flex gap-3 rounded-lg bg-muted p-4 text-sm">
+        <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+        <div className="space-y-1">
+          <p className="font-medium">스팸 방지 작성 제한</p>
+          <p className="text-muted-foreground">
+            같은 인터넷(IP)에서는 이 청첩장에 {GUESTBOOK_RATE_LIMITS.map((l) => l.label).join(', ')}까지 쓸 수 있어요. 넘으면 하객 화면에 &quot;잠시 후 다시
+            남겨 주세요&quot;가 떠요.
+          </p>
+          <p className="text-muted-foreground">
+            같은 와이파이를 쓰는 가족이 연달아 써도 막히지 않을 만큼 넉넉하게 잡았어요. 이름은 {GUESTBOOK_LIMITS.name}자, 메시지는{' '}
+            {GUESTBOOK_LIMITS.message}자까지예요.
+          </p>
+        </div>
+      </div>
+
+      <GuestbookTable invitationId={id} entries={entries} />
     </div>
   )
 }

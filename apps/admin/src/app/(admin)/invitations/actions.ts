@@ -127,9 +127,11 @@ export async function deleteInvitation(id: string) {
   redirect('/invitations')
 }
 
-export async function deleteGuestbookEntry(invitationId: string, entryId: string) {
+// 방명록 글 삭제(한 개 또는 체크한 여러 개)
+export async function deleteGuestbookEntries(invitationId: string, entryIds: string[]) {
   await requireAdmin()
-  await guestbook.remove(entryId)
+  const ids = z.array(z.uuid()).min(1).max(500).parse(entryIds)
+  await guestbook.remove(z.uuid().parse(invitationId), ids)
   revalidatePath(`/invitations/${invitationId}/guestbook`)
   revalidatePath('/invitations')
 }

@@ -1,14 +1,12 @@
 import { createHash } from 'node:crypto'
-import { guestbookInputSchema, isValidSlug } from '@lww/shared'
+import { GUESTBOOK_RATE_LIMITS, guestbookInputSchema, isValidSlug } from '@lww/shared'
 import { after, NextResponse, type NextRequest } from 'next/server'
 import { sendAlert } from '@/lib/alert'
 import { serverEnv } from '@/lib/env'
 import { guestbook, invitations } from '@/lib/repositories'
 
 // 방명록 쓰기. 하객 브라우저는 Supabase에 직접 붙지 않고 이 서버 코드만 거친다.
-// 연속 작성 제한: 같은 IP는 청첩장마다 10분에 3번까지. IP는 소금을 친 해시로만 저장한다.
-const WINDOW_MS = 10 * 60_000
-const MAX_PER_WINDOW = 3
+// 연속 작성 제한: 같은 IP는 청첩장마다 GUESTBOOK_RATE_LIMITS(1분 3번, 1시간 10번)까지. IP는 소금을 친 해시로만 저장한다.
 
 const hashIp = (ip: string) => createHash('sha256').update(`${serverEnv.ipHashSalt}:${ip}`).digest('hex')
 
@@ -36,8 +34,11 @@ async function post(req: NextRequest, ctx: RouteContext<'/api/invitations/[slug]
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown'
   const ipHash = hashIp(ip)
-  const since = new Date(Date.now() - WINDOW_MS).toISOString()
-  if ((await guestbook.countRecent(inv.id, ipHash, since)) >= MAX_PER_WINDOW) {
+  const now = Date.now()
+  const counts = await Promise.all(
+    GUESTBOOK_RATE_LIMITS.map((l) => guestbook.countRecent(inv.id, ipHash, new Date(now - l.windowMs).toISOString())),
+  )
+  if (counts.some((n, i) => n >= GUESTBOOK_RATE_LIMITS[i]!.max)) {
     return NextResponse.json({ error: '잠시 후 다시 남겨 주세요.' }, { status: 429 })
   }
 

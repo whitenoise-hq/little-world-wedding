@@ -49,7 +49,7 @@ export interface GuestbookRepository {
   add(invitationId: string, input: GuestbookInput, ipHash?: string): Promise<GuestbookEntry>
   // since(ISO 시각) 이후 같은 IP 해시로 남긴 글 수
   countRecent(invitationId: string, ipHash: string, since: string): Promise<number>
-  remove(id: string): Promise<void> // 운영자만
+  remove(invitationId: string, ids: string[]): Promise<void> // 운영자만. 그 청첩장의 글만 지운다
 }
 
 // 하객 페이지 캐시 태그. 어드민이 바꾼 뒤 하객용 앱의 /api/revalidate 로 이 태그를 지운다.

@@ -196,9 +196,10 @@ export const supabaseGuestbook: GuestbookRepository = {
   },
   add: notForAdmin,
   countRecent: notForAdmin,
-  async remove(id) {
+  async remove(invitationId, ids) {
+    if (ids.length === 0) return
     const db = await createSupabase()
-    const { error } = await db.from('guestbook_entries').delete().eq('id', id)
+    const { error } = await db.from('guestbook_entries').delete().eq('invitation_id', invitationId).in('id', ids)
     if (error) throw new Error(error.message)
   },
 }
