@@ -40,6 +40,9 @@ export default function NotFound() {
           </Link>
         </div>
       </div>
+      <Link href="/privacy" className="brand-foot notfound-privacy">
+        개인정보처리방침
+      </Link>
     </main>
   )
 }

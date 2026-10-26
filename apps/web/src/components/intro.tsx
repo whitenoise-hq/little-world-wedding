@@ -5,6 +5,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { GAME_READY, INTRO_CLOSED } from './game/events'
 import { Modal } from './modal'
 import { PixelSprite } from './pixel-sprite'
+import { PrivacyLink } from './privacy-link'
 
 // 첫 화면. 서버가 HTML로 바로 보내고, 뒤에서 게임과 글꼴이 준비되면 "들어가기" 버튼으로 바뀐다.
 // "청첩장 바로 보기"는 게임을 기다리지 않고 처음부터 누를 수 있다 (전체화면 모달).
@@ -108,6 +109,9 @@ export function Intro({ slug, tagline, names, date, bg, accent, card }: Props) {
             청첩장 바로 보기
           </button>
         </div>
+        <div className="brand-foot intro-brand">
+          LITTLE WORLD WEDDING · <PrivacyLink />
+        </div>
       </div>
       {cardOpen && (
         <div style={{ '--accent': accent } as React.CSSProperties}>
@@ -119,6 +123,11 @@ export function Intro({ slug, tagline, names, date, bg, accent, card }: Props) {
               <div className="card-date">{date}</div>
             </div>
             {card}
+            <div className="brand-foot">
+              LITTLE WORLD WEDDING
+              <br />
+              <PrivacyLink />
+            </div>
           </Modal>
         </div>
       )}

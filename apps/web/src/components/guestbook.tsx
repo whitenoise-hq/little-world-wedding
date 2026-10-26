@@ -2,6 +2,7 @@
 
 import { GUESTBOOK_LIMITS, guestbookInputSchema, type GuestbookEntry, type ThemeId } from '@lww/shared'
 import { useState } from 'react'
+import { PrivacyLink } from './privacy-link'
 import { toast } from './toast'
 
 // 방명록이 올라가면 게임 화면에 알린다 (물고기·별이 생기는 연출)
@@ -106,6 +107,11 @@ export function Guestbook({ slug, theme, initial }: { slug: string; theme: Theme
           {sending ? '남기는 중' : '방명록 남기기'}
         </button>
         <p className="note">남긴 글은 수정하거나 삭제할 수 없습니다.</p>
+        <p className="note">
+          이름과 메시지는 이 청첩장에만 공개됩니다.
+          <br />
+          <PrivacyLink />
+        </p>
       </form>
       <div className="entries">
         <div className="small muted" style={{ marginBottom: 6 }}>

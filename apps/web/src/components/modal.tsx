@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { CloseIcon } from './icons'
 
 // 화면의 90%를 채우는 패널. 닫기 버튼, 바깥 영역, Esc로 닫힌다.
@@ -13,17 +13,23 @@ interface Props {
 }
 
 export function Modal({ title, onClose, full = false, children }: Props) {
+  const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
       // 사진 전체화면이 열려 있으면 그쪽이 먼저 닫힌다
-      if (e.key === 'Escape' && !document.querySelector('.lb')) onClose()
+      if (document.querySelector('.lb')) return
+      // 모달이 겹쳐 있으면(예: 바로 보기 안의 개인정보 처리방침) 맨 위 것만 닫는다
+      const all = document.querySelectorAll('.modal-backdrop')
+      if (all[all.length - 1] !== ref.current) return
+      onClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
   return (
-    <div className={`modal-backdrop${full ? ' full' : ''}`} onPointerDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div ref={ref} className={`modal-backdrop${full ? ' full' : ''}`} onPointerDown={(e) => e.target === e.currentTarget && onClose()}>
       <div className={`modal${full ? ' full' : ''}`} role="dialog" aria-modal="true" aria-label={title}>
         <div className="modal-head">
           {!full && <div className="modal-title">{title}</div>}

@@ -950,6 +950,10 @@ textarea.field {
 .notfound-link:active {
   background: rgba(255, 255, 255, 0.12);
 }
+.notfound-privacy {
+  margin-top: 40px;
+  color: inherit;
+}
 .notfound-retry {
   width: 200px;
   margin-top: 32px;
@@ -1106,4 +1110,71 @@ textarea.field {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+/* ── 브랜드·개인정보 처리방침 (docs/PLANNING.md 9장) ─────────────── */
+
+.brand-foot {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-align: center;
+  padding: 28px 0 8px;
+}
+.intro-brand {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  padding: 0;
+  color: rgba(255, 255, 255, 0.55);
+}
+.privacy-link {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.policy {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text);
+  padding-bottom: 12px;
+}
+.policy-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 6px 0 16px;
+}
+.policy h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 26px 0 8px;
+}
+.policy p,
+.policy ul {
+  margin: 0 0 8px;
+}
+.policy ul {
+  padding-left: 18px;
+}
+.policy li {
+  margin-bottom: 4px;
+}
+.policy a {
+  color: var(--accent);
+}
+.policy-page {
+  min-height: 100dvh;
+  background: var(--bg);
+  padding: 40px clamp(16px, 5vw, 28px) calc(48px + env(safe-area-inset-bottom));
+}
+.policy-page > .policy {
+  max-width: 640px;
+  margin: 0 auto;
 }
