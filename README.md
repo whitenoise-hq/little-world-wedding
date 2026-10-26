@@ -13,7 +13,7 @@
 
 - [docs/PLANNING.md](docs/PLANNING.md): 기획 전체 (서비스 구조, 테마, 인트로, 장소와 모달, 방명록, 조작, 어드민, 데이터·백엔드, 진행 순서)
 - [docs/ART_GUIDE.md](docs/ART_GUIDE.md): 픽셀아트 기준 (해상도, 그리기 순서, 스프라이트 표기법, 팔레트, UI 색)
-- [docs/STORE_GUIDE.md](docs/STORE_GUIDE.md): 스마트스토어 상품·상세 이미지 기준과 기준 이미지
+- [docs/STORE_GUIDE.md](docs/STORE_GUIDE.md): 스마트스토어 상품·상세 이미지 기준, 기준 템플릿(`docs/store/template/`), 만드는 도구(`scripts/store/`)
 - [CLAUDE.md](CLAUDE.md): 작업 규칙 요약 (구조, 진행 순서, 공통·성능 규칙)
 
 ## 구조

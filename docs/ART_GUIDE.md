@@ -227,6 +227,7 @@ INVITATION        ← 12px, 굵게(700), 자간 0.18em, --accent
    3. 커밋하고 `git push`: Vercel이 web·admin을 배포한다. 프론트를 먼저 배포하면 어드민에 새 테마가 보이는데 저장하면 DB가 거부한다.
 6. **배포 후**
    - 실제 주소에서 샘플 청첩장과 어드민 테마 선택을 확인하고, `docs/STORE_GUIDE.md` 테마별 값 표에 열을 추가한다.
+   - 스토어 이미지(상품 8장, 상세 16장)를 `docs/STORE_GUIDE.md` 8장 순서로 만들고 `docs/store/template/`과 비교한다.
 
 테마 목록이 적힌 곳 (테마를 추가하면 모두 고친다):
 

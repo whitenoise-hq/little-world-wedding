@@ -1,0 +1,228 @@
+<!doctype html>
+<!--
+  상세 이미지 16장의 원본 랜딩 (docs/STORE_GUIDE.md 6장). 지금은 공항 테마 값이 들어 있다.
+  다른 테마는 docs/STORE_GUIDE.md 3장 표의 값으로 바꾼다:
+  :root의 --green(dark)·--green2(칩)·--mint, .dark .lead 색, 01 무대·테마 칩, 02·16 샘플 주소,
+  03 문구·캡션, 04 라벨·제목, 05 라벨·제목·문구, 06 라벨·제목·문구·캡션, 07 라벨·제목·문구, 10 방명록 줄.
+  같은 폴더에 img/(캡처, qr.png, logo-pc.png, detail-crop.png, controls-crop.png)와 fonts/(나눔 글꼴)를 둔다.
+-->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=848">
+<title>리틀 월드 웨딩 상세페이지 (공항)</title>
+<style>
+@font-face{font-family:'NM';src:url(fonts/NanumMyeongjo-Regular.ttf)}
+@font-face{font-family:'NM';src:url(fonts/NanumMyeongjo-Bold.ttf);font-weight:700}
+@font-face{font-family:'NG';src:url(fonts/NanumGothic-Regular.ttf)}
+@font-face{font-family:'NG';src:url(fonts/NanumGothic-Bold.ttf);font-weight:700}
+:root{--green:#16263d;--green2:#263a5a;--cream:#f7f2e9;--paper:#fffdf9;--ink:#28261f;--muted:#6e6860;--accent:#c8593c;--line:#e6dccb;--mint:#dfe6ef}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:848px;margin:0 auto;background:var(--cream);color:var(--ink);font-family:'NG',sans-serif;word-break:keep-all}
+section{padding:110px 72px;text-align:center;position:relative}
+.label{font-family:'NG';font-weight:700;font-size:20px;letter-spacing:.18em;color:var(--accent)}
+h2{font-family:'NM';font-weight:700;font-size:50px;line-height:1.35;margin-top:18px}
+.lead{font-size:25px;line-height:1.75;color:var(--muted);margin-top:24px}
+.phone{display:inline-block;background:#1c1c1e;padding:12px;border-radius:52px;box-shadow:0 24px 50px rgba(0,0,0,.18)}
+.phone img{display:block;width:100%;border-radius:42px}
+.dark{background:var(--green);color:var(--cream)}
+.dark .lead{color:#c3cede}
+.dark .label{color:#e8c4a0}
+.mint{background:var(--mint)}
+.paper{background:var(--paper)}
+.card{background:#fff;border-radius:28px;padding:40px;text-align:left}
+.row{display:flex;gap:28px;align-items:center}
+.num{flex:none;width:58px;height:58px;border-radius:50%;background:var(--green);color:#fff;font-weight:700;font-size:24px;display:flex;align-items:center;justify-content:center}
+.chip{display:inline-block;background:var(--cream);color:var(--green);border-radius:999px;padding:8px 18px;font-size:19px;font-weight:700;margin:4px}
+.item{display:flex;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item span{color:var(--muted)}
+.step{align-items:flex-start;padding-bottom:40px}
+.step:last-child{padding-bottom:0}
+.step b{display:block;font-size:27px}
+.step p{font-size:21px;color:var(--muted);margin-top:10px;line-height:1.7}
+.check{align-items:flex-start;gap:18px}
+.check::before{content:'✓';color:var(--green);font-weight:700}
+.check p{font-size:20px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<section class="dark" data-slice="01-hero" style="padding:96px 72px 0">
+  <img src="img/logo-pc.png" style="height:44px;image-rendering:pixelated;background:var(--cream);padding:10px 18px;border-radius:14px">
+  <h2 style="font-size:58px;margin-top:56px">하객이 직접<br>걸어 다니는 청첩장</h2>
+  <p class="lead">두 사람만의 작은 공항으로<br>소중한 분들을 초대하세요</p>
+  <div style="margin-top:28px"><span class="chip" style="background:var(--green2);color:var(--cream)">공항 테마</span><span class="chip" style="background:var(--green2);color:var(--cream)">픽셀아트</span><span class="chip" style="background:var(--green2);color:var(--cream)">모바일 청첩장</span></div>
+  <div class="phone" style="width:420px;margin-top:64px;border-radius:52px 52px 0 0;padding-bottom:0"><img src="img/03-game.png" style="border-radius:42px 42px 0 0;height:640px;object-fit:cover;object-position:top"></div>
+</section>
+
+<section data-slice="02-sample">
+  <p class="label">SAMPLE</p>
+  <h2>지금 바로<br>샘플 청첩장을 열어 보세요</h2>
+  <p class="lead">휴대폰 카메라로 QR 코드를 비추면<br>실제 청첩장을 직접 걸어 볼 수 있어요</p>
+  <div class="card" style="margin-top:56px;text-align:center;padding:52px 40px">
+    <img src="img/qr.png" style="width:300px;height:300px">
+    <p style="margin-top:28px;font-size:18px;color:var(--muted)">샘플 주소</p>
+    <p style="margin-top:8px;font-size:27px;font-weight:700;color:var(--green)">little-world-wedding.vercel.app/loveport</p>
+  </div>
+</section>
+
+<section class="paper" data-slice="03-about">
+  <p class="label">PLAYABLE INVITATION</p>
+  <h2>보는 청첩장이 아니라<br>둘러보는 청첩장</h2>
+  <p class="lead">링크를 열면 신랑·신부 캐릭터가 공항 출국장에 서 있어요.<br>하객은 조이스틱으로 두 사람을 움직여 공항을 둘러봐요.</p>
+  <div class="row" style="margin-top:64px;justify-content:center;gap:36px">
+    <div class="phone" style="width:330px"><img src="img/01-intro.png"></div>
+    <div class="phone" style="width:330px"><img src="img/03-game.png"></div>
+  </div>
+  <div class="row" style="justify-content:center;gap:36px;margin-top:22px;font-size:20px;color:var(--muted)"><p style="width:330px">표지</p><p style="width:330px">공항</p></div>
+</section>
+
+<section data-slice="04-house">
+  <p class="label">PLACE 1 · CHECK-IN</p>
+  <h2>체크인 카운터에서<br>예식 정보를 한눈에</h2>
+  <p class="lead">인사말, 예식 일시와 달력, 오시는 길,<br>양가 연락처와 마음 전하실 곳까지 한곳에 담았어요</p>
+  <div class="row" style="margin-top:64px;justify-content:center;gap:36px">
+    <div class="phone" style="width:330px"><img src="img/04-home-modal.png"></div>
+    <div class="phone" style="width:330px"><img src="img/04-home-modal-end.png"></div>
+  </div>
+</section>
+
+<section class="mint" data-slice="05-garden">
+  <p class="label">PLACE 2 · PHOTO ZONE</p>
+  <h2>포토존에 걸린<br>두 사람의 사진</h2>
+  <p class="lead">탑승권 포토존에 사진을 최대 20장까지 걸어 드려요.<br>누르면 크게, 손가락으로 넘겨 볼 수 있어요.</p>
+  <div class="phone" style="width:380px;margin-top:64px"><img src="img/05-photo-near.png"></div>
+</section>
+
+<section data-slice="06-pier">
+  <p class="label">PLACE 3 · BOARDING GATE</p>
+  <h2>축하 메시지가<br>종이비행기 한 대로</h2>
+  <p class="lead">탑승구에서 남긴 메시지는 종이비행기가 되어 하늘을 날아요.<br>마음이 쌓일수록 하늘이 종이비행기로 가득 차요.</p>
+  <div class="row" style="margin-top:64px;justify-content:center;gap:36px">
+    <div class="phone" style="width:330px"><img src="img/06-guestbook-near.png"></div>
+    <div class="phone" style="width:330px"><img src="img/06-guestbook-modal.png"></div>
+  </div>
+  <p style="margin-top:36px;font-size:21px;color:var(--muted)">종이비행기를 누르면 하객이 남긴 메시지를 읽을 수 있어요</p>
+</section>
+
+<section class="paper" data-slice="07-alive">
+  <p class="label">LIVING AIRPORT</p>
+  <h2>구석구석 살아 움직이는<br>작은 공항</h2>
+  <p class="lead">활주로를 달려 이륙하는 비행기, 돌아가는 수하물 벨트,<br>깡통을 단 신혼여행 여객기, 깜빡이는 활주로 불빛까지</p>
+  <img src="img/detail-crop.png" style="width:100%;margin-top:64px;border-radius:28px;image-rendering:pixelated">
+</section>
+
+<section data-slice="08-easy">
+  <p class="label">EASY TO USE</p>
+  <h2>게임이 처음이어도<br>괜찮아요</h2>
+  <p class="lead">아래 버튼을 누르면 원하는 장소까지 알아서 걸어가요.<br>가까이 가면 들어가기 버튼이 나타나요.</p>
+  <img src="img/controls-crop.png" style="width:100%;margin-top:64px;border-radius:28px">
+  <div class="card" style="margin-top:36px;display:grid;gap:22px;font-size:23px">
+    <div class="row" style="gap:18px"><span class="chip" style="margin:0">앱 설치 없음</span>카카오톡에서 링크만 누르면 바로 열려요</div>
+    <div class="row" style="gap:18px"><span class="chip" style="margin:0">카톡 미리보기</span>대표 사진과 두 분 이름이 함께 보여요</div>
+    <div class="row" style="gap:18px"><span class="chip" style="margin:0">모든 휴대폰</span>아이폰, 갤럭시 어디서나 같아요</div>
+  </div>
+</section>
+
+<section class="mint" data-slice="09-quick">
+  <p class="label">QUICK VIEW</p>
+  <h2>게임이 어려우신 분은<br>바로 보기로</h2>
+  <p class="lead">표지에서 "청첩장 바로 보기"를 누르면<br>일반 청첩장처럼 위에서 아래로 한 번에 볼 수 있어요</p>
+  <div class="row" style="margin-top:64px;justify-content:center;gap:36px">
+    <div class="phone" style="width:330px"><img src="img/q1-intro.png"></div>
+    <div class="phone" style="width:330px"><img src="img/q2-card-top.png"></div>
+  </div>
+  <div style="margin-top:36px"><span class="chip">인사말</span><span class="chip">예식 일시</span><span class="chip">오시는 길</span><span class="chip">연락처</span><span class="chip">계좌번호</span><span class="chip">사진</span><span class="chip">방명록</span></div>
+  <p style="margin-top:24px;font-size:21px;color:var(--muted)">게임 화면을 불러오는 동안에도 바로 누를 수 있어요</p>
+</section>
+
+<section class="paper" data-slice="10-contents">
+  <p class="label">WHAT'S INSIDE</p>
+  <h2>청첩장에 담기는 내용</h2>
+  <div class="card" style="margin-top:56px;padding:20px 44px;font-size:24px">
+    <div class="item"><b>신랑·신부 이름과 인사말</b></div>
+    <div class="item"><b>예식 날짜·시간, 달력, D-day</b></div>
+    <div class="item"><b>예식장 주소와 길찾기</b><span>카카오맵 · 네이버지도</span></div>
+    <div class="item"><b>오시는 길</b><span>지하철 · 버스 · 주차</span></div>
+    <div class="item"><b>양가 연락처</b><span>원하는 분만 공개</span></div>
+    <div class="item"><b>마음 전하실 곳</b><span>계좌번호 복사</span></div>
+    <div class="item"><b>사진 갤러리</b><span>최대 20장</span></div>
+    <div class="item"><b>종이비행기가 되는 방명록</b></div>
+    <div class="item"><b>배경음악</b><span>선택</span></div>
+  </div>
+</section>
+
+<section class="dark" data-slice="11-how-to-buy">
+  <p class="label">HOW TO ORDER</p>
+  <h2>구매 방법</h2>
+  <p class="lead">주문할 때 두 가지만 적어 주세요</p>
+  <div class="card" style="margin-top:56px;color:var(--ink);display:grid;gap:34px">
+    <div class="row"><span class="num">1</span><div><p style="font-size:27px;font-weight:700">옵션에 기본 정보 입력</p><p style="font-size:21px;color:var(--muted);margin-top:8px;line-height:1.6">예식 날짜, 신랑·신부 이름</p></div></div>
+    <div class="row"><span class="num">2</span><div><p style="font-size:27px;font-weight:700">결제하기</p><p style="font-size:21px;color:var(--muted);margin-top:8px;line-height:1.6">결제가 끝나면 네이버 톡톡으로<br>다음 안내를 보내드려요</p></div></div>
+  </div>
+</section>
+
+<section data-slice="12-after">
+  <p class="label">AFTER ORDER</p>
+  <h2>구매 후 이렇게 진행돼요</h2>
+  <div style="margin-top:60px;text-align:left">
+    <div class="row step"><span class="num">1</span><div style="padding-top:6px"><b>네이버 톡톡으로 안내 받기</b><p>결제 후 톡톡으로 자료 보내는 방법을 알려 드려요.<br>먼저 톡톡으로 말을 걸어 주셔도 좋아요.</p></div></div>
+    <div class="row step"><span class="num">2</span><div style="padding-top:6px"><b>청첩장 자료 보내기</b><p>안내받은 메일 또는 톡톡으로<br>아래 준비물을 보내 주세요.</p></div></div>
+    <div class="row step"><span class="num">3</span><div style="padding-top:6px"><b>청첩장 링크 받기</b><p>자료를 받은 날부터 영업일 기준 2일 안에<br>완성된 청첩장 링크를 보내드려요.</p></div></div>
+    <div class="row step"><span class="num">4</span><div style="padding-top:6px"><b>확인하고 수정 요청하기</b><p>직접 걸어 보시고 고칠 부분을 알려 주세요.<br>완성 후 2회까지 무료로 수정해 드려요.</p></div></div>
+    <div class="row step"><span class="num" style="background:var(--accent)">5</span><div style="padding-top:6px"><b>하객에게 공유하기</b><p>카카오톡이나 문자로 링크만 보내면 끝이에요.</p></div></div>
+  </div>
+</section>
+
+<section class="mint" data-slice="13-checklist">
+  <p class="label">CHECKLIST</p>
+  <h2>미리 준비해 주세요</h2>
+  <p class="lead">구매 후 보내 주실 자료예요</p>
+  <div class="card" style="margin-top:56px;font-size:23px;line-height:1.6;display:grid;gap:26px">
+    <div class="row check"><div><b>신랑·신부 이름</b></div></div>
+    <div class="row check"><div><b>예식 날짜와 시간</b></div></div>
+    <div class="row check"><div><b>예식장 이름, 홀, 주소</b><p>오시는 길(지하철·버스·주차)은 아시는 만큼만</p></div></div>
+    <div class="row check"><div><b>인사말</b><p>없으시면 기본 문구로 넣어 드려요</p></div></div>
+    <div class="row check"><div><b>연락처</b><p>신랑·신부, 공개를 원하시는 양가 부모님</p></div></div>
+    <div class="row check"><div><b>계좌번호</b><p>공개를 원하시는 분만 · 카카오페이 송금 링크(선택)</p></div></div>
+    <div class="row check"><div><b>사진 최대 20장</b><p>카카오톡 미리보기에 쓸 사진도 골라 주세요</p></div></div>
+    <div class="row check"><div><b>배경음악 사용 여부</b></div></div>
+  </div>
+</section>
+
+<section class="paper" data-slice="14-notice">
+  <p class="label">NOTICE</p>
+  <h2>꼭 확인해 주세요</h2>
+  <div class="card" style="margin-top:56px;background:var(--cream);font-size:21px;line-height:1.75;display:grid;gap:24px;color:#3f3a33">
+    <p><b style="color:var(--ink)">이용 기간</b><br>청첩장 링크는 예식일 이후 3개월까지 유지돼요.</p>
+    <p><b style="color:var(--ink)">환불</b><br>자료를 보내 주시기 전(제작 시작 전)에는 전액 환불해 드려요. 제작을 시작한 뒤에는 맞춤제작 상품 특성상 단순 변심에 의한 환불이 어려워요.</p>
+    <p><b style="color:var(--ink)">수정</b><br>고객 요청 수정은 완성 후 2회까지 무료예요. 오타나 화면 오류 같은 저희 실수는 기간 안에 횟수와 관계없이 고쳐 드려요.</p>
+    <p><b style="color:var(--ink)">사진</b><br>직접 찍었거나 사용 권한이 있는 사진만 보내 주세요.</p>
+    <p><b style="color:var(--ink)">방명록</b><br>부적절한 글은 요청하시면 지워 드려요.</p>
+    <p><b style="color:var(--ink)">개인정보</b><br>보내 주신 정보와 사진은 청첩장 제작에만 쓰고, 이용 기간이 끝나면 삭제해요.</p>
+  </div>
+</section>
+
+<section data-slice="15-faq">
+  <p class="label">FAQ</p>
+  <h2>자주 묻는 질문</h2>
+  <div style="margin-top:56px;display:grid;gap:20px;text-align:left">
+    <div class="card"><p style="font-size:24px;font-weight:700">Q. 어르신들도 쓰실 수 있을까요?</p><p style="font-size:21px;color:var(--muted);margin-top:14px;line-height:1.7">버튼만 눌러도 원하는 장소로 걸어가요. 정보는 일반 청첩장처럼 글로 보여 드려요.</p></div>
+    <div class="card"><p style="font-size:24px;font-weight:700">Q. 아이폰, 갤럭시 모두 되나요?</p><p style="font-size:21px;color:var(--muted);margin-top:14px;line-height:1.7">네. 휴대폰 기본 브라우저와 카카오톡 안에서 바로 열려요.</p></div>
+    <div class="card"><p style="font-size:24px;font-weight:700">Q. 사진은 몇 장까지 넣을 수 있나요?</p><p style="font-size:21px;color:var(--muted);margin-top:14px;line-height:1.7">최대 20장까지 넣어 드려요.</p></div>
+    <div class="card"><p style="font-size:24px;font-weight:700">Q. 받은 뒤에도 내용을 바꿀 수 있나요?</p><p style="font-size:21px;color:var(--muted);margin-top:14px;line-height:1.7">완성 후 2회까지 무료로 수정해 드려요. 같은 링크 그대로 내용만 바뀌어요.</p></div>
+  </div>
+</section>
+
+<section class="dark" data-slice="16-outro" style="padding:100px 72px 110px">
+  <h2 style="font-size:46px">두 사람만의 작은 세계로<br>하객을 초대하세요</h2>
+  <div style="margin-top:48px;display:inline-flex;align-items:center;gap:32px;background:var(--cream);color:var(--ink);border-radius:28px;padding:28px 40px;text-align:left">
+    <img src="img/qr.png" style="width:150px;height:150px">
+    <div><p style="font-size:19px;color:var(--muted)">샘플 청첩장</p><p style="font-size:21px;font-weight:700;color:var(--green);margin-top:8px">little-world-wedding<br>.vercel.app/loveport</p></div>
+  </div>
+  <div style="margin-top:56px"><img src="img/logo-pc.png" style="height:40px;image-rendering:pixelated;background:var(--cream);padding:10px 18px;border-radius:14px"></div>
+</section>
+
+</body>
+</html>

@@ -2,17 +2,25 @@
 
 네이버 스마트스토어 상품 이미지(대표·추가)와 상세설명 이미지를 만들 때의 기준. 어느 테마, 누가 만들든 같은 디자인으로 나오게 하는 것이 목적이다.
 
-- 만든 이미지는 레포에 커밋하지 않는다(`out/store/{테마}/`에 만든다. `out/`은 git 제외). 기준 이미지 4장만 `docs/store/reference/`에 둔다.
-- 새로 만든 결과물은 기준 이미지와 나란히 놓고 비교해서 색·배치·글자 크기가 같은지 확인한다.
+- **기준 템플릿:** 공항 테마로 만든 완성본 24장을 `docs/store/template/`에 둔다. 새 테마의 스토어 이미지는 이 템플릿과 **구성·배치·글꼴·문구가 똑같이** 나와야 한다. 테마별로 바뀌는 것은 3장 표의 색·장소 이름·방명록 문구와 캡처 화면뿐이다.
+  - `docs/store/template/main/`: 상품 대표·추가 이미지 8장 (1000×1000, 4·5장)
+  - `docs/store/template/detail/`: 상세설명 이미지 16장 (가로 848px, 6장)
+- **만드는 도구:** `scripts/store/`의 스크립트로 만든다(8장 "만드는 순서"). 손으로 따라 그리지 않는다.
+- 새로 만든 이미지는 레포에 커밋하지 않는다(`out/store/{테마}/`에 만든다. `out/`은 git 제외). 커밋하는 것은 위 기준 템플릿뿐이다.
+- 결과물은 템플릿과 같은 번호끼리 나란히 놓고 색·배치·글자 크기가 같은지 확인한다.
 
-| 기준 이미지 | 보여주는 것 |
+| 템플릿 (main) | 내용 |
 |---|---|
-| [main-image.jpg](store/reference/main-image.jpg) | 대표이미지: 휴대폰 두 대, 글자 없음 |
-| [additional-image.jpg](store/reference/additional-image.jpg) | 추가이미지: 영문 라벨 + 명조 제목 + 설명 + 휴대폰 |
-| [detail-phone-section.jpg](store/reference/detail-phone-section.jpg) | 상세 이미지: 휴대폰 화면이 들어간 섹션 |
-| [detail-text-section.jpg](store/reference/detail-text-section.jpg) | 상세 이미지: 글만 있는 섹션 (번호 원) |
+| [01-main](store/template/main/01-main.jpg) | 대표이미지: 표지·게임 휴대폰 두 대, 글자 없음 |
+| [02-walk](store/template/main/02-walk.jpg) | 하객이 직접 걸어 다니는 청첩장 |
+| [03-house](store/template/main/03-house.jpg) | 청첩장 장소: 청첩장 모달 맨 위·맨 아래 |
+| [04-guestbook](store/template/main/04-guestbook.jpg) | 방명록 장소 앞 + 방명록 모달 |
+| [05-easy](store/template/main/05-easy.jpg) | 버튼 하나로 원하는 장소까지 |
+| [06-cover](store/template/main/06-cover.jpg) | 표지 (dark 배경) |
+| [07-contents](store/template/main/07-contents.jpg) | 청첩장에 담기는 내용 + 픽셀 로고 |
+| [08-quick](store/template/main/08-quick.jpg) | 청첩장 바로 보기 |
 
-기준 이미지는 마을 테마로 만들었다. 다른 테마는 아래 "테마별 값"의 색과 문구만 바꾼다.
+상세 템플릿은 `store/template/detail/01-hero.jpg` ~ `16-outro.jpg`이고, 순서와 문구는 6장 표와 같다.
 
 ## 1. 화면 캡처
 
@@ -184,3 +192,33 @@
 - **환불 문구는 법을 근거로 쓴다.** "어떤 경우에도 환불 불가" 같은 임의 규정은 쓰지 않는다. 제작 전 전액 환불, 판매자 귀책 무상 수정을 같이 적는다.
 - **없는 기능을 쓰지 않는다.** 지도 표시처럼 아직 안 된 기능은 이미지와 문구에서 뺀다.
 - 버튼 이름은 실제 화면과 같아야 한다(청첩장·사진·방명록, 청첩장 보기, 청첩장 바로 보기). 화면이 바뀌면 다시 캡처한다.
+
+## 8. 만드는 순서 (다른 컴퓨터에서도 같게)
+
+준비물: 크롬, Node, Python 3 + Pillow(`pip3 install pillow`). 작업은 모두 `out/store/` 아래에서 한다(git 제외).
+
+```bash
+# 1. 도구 폴더와 글꼴 (나눔명조·나눔고딕, OFL)
+mkdir -p out/store/_tools/fonts && cp scripts/store/* out/store/_tools/
+cd out/store/_tools
+for f in nanummyeongjo/NanumMyeongjo-Bold.ttf nanummyeongjo/NanumMyeongjo-Regular.ttf nanumgothic/NanumGothic-Regular.ttf nanumgothic/NanumGothic-Bold.ttf; do curl -sL -o fonts/$(basename $f) "https://github.com/google/fonts/raw/main/ofl/$f"; done
+npm init -y >/dev/null && npm i puppeteer-core@23.11.1 qrcode@1.5.4
+python3 logo.py .                                   # logo-pc.png
+
+# 2. 배포된 샘플 청첩장 캡처 (1장 표의 화면 11장)
+node capture.mjs ../{테마}/shots https://little-world-wedding.vercel.app/{샘플 주소}
+
+# 3. 상품 이미지 8장: compose.py 맨 위 THEME를 3장 표의 그 테마 값으로 바꾼 뒤
+python3 compose.py ../{테마}/shots ../{테마}/main logo-pc.png fonts
+```
+
+4. 상세 이미지 16장
+   - `out/store/{테마}/detail-src/`에 `detail.html`을 복사하고, 파일 맨 위 주석에 적힌 곳을 3장 표의 값으로 바꾼다.
+   - 같은 폴더에 `fonts/`(위 글꼴)와 `img/`를 둔다. `img/`에는 캡처 10장(`01-intro`, `03-game`, `04-home-modal`, `04-home-modal-end`, `04-home-near`, `05-photo-near`, `06-guestbook-near`, `06-guestbook-modal`, `q1-intro`, `q2-card-top`)과 `logo-pc.png`, 샘플 주소 QR(`qr.png`, 480px, 색은 3장 표의 QR 색), 잘라낸 그림 두 장을 넣는다.
+     - `detail-crop.png`: 07 "살아 움직이는" 섹션용. 게임 캡처에서 움직이는 장식이 많은 부분을 들어가기 버튼 없이 자른다(공항은 `06-guestbook-near`의 y 1100~1840).
+     - `controls-crop.png`: 08 섹션용. `04-home-near`의 아래쪽 (0, 1900)~(1170, 2532)
+   - `node slice.mjs ../{테마}/detail-src/detail.html ../{테마}/detail`
+5. `docs/store/template/`의 같은 번호 이미지와 나란히 놓고 비교한다.
+
+- 크롬 위치가 기본(맥)과 다르면 `CHROME_PATH=/경로/chrome node capture.mjs ...`로 실행한다.
+- 템플릿을 바꿀 일이 생기면(문구·배치 변경) 이 문서와 `scripts/store/`를 먼저 고치고, 공항 테마로 다시 만들어 `docs/store/template/`을 통째로 교체한다.
