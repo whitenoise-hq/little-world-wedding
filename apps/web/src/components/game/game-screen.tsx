@@ -9,6 +9,7 @@ import { Modal } from '../modal'
 import { toast } from '../toast'
 import { GAME_READY, INTRO_CLOSED } from './events'
 import { Joystick } from './joystick'
+import { reportError } from '../report-error'
 
 
 const MODAL_TITLES: Record<PlaceId, string> = { home: '청첩장', photo: '사진', guestbook: '방명록' }
@@ -92,8 +93,10 @@ export default function GameScreen({ theme: themeId, names, date, tagline, tagli
       .then((theme) => {
         if (!cancelled) start(theme)
       })
-      .catch(() => {
-        if (!cancelled) toast('화면을 불러오지 못했습니다. 새로고침해 주세요.')
+      .catch((e) => {
+        if (cancelled) return
+        toast('화면을 불러오지 못했습니다. 새로고침해 주세요.')
+        reportError('게임', e)
       })
     return () => {
       cancelled = true

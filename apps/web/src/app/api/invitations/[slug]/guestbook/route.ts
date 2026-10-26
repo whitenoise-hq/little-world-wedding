@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { guestbookInputSchema, isValidSlug } from '@lww/shared'
-import { NextResponse, type NextRequest } from 'next/server'
+import { after, NextResponse, type NextRequest } from 'next/server'
+import { sendAlert } from '@/lib/alert'
 import { serverEnv } from '@/lib/env'
 import { guestbook, invitations } from '@/lib/repositories'
 
@@ -12,6 +13,18 @@ const MAX_PER_WINDOW = 3
 const hashIp = (ip: string) => createHash('sha256').update(`${serverEnv.ipHashSalt}:${ip}`).digest('hex')
 
 export async function POST(req: NextRequest, ctx: RouteContext<'/api/invitations/[slug]/guestbook'>) {
+  try {
+    return await post(req, ctx)
+  } catch (e) {
+    // DB 오류 등. 하객 화면은 이 안내를 토스트로 보여준다.
+    console.error('방명록을 남기지 못했습니다', e)
+    const userAgent = req.headers.get('user-agent') ?? undefined
+    after(() => sendAlert({ where: '방명록 쓰기', message: String((e as Error)?.message ?? e), url: req.url, userAgent }))
+    return NextResponse.json({ error: '잠시 후 다시 시도해 주세요.' }, { status: 500 })
+  }
+}
+
+async function post(req: NextRequest, ctx: RouteContext<'/api/invitations/[slug]/guestbook'>) {
   const { slug } = await ctx.params
   if (!isValidSlug(slug)) return NextResponse.json({ error: '청첩장을 찾을 수 없습니다.' }, { status: 404 })
 

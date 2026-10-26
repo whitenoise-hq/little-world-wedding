@@ -1,6 +1,8 @@
 import 'server-only'
 import { cacheTags, type Invitation, type Photo } from '@lww/shared'
 import { unstable_cache } from 'next/cache'
+import { after } from 'next/server'
+import { sendAlert } from './alert'
 import { guestbook, invitations, photos } from './repositories'
 
 // 하객 페이지 데이터 캐시 (docs/PLANNING.md 8장 "캐시").
@@ -22,12 +24,25 @@ export const getPhotos = (invitationId: string): Promise<Photo[]> =>
     revalidate: SAFETY_REVALIDATE,
   })()
 
+// 사진을 못 읽어도 청첩장·게임·방명록은 보이도록 빈 목록을 돌려준다.
+// 캐시 밖에서 잡아야 실패한 결과(빈 목록)가 1시간 동안 캐시되지 않는다.
+export async function getPhotosSafe(invitationId: string): Promise<Photo[]> {
+  try {
+    return await getPhotos(invitationId)
+  } catch (e) {
+    console.error('사진 목록을 읽지 못했습니다', e)
+    after(() => sendAlert({ where: '사진 목록', message: String((e as Error)?.message ?? e), detail: `청첩장 id ${invitationId}` }))
+    return []
+  }
+}
+
 // 방명록은 매번 읽되, DB가 잠시 멈춰도 청첩장은 보이도록 실패하면 빈 목록을 돌려준다
 export async function getGuestbook(invitationId: string) {
   try {
     return await guestbook.list(invitationId)
   } catch (e) {
     console.error('방명록을 읽지 못했습니다', e)
+    after(() => sendAlert({ where: '방명록 목록', message: String((e as Error)?.message ?? e), detail: `청첩장 id ${invitationId}` }))
     return []
   }
 }

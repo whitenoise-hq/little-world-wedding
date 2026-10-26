@@ -950,6 +950,13 @@ textarea.field {
 .notfound-link:active {
   background: rgba(255, 255, 255, 0.12);
 }
+.notfound-retry {
+  width: 200px;
+  margin-top: 32px;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
 
 /* ── 인트로 ─────────────────────────────── */
 

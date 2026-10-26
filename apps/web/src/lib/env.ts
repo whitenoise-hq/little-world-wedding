@@ -7,4 +7,7 @@ export const serverEnv = {
   ipHashSalt: process.env.IP_HASH_SALT ?? '',
   cronSecret: process.env.CRON_SECRET ?? '',
   revalidateToken: process.env.REVALIDATE_TOKEN ?? '',
+  resendApiKey: process.env.RESEND_API_KEY ?? '',
+  alertEmailTo: process.env.ALERT_EMAIL_TO ?? '',
+  alertEmailFrom: process.env.ALERT_EMAIL_FROM || '리틀 월드 웨딩 알림 <onboarding@resend.dev>',
 }

@@ -8,14 +8,14 @@ import { Guestbook } from '@/components/guestbook'
 import { HomeContent } from '@/components/home-content'
 import { Intro } from '@/components/intro'
 import { Section } from '@/components/section'
-import { getGuestbook, getInvitationBySlug, getPhotos } from '@/lib/cached'
+import { getGuestbook, getInvitationBySlug, getPhotosSafe } from '@/lib/cached'
 
 // 인트로 → 게임 화면. 장소에 들어가면 모달로 청첩장 내용을 보여준다.
 // 인트로의 "청첩장 바로 보기"는 같은 내용을 한 화면(전체화면 모달)에 이어서 보여준다.
 
 // 청첩장·사진은 캐시에서 읽는다 (lib/cached.ts). cache(): 메타데이터와 페이지가 같은 요청에서 두 번 읽지 않게 한다.
 const load = cache(async (slug: string) => (isValidSlug(slug) ? getInvitationBySlug(slug) : null))
-const loadPhotos = cache((invitationId: string) => getPhotos(invitationId))
+const loadPhotos = cache((invitationId: string) => getPhotosSafe(invitationId))
 
 // 개발 환경에서만: ?theme={id}로 다른 테마를 입혀 본다 (docs/ART_GUIDE.md 7장 "새 테마 추가 순서").
 // 배포에서는 searchParams를 읽지 않아 페이지 동작이 그대로다.
