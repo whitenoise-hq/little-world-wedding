@@ -1,4 +1,4 @@
-import { formatCeremonyShort, THEME_IDS, THEME_LABELS, type InvitationSummary } from '@lww/shared'
+import { expiryDate, formatCeremonyShort, isExpired, THEME_IDS, THEME_LABELS, todayKst, type InvitationSummary } from '@lww/shared'
 import { ExternalLinkIcon, PlusIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
@@ -68,7 +68,8 @@ function TabLink({ href, active, label, count }: { href: string; active: boolean
 }
 
 function InvitationTable({ rows, template }: { rows: InvitationSummary[]; template: boolean }) {
-  const columns = template ? 7 : 6
+  const columns = 7
+  const today = todayKst()
   return (
     <Card className="py-0">
       <Table>
@@ -79,7 +80,7 @@ function InvitationTable({ rows, template }: { rows: InvitationSummary[]; templa
             <TableHead>테마</TableHead>
             <TableHead>상태</TableHead>
             <TableHead className="text-right">방명록</TableHead>
-            {template && <TableHead className="text-right">하객 화면</TableHead>}
+            {template ? <TableHead className="text-right">하객 화면</TableHead> : <TableHead>이용기간</TableHead>}
             <TableHead className="pr-4 text-right">수정</TableHead>
           </TableRow>
         </TableHeader>
@@ -107,6 +108,7 @@ function InvitationTable({ rows, template }: { rows: InvitationSummary[]; templa
                   {inv.guestbookCount}
                 </Link>
               </TableCell>
+              {!template && <ExpiryCell date={inv.date} today={today} />}
               {template && (
                 <TableCell className="text-right">
                   <a
@@ -126,5 +128,21 @@ function InvitationTable({ rows, template }: { rows: InvitationSummary[]; templa
         </TableBody>
       </Table>
     </Card>
+  )
+}
+
+// 이용기간: 예식일 + 3개월 (docs/PLANNING.md 7장 "이용기간 만료"). 지나면 매일 Cron이 비공개로 바꾸고, 삭제는 운영자가 한다.
+function ExpiryCell({ date, today }: { date: string; today: string }) {
+  const end = expiryDate(date)
+  if (!end) return <TableCell className="text-muted-foreground">-</TableCell>
+  return (
+    <TableCell className="tabular-nums">
+      <span className="text-sm">~{end.replaceAll('-', '.')}</span>
+      {isExpired(date, today) && (
+        <Badge variant="destructive" className="ml-2">
+          만료 · 삭제 대상
+        </Badge>
+      )}
+    </TableCell>
   )
 }

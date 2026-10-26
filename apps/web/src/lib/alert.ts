@@ -49,7 +49,7 @@ function shouldSend(key: string, now: number): boolean {
 }
 
 export async function sendAlert(input: AlertInput): Promise<void> {
-  const { resendApiKey, alertEmailTo, alertEmailFrom } = serverEnv
+  const { resendApiKey, alertEmailTo } = serverEnv
   if (!resendApiKey || !alertEmailTo) return
   const message = clip(input.message || '(메시지 없음)', 500)
   if (!shouldSend(`${input.where}|${input.digest ?? message}`, Date.now())) return
@@ -69,20 +69,26 @@ export async function sendAlert(input: AlertInput): Promise<void> {
     '',
     '같은 오류는 10분 동안 다시 보내지 않습니다. Vercel 로그에서 자세한 내용을 볼 수 있습니다.',
   ]
+  await sendMail(`${input.where} 오류 · ${input.url ?? ''}`, lines.join('\n'))
+}
+
+// 오류가 아닌 운영 알림(예: 이용기간이 지나 비공개로 바꾼 청첩장). 중복 거르기 없이 보낸다.
+export async function sendNotice(subject: string, text: string): Promise<void> {
+  await sendMail(subject, text)
+}
+
+async function sendMail(subject: string, text: string): Promise<void> {
+  const { resendApiKey, alertEmailTo, alertEmailFrom } = serverEnv
+  if (!resendApiKey || !alertEmailTo) return
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { authorization: `Bearer ${resendApiKey}`, 'content-type': 'application/json' },
-      body: JSON.stringify({
-        from: alertEmailFrom,
-        to: [alertEmailTo],
-        subject: clip(`[리틀 월드 웨딩] ${input.where} 오류 · ${input.url ?? ''}`, 120),
-        text: lines.join('\n'),
-      }),
+      body: JSON.stringify({ from: alertEmailFrom, to: [alertEmailTo], subject: clip(`[리틀 월드 웨딩] ${subject}`, 120), text }),
       signal: AbortSignal.timeout(5000),
     })
-    if (!res.ok) console.error('에러 알림 메일을 보내지 못했습니다', res.status, await res.text())
+    if (!res.ok) console.error('알림 메일을 보내지 못했습니다', res.status, await res.text())
   } catch (e) {
-    console.error('에러 알림 메일을 보내지 못했습니다', e)
+    console.error('알림 메일을 보내지 못했습니다', e)
   }
 }

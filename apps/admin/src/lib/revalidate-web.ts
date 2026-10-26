@@ -2,7 +2,7 @@ import 'server-only'
 import { WEB_URL } from './env'
 
 // 하객용 앱(apps/web)의 캐시를 지운다. 태그는 packages/shared 의 cacheTags.
-// 실패해도 저장 자체는 성공으로 둔다: 하객 페이지는 늦어도 1시간 뒤에 저절로 새로 읽는다.
+// 실패해도 저장 자체는 성공으로 둔다: 하객 페이지는 늦어도 하루 뒤에 저절로 새로 읽는다.
 export async function revalidateWeb(tags: string[]) {
   const token = process.env.REVALIDATE_TOKEN
   if (!token || tags.length === 0) return

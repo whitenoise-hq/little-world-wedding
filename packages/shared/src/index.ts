@@ -1,4 +1,5 @@
 export * from './format'
+export * from './lifecycle'
 export * from './guestbook'
 export * from './invitation'
 export * from './repository'

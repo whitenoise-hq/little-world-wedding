@@ -7,10 +7,11 @@ import { guestbook, invitations, photos } from './repositories'
 
 // 하객 페이지 데이터 캐시 (docs/PLANNING.md 8장 "캐시").
 // - 청첩장 내용·사진은 어드민에서만 바뀌므로 캐시하고, 바뀔 때 어드민이 /api/revalidate 로 태그를 지운다.
-// - 갱신 호출이 실패해도 1시간 뒤에는 저절로 새로 읽는다.
+// - 갱신은 어드민 저장이 바로 해 주므로 캐시를 하루로 길게 둔다. DB가 잠깐 멈춰도 캐시가 있는 청첩장은 그대로 보인다.
+// - 갱신 호출이 실패해도 하루 뒤에는 저절로 새로 읽는다(기간이 지나면 이전 캐시를 보여 주며 뒤에서 새로 읽는다).
 // - 방명록은 캐시하지 않는다 (하객이 남긴 글이 바로 보여야 한다).
 // Next 16은 'use cache'를 권장하지만 Cache Components 전환이 필요해, 지금 버전에서 지원하는 unstable_cache를 쓴다.
-const SAFETY_REVALIDATE = 3600
+const SAFETY_REVALIDATE = 86_400
 
 export const getInvitationBySlug = (slug: string): Promise<Invitation | null> =>
   unstable_cache(() => invitations.getPublishedBySlug(slug), ['invitation-by-slug', slug], {
@@ -25,7 +26,7 @@ export const getPhotos = (invitationId: string): Promise<Photo[]> =>
   })()
 
 // 사진을 못 읽어도 청첩장·게임·방명록은 보이도록 빈 목록을 돌려준다.
-// 캐시 밖에서 잡아야 실패한 결과(빈 목록)가 1시간 동안 캐시되지 않는다.
+// 캐시 밖에서 잡아야 실패한 결과(빈 목록)가 캐시되지 않는다.
 export async function getPhotosSafe(invitationId: string): Promise<Photo[]> {
   try {
     return await getPhotos(invitationId)

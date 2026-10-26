@@ -96,7 +96,9 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공
 - Supabase(서울): 마이그레이션·운영자 등록·DB 타입·권한 점검(공개 키 차단, secret 키 허용) 완료. 하객용은 secret 키 + 서버에서만 접근, 어드민은 운영자 세션 + RLS. 목업 데이터 모드는 없다.
 - 샘플(템플릿) 청첩장: 마을 `/seavilla`, 우주 `/marsland`, 공항 `/loveport`. 내용은 `packages/shared/src/templates.ts`.
 - 매일 깨우기: `apps/web` `GET /api/health`(CRON_SECRET 필요) + `apps/web/vercel.json` Cron 매일 03:00 UTC.
-- 하객 페이지 캐시: 청첩장·사진은 `unstable_cache` + 태그(`cacheTags`), 어드민 Server Action이 `revalidateWeb()`으로 web `POST /api/revalidate` 호출. 방명록은 캐시 안 함.
+- 이용기간 만료: `apps/web` `GET /api/cron/expire`(CRON_SECRET 필요, Cron 매일 19:00 UTC = 04:00 KST)가 예식일 + 3개월이 지난 공개 고객 청첩장을 비공개로 바꾸고 캐시를 지운 뒤 운영자에게 메일. 삭제는 어드민에서 운영자가 직접(목록에 이용기간·만료 표시). 날짜 계산은 `packages/shared/src/lifecycle.ts`.
+- 에러 처리·알림: `app/error.tsx`, `global-error.tsx`, 사진·방명록 목록 실패는 빈 목록. 서버(`instrumentation.ts`)·브라우저(`/api/report-error`) 오류를 Resend 메일로 알림(`lib/alert.ts`, `RESEND_API_KEY`, `ALERT_EMAIL_TO`).
+- 하객 페이지 캐시: 청첩장·사진은 `unstable_cache`(하루) + 태그(`cacheTags`), 어드민 Server Action이 `revalidateWeb()`으로 web `POST /api/revalidate` 호출. 방명록은 캐시 안 함.
 - Supabase 클라이언트는 처음 쓸 때 만들어 키 없이도 빌드된다(키가 없으면 요청 때 오류).
 - 아직 안 한 것:
   - 지도 표시(카카오맵 앱 키 필요). 지금은 "지도는 준비 중입니다" 자리와 길찾기 버튼만 있다
