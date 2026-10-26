@@ -209,6 +209,15 @@ export function generateSlug(): string {
 | 배경음악 | 음악 파일 주소 (선택). 하객 화면에서는 꺼진 상태로 시작 |
 | 방명록 | 글 목록, 삭제 (운영자만) |
 
+### 어드민 청첩장 목록
+
+- 목록은 탭 두 개로 나눈다: **고객 청첩장**(판매해서 만든 청첩장)과 **템플릿**(홍보용 샘플 청첩장).
+- 둘은 `invitations.kind` 칸으로 구분한다: `template`(템플릿) / `customer`(고객 청첩장). 주소로 구분하지 않으므로 템플릿 주소를 바꿔도 템플릿으로 남는다.
+  - 어드민 "새 청첩장"으로 만들면 `customer`(DB 기본값), `pnpm db:templates`로 넣으면 `template`.
+  - 테마를 추가하고 `pnpm db:templates`를 실행하면 템플릿 탭에만 하나씩 쌓인다(테마 순서대로).
+- "새 청첩장" 버튼은 고객 청첩장 탭에만 둔다. 템플릿 탭에는 각 샘플의 하객 화면 링크를 같이 보여 준다.
+- 탭은 주소(`/invitations?tab=templates`)로 구분해서 새로고침해도 유지된다.
+
 ### 어드민 사진 관리
 
 - 여러 장을 한 번에 고르거나 끌어다 놓아 올린다. 청첩장 하나에 최대 20장.
@@ -270,7 +279,7 @@ Supabase 무료 플랜은 최근 7일 동안 DB 활동이 충분하지 않으면
 
 | 테이블 | 필드 |
 |---|---|
-| `invitations` | id, slug(unique), theme, is_published, content(jsonb), cover_photo_id, created_at, updated_at |
+| `invitations` | id, slug(unique), theme, kind(`template`/`customer`), is_published, content(jsonb), cover_photo_id, created_at, updated_at |
 | `photos` | id, invitation_id, thumb_url, full_url, caption, sort_order |
 | `guestbook_entries` | id, invitation_id, name, message, created_at |
 

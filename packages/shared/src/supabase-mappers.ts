@@ -20,6 +20,7 @@ export function toInvitation(row: InvitationRow): Invitation {
     id: row.id,
     slug: row.slug,
     theme: row.theme as ThemeId,
+    kind: row.kind === 'template' ? 'template' : 'customer',
     isPublished: row.is_published,
     content: { ...emptyInvitationContent(), ...(row.content as Partial<InvitationContent>) },
     coverPhotoId: row.cover_photo_id,

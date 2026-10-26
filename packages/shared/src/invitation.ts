@@ -69,10 +69,15 @@ export type Direction = z.infer<typeof directionSchema>
 export type Account = z.infer<typeof accountSchema>
 export type InvitationContent = z.infer<typeof invitationContentSchema>
 
+// 템플릿(홍보용 샘플) / 고객 청첩장. docs/PLANNING.md 7장 "어드민 청첩장 목록"
+export const INVITATION_KINDS = ['template', 'customer'] as const
+export type InvitationKind = (typeof INVITATION_KINDS)[number]
+
 export const invitationSchema = z.object({
   id: z.string(),
   slug: z.string().length(SLUG_LENGTH),
   theme: z.enum(THEME_IDS),
+  kind: z.enum(INVITATION_KINDS),
   isPublished: z.boolean(),
   content: invitationContentSchema,
   coverPhotoId: z.string().nullable(),

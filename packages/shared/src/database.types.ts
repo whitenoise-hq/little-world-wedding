@@ -71,6 +71,7 @@ export type Database = {
           created_at: string
           id: string
           is_published: boolean
+          kind: string
           slug: string
           theme: string
           updated_at: string
@@ -81,6 +82,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_published?: boolean
+          kind?: string
           slug: string
           theme: string
           updated_at?: string
@@ -91,6 +93,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_published?: boolean
+          kind?: string
           slug?: string
           theme?: string
           updated_at?: string

@@ -30,7 +30,7 @@ async function rest<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 for (const tpl of TEMPLATE_INVITATIONS) {
-  const fields = { slug: tpl.slug, theme: tpl.theme, is_published: true, content: tpl.content }
+  const fields = { slug: tpl.slug, theme: tpl.theme, kind: 'template', is_published: true, content: tpl.content }
   const legacy = LEGACY_SLUGS[tpl.theme]
   const slugs = legacy ? `${tpl.slug},${legacy}` : tpl.slug
   const found = await rest<{ id: string; slug: string }[]>(`invitations?select=id,slug&slug=in.(${slugs})`)

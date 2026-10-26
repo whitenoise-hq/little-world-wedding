@@ -42,7 +42,7 @@ export const supabaseInvitations: InvitationRepository = {
     const rows = must(
       await db
         .from('invitations')
-        .select('id, slug, theme, is_published, content, updated_at, guestbook_entries(count)')
+        .select('id, slug, theme, kind, is_published, content, updated_at, guestbook_entries(count)')
         .order('updated_at', { ascending: false }),
     )
     return rows.map((r) => {
@@ -51,6 +51,7 @@ export const supabaseInvitations: InvitationRepository = {
         id: r.id,
         slug: r.slug,
         theme: r.theme as ThemeId,
+        kind: r.kind === 'template' ? ('template' as const) : ('customer' as const),
         isPublished: r.is_published,
         groomName: content.groom?.fullName ?? '',
         brideName: content.bride?.fullName ?? '',
