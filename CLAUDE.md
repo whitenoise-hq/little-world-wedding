@@ -37,7 +37,7 @@ pnpm build
 pnpm supabase <명령>   # Supabase CLI (레포 devDependency, Homebrew 불필요)
 pnpm db:push          # supabase/migrations 를 원격 DB에 적용
 pnpm db:types         # DB 타입 생성 → packages/shared/src/database.types.ts
-pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공항 /loveport)을 DB에 적용. 사진·방문자 글은 건드리지 않음 (--reset-samples: 샘플 방명록만 갈아 끼움)
+pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공항 /loveport)을 DB에 적용. 사진·방문자 글은 건드리지 않음, 끝나면 로컬·배포 하객 화면 캐시도 지움 (--reset-samples: 샘플 방명록만 갈아 끼움)
 ```
 
 - Supabase 프로젝트: `little-world-wedding`(ref `gninsfsuhbgkzkwbdagc`, 서울). 이 레포에 `supabase link` 되어 있다.

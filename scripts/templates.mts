@@ -4,12 +4,16 @@
 // - 샘플 방명록은 방명록이 비어 있을 때만 넣는다 (방문자가 남긴 글을 지우지 않는다).
 // - --reset-samples: 샘플 방명록만 지우고 새 내용으로 다시 넣는다. 샘플 글은 templates.ts의 작성 시각과
 //   정확히 같은 시각으로 들어가 있어서, 그 시각의 글만 지우면 방문자 글은 그대로 남는다.
+// - 끝나면 하객 화면 캐시(하루)를 지운다. 로컬(NEXT_PUBLIC_WEB_URL)과 배포 주소에 어드민과 같은 방식으로
+//   POST /api/revalidate 를 보낸다(REVALIDATE_TOKEN). 실패해도 DB 적용은 그대로이고, 하루 뒤에 저절로 반영된다.
 // 실행: pnpm db:templates [--reset-samples]  (apps/admin/.env.local 의 URL과 admin secret 키를 쓴다)
 import { readFileSync } from 'node:fs'
+import { cacheTags } from '../packages/shared/src/repository'
 import { TEMPLATE_GUESTBOOK, TEMPLATE_INVITATIONS } from '../packages/shared/src/templates'
 
 const resetSamples = process.argv.includes('--reset-samples')
 const LEGACY_SLUGS: Record<string, string> = { village: 'ejdushfe', space: 'qmwvhzta' }
+const PRODUCTION_WEB_URL = 'https://little-world-wedding.vercel.app'
 
 const env = Object.fromEntries(
   readFileSync(new URL('../apps/admin/.env.local', import.meta.url), 'utf8')
@@ -73,4 +77,23 @@ for (const tpl of TEMPLATE_INVITATIONS) {
   }))
   if (entries.length) await rest('guestbook_entries', { method: 'POST', body: JSON.stringify(entries) })
   console.log(`  방명록: 샘플 ${entries.length}개 추가`)
+}
+
+// 하객 화면 캐시 지우기 (어드민 revalidateWeb과 같은 요청)
+const token = env.REVALIDATE_TOKEN
+const webUrls = [...new Set([env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000', PRODUCTION_WEB_URL].map((u) => u.replace(/\/$/, '')))]
+const tags = TEMPLATE_INVITATIONS.map((tpl) => cacheTags.invitation(tpl.slug))
+if (!token) console.log('캐시: REVALIDATE_TOKEN이 없어 건너뜀 (하객 화면은 하루 안에 반영)')
+for (const web of token ? webUrls : []) {
+  try {
+    const res = await fetch(`${web}/api/revalidate`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ tags }),
+      signal: AbortSignal.timeout(5000),
+    })
+    console.log(`캐시: ${web} ${res.ok ? '지움' : `실패 ${res.status}${res.status === 401 ? ' (REVALIDATE_TOKEN이 그쪽 값과 다름)' : ''}`}`)
+  } catch {
+    console.log(`캐시: ${web} 연결 안 됨 (서버가 꺼져 있으면 무시해도 됨)`)
+  }
 }
