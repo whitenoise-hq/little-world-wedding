@@ -14,6 +14,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useLeaveGuard } from '@/lib/use-leave-guard'
 import { createInvitation, saveInvitation } from '../actions'
+import { BgmSelect } from './bgm-select'
 import { VenueSearch } from './venue-search'
 
 type Path = (string | number)[]
@@ -315,9 +316,9 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
         </div>
       </Section>
 
-      <Section title="배경음악" description="하객 화면에서 꺼진 상태로 시작하고, 하객이 켤 수 있어요.">
-        <Field label="음악 파일 주소 (선택)" error={err(['decor', 'bgmUrl'])}>
-          {text(['decor', 'bgmUrl'], { placeholder: 'https://... (mp3)' })}
+      <Section title="배경음악" description="하객이 표지에서 들어가는 순간 켜지고, 음악 버튼으로 끌 수 있어요.">
+        <Field label="곡" error={err(['decor', 'bgmUrl'])}>
+          <BgmSelect value={content.decor.bgmUrl} onChange={(v) => set(['decor', 'bgmUrl'], v)} />
         </Field>
       </Section>
 

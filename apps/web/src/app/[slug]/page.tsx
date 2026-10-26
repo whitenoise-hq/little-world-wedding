@@ -67,12 +67,13 @@ export default async function InvitationPage({ params, searchParams }: PageProps
         tagline={ui.tagline}
         taglineColor={ui.taglineColor}
         accent={ui.accent}
-        bgmUrl={inv.content.decor.bgmUrl}
+        hasBgm={!!inv.content.decor.bgmUrl}
         entries={entries}
         contents={{ home, photo: gallery, guestbook }}
       />
       <Intro
         slug={slug}
+        bgm={inv.content.decor.bgmUrl}
         tagline={ui.tagline}
         names={names}
         date={date}

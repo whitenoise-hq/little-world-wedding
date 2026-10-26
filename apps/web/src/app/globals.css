@@ -119,20 +119,29 @@ button {
   position: absolute;
   top: calc(18px + env(safe-area-inset-top));
   right: 18px;
-  width: 36px;
-  height: 36px;
-  border: 2px solid #f4efe6;
-  background: rgba(20, 16, 30, 0.55);
-  color: #f4efe6;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  padding: 0;
+  background: var(--pixel-ink);
+  cursor: pointer;
+}
+/* 플로팅 버튼(.fab)과 같은 팔각 픽셀 버튼. 켜짐: 크림 바탕, 꺼짐: 어두운 반투명 바탕 */
+.music > span {
+  position: absolute;
+  inset: 2px;
+  background: #fbf3e4;
+  color: var(--pixel-ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 }
-.music[aria-pressed='true'] {
-  background: #f6c85f;
-  border-color: var(--pixel-ink);
-  color: var(--pixel-ink);
+.music[aria-pressed='false'] {
+  background: rgba(251, 243, 228, 0.7);
+}
+.music[aria-pressed='false'] > span {
+  background: rgba(20, 16, 30, 0.6);
+  color: #fbf3e4;
 }
 .guest-card {
   position: absolute;
@@ -381,6 +390,12 @@ button {
 .modal.full .modal-head {
   justify-content: flex-start;
   padding: max(10px, env(safe-area-inset-top)) 12px 4px;
+}
+.modal-actions {
+  margin-left: auto;
+}
+.modal-actions .icon-button[aria-pressed='false'] {
+  opacity: 0.55;
 }
 .modal.full .modal-body {
   padding: 0 max(clamp(16px, 5vw, 28px), calc((100% - 640px) / 2)) calc(40px + env(safe-area-inset-bottom));

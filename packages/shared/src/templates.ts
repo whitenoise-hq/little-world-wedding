@@ -63,7 +63,7 @@ export const TEMPLATE_INVITATIONS: Invitation[] = [
           { relation: '어머니', holder: '최윤정', bank: '하나은행', number: '000-000000-00000', kakaoPayUrl: '', visible: true },
         ],
       },
-      decor: { bgmUrl: '' },
+      decor: { bgmUrl: '/bgm/piano.mp3' },
     },
   },
   {
@@ -121,7 +121,7 @@ export const TEMPLATE_INVITATIONS: Invitation[] = [
           { relation: '어머니', holder: '오미숙', bank: '하나은행', number: '000-000000-00000', kakaoPayUrl: '', visible: true },
         ],
       },
-      decor: { bgmUrl: '' },
+      decor: { bgmUrl: '/bgm/romantic.mp3' },
     },
   },
   {
@@ -179,7 +179,7 @@ export const TEMPLATE_INVITATIONS: Invitation[] = [
           { relation: '어머니', holder: '최윤정', bank: '하나은행', number: '000-000000-00000', kakaoPayUrl: '', visible: true },
         ],
       },
-      decor: { bgmUrl: '' },
+      decor: { bgmUrl: '/bgm/wedding.mp3' },
     },
   },
 ]

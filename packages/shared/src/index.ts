@@ -1,3 +1,4 @@
+export * from './bgm'
 export * from './format'
 export * from './lifecycle'
 export * from './guestbook'

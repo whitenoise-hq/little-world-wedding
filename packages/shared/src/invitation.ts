@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { BGM_FILES } from './bgm'
 import { SLUG_LENGTH } from './slug'
 import { THEME_IDS } from './themes'
 
@@ -59,7 +60,8 @@ export const invitationContentSchema = z.object({
     groom: z.array(accountSchema).max(5),
     bride: z.array(accountSchema).max(5),
   }),
-  decor: z.object({ bgmUrl: z.union([z.url(), z.literal('')]) }),
+  // 배경음악: 기본 곡 파일 경로(BGM_FILES) 또는 예전에 넣은 외부 주소, 없으면 ''
+  decor: z.object({ bgmUrl: z.union([z.enum(BGM_FILES), z.url(), z.literal('')]) }),
 })
 
 export type Parent = z.infer<typeof parentSchema>

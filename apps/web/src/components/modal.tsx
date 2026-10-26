@@ -5,14 +5,16 @@ import { CloseIcon } from './icons'
 
 // 화면의 90%를 채우는 패널. 닫기 버튼, 바깥 영역, Esc로 닫힌다.
 // full: 화면 전체를 덮고, 머리에는 왼쪽 위 닫기 버튼만 둔다 (표지의 "청첩장 바로 보기").
+// actions: 머리 오른쪽에 둘 버튼 (바로 보기의 음악 버튼)
 interface Props {
   title: string
   onClose: () => void
   full?: boolean
+  actions?: ReactNode
   children: ReactNode
 }
 
-export function Modal({ title, onClose, full = false, children }: Props) {
+export function Modal({ title, onClose, full = false, actions, children }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -36,6 +38,7 @@ export function Modal({ title, onClose, full = false, children }: Props) {
           <button type="button" className="icon-button" onClick={onClose} aria-label="닫기">
             <CloseIcon size={22} />
           </button>
+          {actions && <div className="modal-actions">{actions}</div>}
         </div>
         <div className="modal-body">{children}</div>
       </div>
