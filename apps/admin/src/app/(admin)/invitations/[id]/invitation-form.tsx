@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { useLeaveGuard } from '@/lib/use-leave-guard'
 import { createInvitation, saveInvitation } from '../actions'
 import { VenueSearch } from './venue-search'
 
@@ -44,6 +45,7 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
   const [dirty, setDirty] = useState(false)
   const [pending, start] = useTransition()
   const router = useRouter()
+  useLeaveGuard(dirty)
 
   const set = (path: Path, value: unknown) => {
     setContent((c) => setIn(c, path, value))
