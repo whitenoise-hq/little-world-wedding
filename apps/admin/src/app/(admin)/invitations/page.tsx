@@ -9,7 +9,6 @@ import { invitationUrl } from '@/lib/env'
 import { formatDateTime } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { invitations } from '@/lib/repositories'
-import { createInvitation } from './actions'
 
 // 고객 청첩장과 템플릿(홍보용 샘플)을 탭으로 나눈다. docs/PLANNING.md 7장 "어드민 청첩장 목록".
 type Tab = 'customers' | 'templates'
@@ -33,11 +32,11 @@ export default async function InvitationsPage({ searchParams }: PageProps<'/invi
           </p>
         </div>
         {tab === 'customers' && (
-          <form action={createInvitation}>
-            <Button type="submit">
+          <Button asChild>
+            <Link href="/invitations/new">
               <PlusIcon />새 청첩장
-            </Button>
-          </form>
+            </Link>
+          </Button>
         )}
       </div>
 

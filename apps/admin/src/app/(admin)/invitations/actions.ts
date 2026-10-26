@@ -2,7 +2,6 @@
 
 import {
   cacheTags,
-  emptyInvitationContent,
   invitationContentSchema,
   MAX_PHOTOS,
   THEME_IDS,
@@ -23,33 +22,52 @@ export type SaveResult =
   | { ok: true; located: boolean; coords: { lat: number | null; lng: number | null } }
   | { ok: false; errors: Record<string, string> }
 
-export async function createInvitation() {
+// 새 청첩장은 "새 청첩장" 화면(/invitations/new)에서 처음 저장할 때 만든다. 버튼만 눌러서는 DB에 남지 않는다.
+export type CreateResult = { ok: true; id: string; located: boolean } | { ok: false; errors: Record<string, string> }
+
+export async function createInvitation(theme: ThemeId, content: InvitationContent): Promise<CreateResult> {
   await requireAdmin()
-  const inv = await invitations.create({ theme: 'village', content: emptyInvitationContent() })
+  const parsed = parseForm(theme, content)
+  if (!parsed.ok) return parsed
+  const located = await withCoordinates(parsed.content)
+  const inv = await invitations.create({ theme: parsed.theme, content: located })
   revalidatePath('/invitations')
-  redirect(`/invitations/${inv.id}`)
+  return { ok: true, id: inv.id, located: isLocated(located) }
 }
 
 export async function saveInvitation(id: string, theme: ThemeId, content: InvitationContent): Promise<SaveResult> {
   await requireAdmin()
-  const parsed = z.object({ theme: z.enum(THEME_IDS), content: invitationContentSchema }).safeParse({ theme, content })
-  if (!parsed.success) {
-    const errors: Record<string, string> = {}
-    for (const issue of parsed.error.issues) {
-      // 폼은 content 기준 경로(groom.fullName)로 에러를 찾는다
-      const [root, ...rest] = issue.path
-      const key = (root === 'content' ? rest : issue.path).join('.')
-      errors[key] ??= issue.message
-    }
-    return { ok: false, errors }
-  }
-  const located = await withCoordinates(parsed.data.content)
-  const inv = await invitations.update(id, { theme: parsed.data.theme, content: located })
+  const parsed = parseForm(theme, content)
+  if (!parsed.ok) return parsed
+  const located = await withCoordinates(parsed.content)
+  const inv = await invitations.update(id, { theme: parsed.theme, content: located })
   revalidatePath('/invitations')
   revalidatePath(`/invitations/${id}`)
   await revalidateWeb([cacheTags.invitation(inv.slug)])
-  const { address, lat, lng } = located.ceremony
-  return { ok: true, located: !address.trim() || (lat !== null && lng !== null), coords: { lat, lng } }
+  const { lat, lng } = located.ceremony
+  return { ok: true, located: isLocated(located), coords: { lat, lng } }
+}
+
+function parseForm(
+  theme: ThemeId,
+  content: InvitationContent,
+): { ok: true; theme: ThemeId; content: InvitationContent } | { ok: false; errors: Record<string, string> } {
+  const parsed = z.object({ theme: z.enum(THEME_IDS), content: invitationContentSchema }).safeParse({ theme, content })
+  if (parsed.success) return { ok: true, ...parsed.data }
+  const errors: Record<string, string> = {}
+  for (const issue of parsed.error.issues) {
+    // 폼은 content 기준 경로(groom.fullName)로 에러를 찾는다
+    const [root, ...rest] = issue.path
+    const key = (root === 'content' ? rest : issue.path).join('.')
+    errors[key] ??= issue.message
+  }
+  return { ok: false, errors }
+}
+
+// 주소가 없거나 좌표를 찾았으면 true (주소가 있는데 좌표가 없을 때만 경고한다)
+function isLocated(content: InvitationContent): boolean {
+  const { address, lat, lng } = content.ceremony
+  return !address.trim() || (lat !== null && lng !== null)
 }
 
 // 어드민 "예식장 검색": 예식장 이름으로 카카오 장소를 찾는다

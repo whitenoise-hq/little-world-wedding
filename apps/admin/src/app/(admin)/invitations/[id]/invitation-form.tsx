@@ -2,6 +2,7 @@
 
 import { THEME_IDS, THEME_LABELS, type Account, type InvitationContent, type Person, type ThemeId } from '@lww/shared'
 import { PlusIcon, XIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState, useTransition, type ReactNode } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -11,7 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
-import { saveInvitation } from '../actions'
+import { createInvitation, saveInvitation } from '../actions'
 import { VenueSearch } from './venue-search'
 
 type Path = (string | number)[]
@@ -31,7 +32,7 @@ function getIn(obj: unknown, path: Path): unknown {
 }
 
 interface Props {
-  id: string
+  id: string | null // null: 새 청첩장(처음 저장할 때 만든다)
   theme: ThemeId
   content: InvitationContent
 }
@@ -42,6 +43,7 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [dirty, setDirty] = useState(false)
   const [pending, start] = useTransition()
+  const router = useRouter()
 
   const set = (path: Path, value: unknown) => {
     setContent((c) => setIn(c, path, value))
@@ -58,15 +60,32 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
     />
   )
 
+  const warnNoLocation = '저장했어요. 다만 주소로 지도 위치를 못 찾았어요. 주소를 확인하거나 예식장 검색으로 골라 주세요'
+
+  // 새 청첩장은 처음 저장할 때 만들고 편집 화면으로 넘어간다(사진은 그 뒤에 올린다)
+  const createNew = async () => {
+    const res = await createInvitation(theme, content)
+    if (res.ok) {
+      setDirty(false)
+      if (res.located) toast.success('청첩장을 만들었어요. 이제 사진을 올릴 수 있어요')
+      else toast.warning(warnNoLocation)
+      router.replace(`/invitations/${res.id}`)
+    } else {
+      setErrors(res.errors)
+      toast.error(`입력을 확인해 주세요 (${Object.keys(res.errors).length}곳)`)
+    }
+  }
+
   const save = () =>
     start(async () => {
+      if (id === null) return createNew()
       const res = await saveInvitation(id, theme, content)
       if (res.ok) {
         setErrors({})
         setDirty(false)
         setContent((c) => ({ ...c, ceremony: { ...c.ceremony, ...res.coords } }))
         if (res.located) toast.success('저장했어요')
-        else toast.warning('저장했어요. 다만 주소로 지도 위치를 못 찾았어요. 주소를 확인하거나 예식장 검색으로 골라 주세요')
+        else toast.warning(warnNoLocation)
       } else {
         setErrors(res.errors)
         toast.error(`입력을 확인해 주세요 (${Object.keys(res.errors).length}곳)`)
@@ -302,7 +321,7 @@ export function InvitationForm({ id, theme: initialTheme, content: initialConten
 
       <div className="fixed inset-x-0 bottom-0 z-10 border-t bg-background/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-end gap-3 px-6">
-          <span className="text-sm text-muted-foreground">{dirty ? '저장하지 않은 변경이 있어요' : '저장됨'}</span>
+          <span className="text-sm text-muted-foreground">{dirty ? '저장하지 않은 변경이 있어요' : id === null ? '아직 저장하지 않았어요' : '저장됨'}</span>
           <Button onClick={save} disabled={pending || !dirty}>
             {pending ? '저장 중…' : '저장'}
           </Button>
