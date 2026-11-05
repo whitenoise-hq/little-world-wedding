@@ -54,7 +54,9 @@ export function Intro({ slug, bgm, tagline, names, date, bg, accent, card }: Pro
     })
     const fallback = setTimeout(() => alive && setReady(true), FALLBACK_MS)
     try {
-      // 다시 방문하면 기다리지 않고 바로 버튼을 보여준다
+      // 다시 방문하면 기다리지 않고 바로 버튼을 보여준다.
+      // localStorage는 서버 렌더링 때 읽을 수 없어 첫 렌더 뒤 이펙트에서 반영한다(초기값으로 읽으면 하이드레이션이 어긋남).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (localStorage.getItem(`lww-visited:${slug}`) === '1') setReady(true)
       localStorage.setItem(`lww-visited:${slug}`, '1')
     } catch {}

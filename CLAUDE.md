@@ -20,7 +20,7 @@
   - `packages/shared` — 도메인 타입, zod 스키마, slug 생성, Supabase 타입, 공통 상수
 - 백엔드: Supabase (DB, 사진 스토리지, 어드민 로그인)
 - 배포: Vercel 프로젝트 2개(web, admin). 각 앱의 `vercel.json`에서 `turbo-ignore`로 바뀐 앱만 빌드, 함수 실행 위치는 서울(`regions: ["icn1"]`). Supabase도 서울이라 둘을 떼어 놓으면 요청마다 미국 왕복이 생겨 느려진다
-- 버전: Node 22, pnpm 10, Next.js 16, React 19, TypeScript 5.9, zod 4, vitest
+- 버전: Node 22, pnpm 10, Next.js 16, React 19, TypeScript 5.9, zod 4, vitest, ESLint 9(flat config, `eslint-config-next`)
 - 어드민 UI: Tailwind 4 + shadcn/ui(Radix, Nova 프리셋). 하객용(`apps/web`)은 Tailwind 없이 `globals.css`. 글꼴은 나눔명조(청첩장 글자) + 갈무리 서브셋(게임 세계 안 이름표·말풍선)
 - 내부 패키지(`@lww/shared`, `@lww/engine`)는 빌드하지 않고 TS 소스를 그대로 내보낸다. 앱의 `next.config.ts`에서 `transpilePackages`로 컴파일한다.
 
@@ -32,6 +32,7 @@ pnpm dev          # web(3000) + admin(3001)
 pnpm dev:web      # 하객용만
 pnpm dev:admin    # 어드민만
 pnpm typecheck
+pnpm lint         # ESLint (레포 루트 eslint.config.mjs 하나로 전체 검사)
 pnpm test
 pnpm build
 pnpm supabase <명령>   # Supabase CLI (레포 devDependency, Homebrew 불필요)
@@ -53,7 +54,7 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공
 0. 모노레포 세팅 — 완료
 1. 데이터 구조, 어드민, `/[slug]` 청첩장 + OG 태그 + 인트로 — 완료 (Supabase 연결 포함)
 2. 게임 화면(엔진 + 테마)과 장소·데이터 연결 — 완료 (우주·마을·공항 3개 테마)
-3. 방명록 관리·스팸 방지, 사진 최적화, 로딩·성능 — 대부분 완료. 남은 일은 아래 "아직 안 한 것"
+3. 방명록 관리·스팸 방지, 사진 최적화, 로딩·성능 — 완료
 
 - 이후 새 테마는 `docs/ART_GUIDE.md` 7장 순서로 추가한다.
 
@@ -65,6 +66,7 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공
 
 - **문서 먼저.** 기획·그림 규칙이 바뀌면 `docs/PLANNING.md` / `docs/ART_GUIDE.md`를 먼저 고친 뒤 코드를 바꾼다.
 - **공유 코드는 `packages/`에만.** 앱끼리 서로 import하지 않는다. 타입·스키마·상수는 `packages/shared`에 한 번만 정의한다.
+- **규칙은 ESLint로 지킨다.** 아래 규칙 중 기계로 잡을 수 있는 것(엔진·공유 코드의 `Math.random`, 테마 정적 import, 앱끼리 import, 하객용 앱의 어드민 전용 의존성)은 `eslint.config.mjs`에 걸어 두었다. 작업이 끝나면 `pnpm typecheck`·`pnpm lint`·`pnpm test`를 모두 통과시킨다.
 - **테마 추가는 `docs/ART_GUIDE.md` 7장 순서대로.** 로컬에서 `/{slug}?theme={id}`(개발 환경 전용)로 화면을 확정한다. DB·배포는 운영자가 직접 하므로, 코드 작업이 끝나면 운영자에게 할 일 목록(`pnpm db:push` → `pnpm db:templates` → `git push` → 실제 주소 확인)을 항상 알려 준다.
 - **엔진과 테마 분리.** 엔진(렌더러, 입력, 카메라, 충돌, 루프)은 테마를 모른다. 테마는 그림, 장소 좌표, 이동 범위, 충돌 영역, 방명록 연출을 데이터와 함수로 넘긴다.
 - **하객용 앱에 어드민 것을 넣지 않는다.** Supabase 서비스 키, 어드민 전용 의존성은 `apps/admin`에만 둔다.
@@ -87,7 +89,7 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공
 
 ## 현재 상태
 
-- typecheck·test·build 통과. web·admin 모두 Vercel에 배포되어 운영 중이고, 스마트스토어에서 판매한다.
+- typecheck·lint·test·build 통과. web·admin 모두 Vercel에 배포되어 운영 중이고, 스마트스토어에서 판매한다.
 - `packages/shared`: 청첩장 내용 스키마(`invitation.ts`), 저장소 인터페이스, 날짜 포맷, slug, 방명록 스키마, 테마 목록·색(`themes.ts`), 샘플 청첩장 내용(`templates.ts`, `pnpm db:templates`용)
 - `packages/engine`: 게임 루프·입력·카메라·충돌(`game.ts`), 그리기 도구(`painter.ts`), 우주·마을·공항 테마(`themes/`, 테마별 청크로 그 청첩장 테마만 불러옴), 신랑·신부 스프라이트. 캔버스는 화면 배율에 가까운 정수배 해상도로 그려 움직임을 1/3~1/4픽셀 단위로 부드럽게 하고, 움직일 때는 매 프레임·가만히 있을 때는 30fps
 - `apps/admin`: 로그인, 청첩장 목록(고객 청첩장 / 템플릿 탭, `invitations.kind`로 구분), 입력 폼(검증 오류 표시, 테마 선택), 공개 전환·주소 다시 만들기·삭제(사진 파일까지 삭제), 사진 업로드(`PhotoManager`: 브라우저에서 썸네일 600px·큰 사진 1920px WebP로 줄여 Storage에 직접 올림, 순서·대표·설명·삭제, 최대 20장), 배경음악 선택(기본 곡 4개 중 고르기·미리 듣기, `packages/shared/src/bgm.ts`), 방명록 관리(운영자 삭제, 체크해서 한 번에 삭제, 작성 제한 안내)
@@ -101,6 +103,4 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공
 - 지도: 하객 화면은 카카오맵 JS SDK(`NEXT_PUBLIC_KAKAO_MAP_KEY`, 좌표가 있을 때만 `kakao-map.tsx`). 어드민은 "예식장 검색"(카카오 로컬 키워드 검색, `KAKAO_REST_API_KEY`, `lib/geocode.ts`)으로 이름·주소·좌표를 채우고, 주소를 손으로 고치면 저장할 때 주소로 좌표를 찾는다.
 - 하객 페이지 캐시: 청첩장·사진은 `unstable_cache`(하루) + 태그(`cacheTags`), 어드민 Server Action이 `revalidateWeb()`으로 web `POST /api/revalidate` 호출. 방명록은 캐시 안 함.
 - Supabase 클라이언트는 처음 쓸 때 만들어 키 없이도 빌드된다(키가 없으면 요청 때 오류).
-- 아직 안 한 것:
-  - ESLint
 - 미결 사항은 `docs/PLANNING.md` 11장 참고 (RSVP, 들어가기 버튼 분리, 그림 외주 여부, 테마 추가).

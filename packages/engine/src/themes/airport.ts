@@ -1,7 +1,7 @@
 import { OUTLINE as K } from '../constants'
 import type { Painter } from '../painter'
 import { createRng, hashString } from '../random'
-import type { Drawable, Frame, GuestVisual, Place, PlaceId, Theme } from '../theme'
+import type { Drawable, GuestVisual, Place, PlaceId, Theme } from '../theme'
 
 // 공항 테마: 신혼여행을 떠나는 날의 공항 터미널 출국장.
 // 위로 앞 벽과 유리, 아래로 탑승구 유리창 너머 계류장(신혼여행 여객기)과 활주로.

@@ -93,7 +93,7 @@ export function createSpaceTheme(): Theme {
     spawn: {
       from: { x: scope.x + 14, y: scope.y + 9 },
       duration: 1.4,
-      draw(p, o, k, f) {
+      draw(p, o, k) {
         if (k < 0.02) trail = []
         const e = 1 - (1 - k) ** 3
         const x = this.from.x + (o.x - this.from.x) * e

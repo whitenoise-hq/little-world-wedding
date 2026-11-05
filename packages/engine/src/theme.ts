@@ -69,5 +69,8 @@ export interface Theme {
   drawOver?(p: Painter, f: Frame): void
   drawables(f: Frame): Drawable[]
   drawAir?(p: Painter, f: Frame): void
+  // 테마마다 방명록 오브젝트 모양이 달라 엔진은 그 타입을 모른다(테마 안에서는 GuestVisual<자기 타입>으로 검사됨).
+  // unknown으로 두면 함수 매개변수 때문에 테마 객체를 넣을 수 없어 any를 쓴다.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   guest: GuestVisual<any>
 }
