@@ -38,6 +38,9 @@ export default function NotFound() {
           <Link href={`/${TEMPLATE_SLUGS.airport}`} className="notfound-link">
             공항 테마 보기
           </Link>
+          <Link href={`/${TEMPLATE_SLUGS.snowtown}`} className="notfound-link">
+            겨울 마을 테마 보기
+          </Link>
         </div>
       </div>
       <Link href="/privacy" className="brand-foot notfound-privacy">

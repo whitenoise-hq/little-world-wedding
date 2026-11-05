@@ -226,6 +226,18 @@ export class Game {
       if (freeX) P.x = nx
       const freeY = !this.theme.blocked(P.x, ny)
       if (freeY) P.y = ny
+      // 한 축만 막혔을 때 남은 축은 원래 걷는 속도로 미끄러진다(비스듬한 벽을 따라갈 때 느려지지 않게).
+      // 벽에 거의 정면으로 미는 경우(남은 성분이 작음)는 미끄러지지 않는다.
+      const step = WALK_SPEED * dt * Math.min(1, m)
+      if (freeX !== freeY) {
+        if (freeX && Math.abs(vx) > m * 0.2) {
+          const bx = P.x - vx * s + Math.sign(vx) * step
+          if (!this.theme.blocked(bx, P.y)) P.x = bx
+        } else if (freeY && Math.abs(vy) > m * 0.2) {
+          const by = P.y - vy * s + Math.sign(vy) * step
+          if (!this.theme.blocked(P.x, by)) P.y = by
+        }
+      }
       // 자동 이동이 0.3초 넘게 막혀 있으면 포기한다 (dt가 0인 프레임 하나로 취소되지 않게 시간으로 잰다)
       this.stuck = freeX || freeY ? 0 : this.stuck + dt
       if (this.auto && this.stuck > 0.3) {

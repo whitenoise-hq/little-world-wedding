@@ -2,7 +2,7 @@
 
 ## 프로젝트 요약
 
-게임처럼 캐릭터를 움직이며 둘러보는 픽셀아트 모바일 청첩장. 커플마다 `/{slug}` 고유 주소를 받고, 무대는 테마(우주·마을·공항) 중 하나를 고른다. 운영자 1명이 어드민에서 청첩장을 만든다.
+게임처럼 캐릭터를 움직이며 둘러보는 픽셀아트 모바일 청첩장. 커플마다 `/{slug}` 고유 주소를 받고, 무대는 테마(우주·마을·공항·겨울 마을) 중 하나를 고른다. 운영자 1명이 어드민에서 청첩장을 만든다.
 
 ## 먼저 읽을 문서
 
@@ -16,7 +16,7 @@
 - 모노레포: Turborepo + pnpm. npm 스코프 `@lww/*`.
   - `apps/web` — 하객용 청첩장 (Next.js App Router). `{도메인}/{slug}`
   - `apps/admin` — 어드민 (Next.js App Router). `admin.{도메인}`
-  - `packages/engine` — 캔버스 게임 엔진 + 테마(`themes/space`, `themes/village`, `themes/airport`). web과 admin 미리보기가 같이 씀
+  - `packages/engine` — 캔버스 게임 엔진 + 테마(`themes/space`, `themes/village`, `themes/airport`, `themes/snowtown`). web과 admin 미리보기가 같이 씀
   - `packages/shared` — 도메인 타입, zod 스키마, slug 생성, Supabase 타입, 공통 상수
 - 백엔드: Supabase (DB, 사진 스토리지, 어드민 로그인)
 - 배포: Vercel 프로젝트 2개(web, admin). 각 앱의 `vercel.json`에서 `turbo-ignore`로 바뀐 앱만 빌드, 함수 실행 위치는 서울(`regions: ["icn1"]`). Supabase도 서울이라 둘을 떼어 놓으면 요청마다 미국 왕복이 생겨 느려진다
@@ -38,7 +38,7 @@ pnpm build
 pnpm supabase <명령>   # Supabase CLI (레포 devDependency, Homebrew 불필요)
 pnpm db:push          # supabase/migrations 를 원격 DB에 적용
 pnpm db:types         # DB 타입 생성 → packages/shared/src/database.types.ts
-pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공항 /loveport)을 DB에 적용. 사진·방문자 글은 건드리지 않음, 끝나면 로컬·배포 하객 화면 캐시도 지움 (--reset-samples: 샘플 방명록만 갈아 끼움)
+pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공항 /loveport, 겨울 마을 /snowbell)을 DB에 적용. 사진·방문자 글은 건드리지 않음, 끝나면 로컬·배포 하객 화면 캐시도 지움 (--reset-samples: 샘플 방명록만 갈아 끼움)
 ```
 
 - Supabase 프로젝트: `little-world-wedding`(ref `gninsfsuhbgkzkwbdagc`, 서울). 이 레포에 `supabase link` 되어 있다.
@@ -53,7 +53,7 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공
 
 0. 모노레포 세팅 — 완료
 1. 데이터 구조, 어드민, `/[slug]` 청첩장 + OG 태그 + 인트로 — 완료 (Supabase 연결 포함)
-2. 게임 화면(엔진 + 테마)과 장소·데이터 연결 — 완료 (우주·마을·공항 3개 테마)
+2. 게임 화면(엔진 + 테마)과 장소·데이터 연결 — 완료 (우주·마을·공항·겨울 마을 4개 테마)
 3. 방명록 관리·스팸 방지, 사진 최적화, 로딩·성능 — 완료
 
 - 이후 새 테마는 `docs/ART_GUIDE.md` 7장 순서로 추가한다.
@@ -91,12 +91,12 @@ pnpm db:templates     # 샘플 청첩장(마을 /seavilla, 우주 /marsland, 공
 
 - typecheck·lint·test·build 통과. web·admin 모두 Vercel에 배포되어 운영 중이고, 스마트스토어에서 판매한다.
 - `packages/shared`: 청첩장 내용 스키마(`invitation.ts`), 저장소 인터페이스, 날짜 포맷, slug, 방명록 스키마, 테마 목록·색(`themes.ts`), 샘플 청첩장 내용(`templates.ts`, `pnpm db:templates`용)
-- `packages/engine`: 게임 루프·입력·카메라·충돌(`game.ts`), 그리기 도구(`painter.ts`), 우주·마을·공항 테마(`themes/`, 테마별 청크로 그 청첩장 테마만 불러옴), 신랑·신부 스프라이트. 캔버스는 화면 배율에 가까운 정수배 해상도로 그려 움직임을 1/3~1/4픽셀 단위로 부드럽게 하고, 움직일 때는 매 프레임·가만히 있을 때는 30fps
+- `packages/engine`: 게임 루프·입력·카메라·충돌(`game.ts`), 그리기 도구(`painter.ts`), 우주·마을·공항·겨울 마을 테마(`themes/`, 테마별 청크로 그 청첩장 테마만 불러옴), 신랑·신부 스프라이트. 캔버스는 화면 배율에 가까운 정수배 해상도로 그려 움직임을 1/3~1/4픽셀 단위로 부드럽게 하고, 움직일 때는 매 프레임·가만히 있을 때는 30fps
 - `apps/admin`: 로그인, 청첩장 목록(고객 청첩장 / 템플릿 탭, `invitations.kind`로 구분), 입력 폼(검증 오류 표시, 테마 선택), 공개 전환·주소 다시 만들기·삭제(사진 파일까지 삭제), 사진 업로드(`PhotoManager`: 브라우저에서 썸네일 600px·큰 사진 1920px WebP로 줄여 Storage에 직접 올림, 순서·대표·설명·삭제, 최대 20장), 배경음악 선택(기본 곡 4개 중 고르기·미리 듣기, `packages/shared/src/bgm.ts`), 방명록 관리(운영자 삭제, 체크해서 한 번에 삭제, 작성 제한 안내)
-- `apps/web`: 인트로(표지, 게임 준비되면 "들어가기", 처음부터 누를 수 있는 "청첩장 바로 보기" 전체화면 모달) → 게임 화면(조이스틱·플로팅 버튼 청첩장·사진·방명록·들어가기 버튼은 픽셀, 크기 3단계, 태블릿 너비까지) → 장소 모달(청첩장·사진·방명록, 나눔명조). 사진 전체화면은 scroll-snap 슬라이드. 방명록을 올리면 테마 연출(물고기·별·종이비행기). 길찾기는 카카오맵·네이버지도. OG 메타, 방명록 API(청첩장마다 같은 IP 1분 3회·1시간 10회 제한), 없는 주소 안내 페이지
+- `apps/web`: 인트로(표지, 게임 준비되면 "들어가기", 처음부터 누를 수 있는 "청첩장 바로 보기" 전체화면 모달) → 게임 화면(조이스틱·플로팅 버튼 청첩장·사진·방명록·들어가기 버튼은 픽셀, 크기 3단계, 태블릿 너비까지) → 장소 모달(청첩장·사진·방명록, 나눔명조). 사진 전체화면은 scroll-snap 슬라이드. 방명록을 올리면 테마 연출(물고기·별·종이비행기·트리 장식). 길찾기는 카카오맵·네이버지도. OG 메타, 방명록 API(청첩장마다 같은 IP 1분 3회·1시간 10회 제한), 없는 주소 안내 페이지
 - 개발 환경에서만 `/{slug}?theme={id}`로 다른 테마를 입혀 본다(배포에서는 무시).
 - Supabase(서울): 마이그레이션·운영자 등록·DB 타입·권한 점검(공개 키 차단, secret 키 허용) 완료. 하객용은 secret 키 + 서버에서만 접근, 어드민은 운영자 세션 + RLS. 목업 데이터 모드는 없다.
-- 샘플(템플릿) 청첩장: 마을 `/seavilla`, 우주 `/marsland`, 공항 `/loveport`. 내용은 `packages/shared/src/templates.ts`.
+- 샘플(템플릿) 청첩장: 마을 `/seavilla`, 우주 `/marsland`, 공항 `/loveport`, 겨울 마을 `/snowbell`. 내용은 `packages/shared/src/templates.ts`.
 - 매일 깨우기: `apps/web` `GET /api/health`(CRON_SECRET 필요) + `apps/web/vercel.json` Cron 매일 03:00 UTC.
 - 이용기간 만료: `apps/web` `GET /api/cron/expire`(CRON_SECRET 필요, Cron 매일 19:00 UTC = 04:00 KST)가 예식일 + 3개월이 지난 공개 고객 청첩장을 비공개로 바꾸고 캐시를 지운 뒤 운영자에게 메일. 삭제는 어드민에서 운영자가 직접(목록에 이용기간·만료 표시). 날짜 계산은 `packages/shared/src/lifecycle.ts`.
 - 에러 처리·알림: `app/error.tsx`, `global-error.tsx`, 사진·방명록 목록 실패는 빈 목록. 서버(`instrumentation.ts`)·브라우저(`/api/report-error`) 오류를 Resend 메일로 알림(`lib/alert.ts`, `RESEND_API_KEY`, `ALERT_EMAIL_TO`).

@@ -1,7 +1,7 @@
 import type { GuestbookEntry, Invitation } from './invitation'
 import { TEMPLATE_SLUGS } from './themes'
 
-// 샘플(템플릿) 청첩장: 마을·우주·공항 1개씩. 홍보용으로 공개해 두는 청첩장이다.
+// 샘플(템플릿) 청첩장: 테마마다 1개씩. 홍보용으로 공개해 두는 청첩장이다.
 // `pnpm db:templates`로 실제 DB에 적용한다 (scripts/templates.mts). 사진은 어드민에서 직접 올린다.
 // 전화번호·계좌는 실제로 연결되지 않는 가짜 값만 쓴다.
 
@@ -182,6 +182,64 @@ export const TEMPLATE_INVITATIONS: Invitation[] = [
       decor: { bgmUrl: '/bgm/wedding.mp3' },
     },
   },
+  {
+    id: 'inv-4',
+    slug: TEMPLATE_SLUGS.snowtown,
+    theme: 'snowtown',
+    kind: 'template',
+    isPublished: true,
+    coverPhotoId: null,
+    createdAt: '2026-11-05T14:00:00+09:00',
+    updatedAt: '2026-11-05T14:00:00+09:00',
+    content: {
+      groom: {
+        fullName: '최신랑',
+        firstName: '신랑',
+        phone: fakePhone,
+        showPhone: true,
+        father: { name: '최정훈', phone: fakePhone, showPhone: true },
+        mother: { name: '이미숙', phone: fakePhone, showPhone: true },
+      },
+      bride: {
+        fullName: '박신부',
+        firstName: '신부',
+        phone: fakePhone,
+        showPhone: true,
+        father: { name: '박성호', phone: fakePhone, showPhone: true },
+        mother: { name: '최윤정', phone: fakePhone, showPhone: true },
+      },
+      greeting: {
+        text: '첫눈처럼 조용히 찾아온 인연이\n이제 하나의 길을 함께 걸으려 합니다.\n\n추운 날에도 서로의 온기가 되어\n따뜻한 집을 꾸리겠습니다.\n\n눈 내리는 겨울날,\n저희의 시작을 축복해 주세요.',
+      },
+      ceremony: {
+        date: '2027-01-23',
+        time: '12:00',
+        venueName: '리틀월드 윈터홀',
+        hall: '2층 스노우홀',
+        address: '서울특별시 종로구 세종대로 175',
+        lat: 37.571848,
+        lng: 126.976168,
+      },
+      directions: [
+        { label: '지하철', text: '5호선 광화문역 1번 출구에서 도보 3분' },
+        { label: '버스', text: '광화문 정류장 하차 (간선 101, 103, 150)' },
+        { label: '주차', text: '건물 지하 주차장 2시간 무료' },
+      ],
+      accounts: {
+        groom: [
+          { relation: '신랑', holder: '최신랑', bank: '국민은행', number: '000000-00-000000', kakaoPayUrl: '', visible: true },
+          { relation: '아버지', holder: '최정훈', bank: '신한은행', number: '000-000-000000', kakaoPayUrl: '', visible: true },
+          { relation: '어머니', holder: '이미숙', bank: '우리은행', number: '0000-000-000000', kakaoPayUrl: '', visible: true },
+        ],
+        bride: [
+          { relation: '신부', holder: '박신부', bank: '카카오뱅크', number: '0000-00-0000000', kakaoPayUrl: '', visible: true },
+          { relation: '아버지', holder: '박성호', bank: '농협은행', number: '000-0000-0000-00', kakaoPayUrl: '', visible: true },
+          { relation: '어머니', holder: '최윤정', bank: '하나은행', number: '000-000000-00000', kakaoPayUrl: '', visible: true },
+        ],
+      },
+      decor: { bgmUrl: '/bgm/wedding-piano.mp3' },
+    },
+  },
 ]
 
 // 샘플 방명록. 방문자가 남긴 글과 섞여도 어색하지 않게 담백하게 쓴다.
@@ -210,6 +268,14 @@ const GUESTBOOK_SEED: Record<string, [string, string][]> = {
     ['하은', '신혼여행 사진 꼭 보여 줘. 예식 날 갈게!'],
     ['도현', '좋은 비행 되길. 행복하게 잘 살아라, 친구야.'],
     ['이모', '우리 조카, 예쁘게 잘 살아라.'],
+  ],
+  'inv-4': [
+    ['지훈', '눈 오는 날 결혼이라니 너무 낭만적이다. 진심으로 축하해!'],
+    ['수빈', '두 사람의 겨울이 언제나 따뜻하길 바라요.'],
+    ['김 팀장', '두 분의 새로운 출발을 진심으로 축하드립니다.'],
+    ['하은', '트리에 장식 하나 달고 가요. 예식 날 뵐게요!'],
+    ['도현', '추운 날 서로 꼭 안아 주며 행복하게 살아라, 친구야.'],
+    ['이모', '우리 조카 시집가는 날, 기쁜 마음으로 축하한다.'],
   ],
 }
 
